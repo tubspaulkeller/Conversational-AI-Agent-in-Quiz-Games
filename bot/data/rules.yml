@@ -1,0 +1,134 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: restart the conversation 
+  steps: 
+  - intent: i_restart_conversation
+  - action: action_restart
+
+
+- rule: ask ben
+  steps: 
+  - intent: ask_ben
+  - action: action_ask_ben
+
+- rule: reminder for countdown msg
+  steps:
+  - intent: EXTERNAL_reminder_countdown_msg
+  - action: action_react_to_reminder_countdown_msg
+
+- rule: reminder for competition 
+  steps:
+  - intent: EXTERNAL_reminder_competition
+  - action: action_react_to_reminder_competition
+
+- rule: Activate Reminder for Competition Mode KLMK
+  condition:
+  # Condition that form is active.
+  - active_loop: quiz_form_KLMK
+  steps:
+  # Form is deactivated
+  - action: quiz_form_KLMK
+  - active_loop: null
+  - slot_was_set:
+    - answered: true
+  # The actions we want to run when the form is deactivated.
+  - action: action_set_reminder_competition
+
+- rule: Activate Reminder for Competition Mode KLOK
+  condition:
+  # Condition that form is active.
+  - active_loop: quiz_form_KLOK
+  steps:
+  # Form is deactivated
+  - action: quiz_form_KLOK
+  - active_loop: null
+  - slot_was_set:
+    - answered: true
+  # The actions we want to run when the form is deactivated.
+  - action: action_set_reminder_competition
+
+
+- rule: Ask the user to rephrase whenever they send a message with low NLU confidence
+  steps:
+  - intent: nlu_fallback
+  - action: action_fallback
+
+- rule: Start of Conversation
+  condition:
+  - slot_was_set:
+    - my_group: false
+  steps:
+  - intent: greet
+  - action: action_get_channel_members
+  - action: action_start
+- rule: get winner @From - KL 
+  condition:
+  - slot_was_set:
+    - frage_01_s: true
+    - frage_02_s: true
+    - frage_03_m: true
+    - frage_04_m: true
+    - frage_05_o: true
+    - frage_06_o: true
+  steps: 
+  - action: quiz_form_KL
+  - active_loop: quiz_form_KL
+  - active_loop: null
+  - action: action_winner
+
+- rule: get winner @From - OKK
+  condition:
+  - slot_was_set:
+    - frage_01_s: true
+    - frage_02_s: true
+    - frage_03_m: true
+    - frage_04_m: true
+    - frage_05_o: true
+    - frage_06_o: true
+  steps: 
+  - action: quiz_form_OKK
+  - active_loop: quiz_form_OKK
+  - active_loop: null
+  - action: action_winner
+
+- rule: Leaderboard 
+  steps:
+  - action: action_winner
+  - intent: leaderboard
+  - action: action_leaderboard
+
+
+- rule: give user score
+  steps:
+  - intent: ask_score
+  - action: action_give_score
+
+- rule: give user score
+  steps:
+  - intent: ask_badges
+  - action: action_give_badges
+
+- rule: points other team 
+  steps:
+  - intent: ask_points_opponent
+  - action: action_give_score_opponent
+
+- rule: badges other team 
+  steps:
+  - intent: ask_badges_opponent
+  - action: action_give_badges_opponent
+
+
+- rule: why points badges stars
+  steps:
+  - intent: ask_why_points_badges_stars
+  - action: action_why_points_badges_stars
+  
+

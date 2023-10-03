@@ -1,0 +1,31 @@
+{
+    "_id" : "04",
+    "question_id" : "frage_04_m",
+    "answer" : [
+        [
+            "\nA) Vom gleichberechtigten und aktiven Partner hin zur Zielgruppe.",
+            "0"
+        ],
+        [
+            "B) Von der Zielgruppe zum gleichberechtigten und aktiven Partner",
+            "1"
+        ],
+        [
+            "C) Fokus auf Wert",
+            "1"
+        ],
+        [
+            "D) Fokus auf Verkaufszahlen",
+            "0"
+        ],
+        [
+            "E) Vom Produkt zum Service",
+            "1"
+        ]
+    ],
+    "button_combination": [["A", "C", "E", "0"], ["B", "D", "E", "0"], ["A", "B", "C", "0"], ["B", "C", "E", "1"]],
+    "display_question" : "🛑Multiple Choice:\nWie hat sich die Rolle des Kunden verändert und\nwelche neuen Potenziale ergeben sich durch die Digitalisierung?\n(Achtung Mehrfachnennung!)"
+
+}
+
+

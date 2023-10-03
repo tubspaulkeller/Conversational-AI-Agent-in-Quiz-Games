@@ -1,0 +1,4 @@
+action_endpoint:
+  url: "${ACTION_ENDPOINT_URL}"
+
+

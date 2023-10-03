@@ -1,0 +1,19 @@
+{
+    "_id" : "02",
+    "question_id" : "frage_02_s",
+    "answer" : [
+        [
+            "\nA) Digitale Services,\ndie den eigentlichen Service unterstützen.",
+            "1"
+        ],
+        [
+            "B) Hybride Produkte,\ndie den eigentlichen Service erweitern.",
+            "0"
+        ],
+        [
+            "C) Jegliche Form von Services,\ndie den eigentlichen Service erweitern.",
+            "0"
+        ]
+    ],
+    "display_question" : "🛑Single Choice:\nWas ist ein E-Service?"
+}

@@ -1,0 +1,43 @@
+{
+"OKK": {
+    "introduction": 20,
+    "frage_01_s": 40,
+    "frage_02_s": 40,
+    "frage_03_m": 60,
+    "frage_04_m": 60,
+    "frage_05_o":90,
+    "frage_06_o":90
+}, 
+"KL": {
+    "introduction": 10, 
+    "team_name": 90,
+    "non_competive_goal":10,
+    "frage_01_s": 90,
+    "frage_02_s": 10,
+    "frage_03_m": 60,
+    "frage_04_m": 10,
+    "frage_05_o":120,
+    "frage_06_o":10
+}, 
+"KLMK": {
+    "introduction": 10,
+    "team_name": 10,
+    "competive_goal":10,
+    "frage_01_s": 10,
+    "frage_02_s": 10,
+    "frage_03_m": 10,
+    "frage_04_m": 10,
+    "frage_05_o":10,
+    "frage_06_o":10
+},
+"KLOK": {
+    "introduction": 10,
+    "frage_01_s": 90,
+    "frage_02_s": 10,
+    "frage_03_m": 10,
+    "frage_04_m": 40,
+    "frage_05_o":10,
+    "frage_06_o":10
+}
+
+}

@@ -1,0 +1,17 @@
+.DS_Store  
+models/ 
+.env 
+*.tar.gz
+*.rasa
+*.pyc
+.rasa
+output/
+certs 
+rasa 
+*.session 
+credentials_local.yml
+endpoints_local.yml 
+KLOK_example.json 
+KLMK_example.json
+ngrok.yml 
+docker-compose.yml  

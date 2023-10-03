@@ -1,0 +1,21 @@
+{
+    "_id" : "01",
+    "question_id" : "frage_01_s",
+    "answer" : [
+        [
+            "\nA) Sachgüter ersetzt wird.",
+            "0"
+        ],
+        [
+            "B) Services ersetzt wird.",
+            "0"
+        ],
+        [
+            "C) Dienstleistungen ersetzt wird.",
+            "1"
+        ]
+    ],
+    "display_question" : "🛑Single Choice:\nWas versteht man unter Servicification?\n…dass die typische Dienstleistung\nzunehmend durch:"
+}
+
+

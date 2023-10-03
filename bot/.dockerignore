@@ -1,0 +1,5 @@
+tests/*
+models/*
+**/*.md
+/venv
+.DS_Store 

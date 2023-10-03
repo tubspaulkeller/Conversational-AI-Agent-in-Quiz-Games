@@ -1,0 +1,394 @@
+version: "3.1"
+
+intents:
+  - start
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - multiple_response_quest
+  - i_restart_conversation
+  - EXTERNAL_reminder_countdown_msg
+  - EXTERNAL_reminder_competition
+  - KLOK
+  - KLMK
+  - KL
+  - OKK
+  - set_goal
+  - leaderboard
+  - ask_score
+  - ask_badges
+  - ask_points_opponent
+  - ask_badges_opponent
+  - ask_why_points_badges_stars
+  - ask_ben
+
+  - introduction:
+      use_entities: e_introduction
+
+entities:
+  - multiple_response_quest
+  - start
+  - goal
+  - e_introduction
+  - e_why_points_badges_stars
+
+responses:
+  utter_goodbye:
+  - text: "Tschüss"
+
+  utter_is_user_waiting_msg:
+  - text: "Alle Antworten aus unserem Dream Team sind eingetroffen! 💪✨ Wir warten kurz auf die Rückmeldungen der Gegner. Bald gibt es Updates! Bleibt motiviert! 🚀📲🤙🔥"
+  - text: "Okay Leute, wir haben von jedem Teammitglied Rückmeldung erhalten! 💪✨ Kurze Pause, bis die Gegner antworten. Ich halte euch auf dem neuesten Stand! Lasst uns weitermachen! 🚀📲🤙🔥"
+  - text: "Feedback von allen ist da! 💪✨ Wir warten kurz, bis die Gegner antworten. Ich halte euch auf dem Laufenden! 🚀📲🤙🔥"
+  - text: "Alle Rückmeldungen sind eingegangen! 💪✨ Wir machen eine kurze Pause, bis die Gegner reagieren. Ich bleibe dran und melde mich mit Updates! Stay pumped! 🚀📲🤙🔥"
+  - text: "Unser Dream Team hat geantwortet! 💪✨ Wir gönnen uns eine kurze Pause, bis die Gegner ihre Antworten geben. Ich halte euch auf dem Laufenden! Lasst uns weiter rocken! 🚀📲🤙🔥"
+  - text: "Alle sind an Bord! 💪✨ Wir haben Antworten von allen Mitgliedern unseres Dream Teams erhalten! Wir warten kurz, bis die Gegner ihre Rückmeldungen geben. Spannende Updates folgen! 🚀📲🤙🔥"
+  - text: "Feedback eingetroffen! 💪✨ Lasst uns eine kurze Pause einlegen, bis die Gegner reagieren. Ich checke den Fortschritt und bringe frische News! 🚀📲🤙🔥"
+  - text: "Dream Team hat geantwortet! 💪✨ Wir gönnen wir uns einen Moment, bis die Gegner aus ihren Verstecken krochen und ihre Antworten liefern.. 🔍👀 Bald gibt es Updates! 🚀📲🤙🔥"
+  - text: "Wir haben Rückmeldungen von allen Spielern unseres Dream Teams bekommen! 💪✨ Nutzt diese Pause, während die Gegner ihre Antworten aus ihren Verstecken holen.. 🔍👀 Ich überprüfe ihren Status und werde bald mit aufregenden Neuigkeiten zurück sein! 🚀📲🤙🔥"
+  - text: "Antworten sind da! 💪✨ Pause, bis die Gegner reagieren.. 🔍👀 Checke ihren Stand und liefere Updates! 🚀📲 Bleibt motiviert und voller Energie! 🤙🔥"
+  
+  utter_is_group_waiting_msg:
+  - text: Die Kommunikation mit den Gegnern wird kurz unterbrochen, bis wir ihre Reaktionen erhalten. 😎 Ich werde euch über alle weiteren Entwicklungen auf dem Laufenden halten. 🚀📲"
+  - text: "Wir warten bis eure Gegner reagieren. ⏳ Ich stehe bereit, um euch mit Updates zu versorgen, sobald sie eintreffen. 📩💡"
+  - text: "Wir nehmen uns eine kurze Pause, bis wir Rückmeldungen von den Gegnern erhalten. 💤 Ich werde euch über die weiteren Schritte informieren. 📝"
+  - text: "Wir werden eine kurze Pause einlegen, bis die Antwort der Gegner eintrifft. ⏸️ Ich stehe bereit, um euch zeitnah mit den neuesten Informationen zu versorgen. 🗞️📊"
+  - text: "Wir warten bis wir die Antworten der Gegner erhalten. 🔇 Ich werde euch regelmäßig über den Fortschritt informieren. 📈🔄"
+  - text: "Machen wir 'nen kurzen Break, bis die Gegner antworten.. 🕒⏳ Ich liefere euch Updates! 🚀📲"
+  - text: "Lasst uns eine kurze Verschnaufpause machen, bis die Konkurrenz antwortet.. 🤔💭 Ich halte euch auf dem Laufenden! 📡📲"
+  - text: "Lasst uns eine kleine Pause einlegen, bis die Gegner reagieren.. 🕒💤 Ich bleibe dran und halte euch informiert! 🚀📲"
+  - text: "Lassen wir die Konkurrenz kurz zappeln, während ich euch mit Updates versorge! 🚀📲🔍"
+  - text: "Wir machen eine kurze Pause, bis die Gegner zurückfeuern.. ⏳💭 Ich werde euch mit den neuesten Entwicklungen versorgen! 📡🚀📲"
+  - text: "Kurze Verschnaufpause, bis die Gegner antworten.. 🕒💤 Ich halte euch auf dem Laufenden! 🚀📲"
+  - text: "Wir warten, bis wir die Gegnerreaktionen erhalten. 😊⏳ Ich bleibe am Ball und liefere Updates! 📡📲"
+  - text: "Lasst uns kurz abwarten, bis die Konkurrenz antwortet.. 🤔🔄 Ich werde euch auf dem Laufenden halten! 📩📲"
+  - text: "Lasst uns eine kurze Pause einlegen, bis die Gegner reagieren.. 🕒⏸️ Ich halte euch informiert! 🚀📲"
+  - text: "Wir machen eine kurze Verschnaufpause, bis die Gegner ihre Züge ziehen.. 🕒💭 Ich stehe bereit mit den neuesten Infos! 📡🚀📲"
+
+  utter_waiting_msg_after_15_sec:
+  - text: "🕒 Noch einen Moment. Ich habe die andere Gruppe bereits informiert, dass schon wartet... 📲🗣️"
+  - text: "⏳ Bitte etwas Geduld, lass uns noch einen Augenblick warten. 👀🕒 Die andere Gruppe wurde benachrichtigt, dass ihr schon wartet 📩👥"
+  - text: "🚏 Nur einen kurzen Moment, wir sind gleich zurück. 👥⌛ Die andere Gruppe ist darüber informiert, dass ihr wartet... 📱🗒️"
+  - text: "🔍 Wir nehmen uns noch einen Augenblick Zeit. Bitte wartet kurz. 🕒🤝 Ich habe die andere Gruppe informiert, dass ihr wartet.. 📲📝"
+  - text: "📝 Ein kurzer Moment, bitte habt etwas Geduld. 👥⏳ Die andere Gruppe wurde benachrichtigt, dass ihr auf eine Antwort wartet... 🗣️📩"
+  - text: "🚦 Bitte habt etwas Geduld, es dauert nur einen kurzen Moment. 👥⏰ Die andere Gruppe wurde informiert, dass ihr auf eine Antwort wartet... 📲📩"
+  - text: "🔍 Bitte habt noch einen Augenblick 👥⌛ Die andere Gruppe weiß Bescheid, dass ihr noch auf eine Antwort wartet... 🗣️📝"
+  - text: "⏳ Einen kurzen Moment noch, bitte wartet etwas. 👥🕒 Die andere Gruppe wurde darüber informiert, dass ihr auf eine Antwort wartet... 📲🗒️"
+  - text:  "⌛️ Bitte gewährt noch einen Augenblick. 👥🔄 Die andere Gruppe ist informiert, dass ihr noch auf eine Antwort wartet... 📲🗣️"
+
+  utter_waiting_msg_after_30_sec:
+  - text:  "⏳ Bitte habt noch etwas Geduld, nur 30 Sekunden. 👥⌛️"
+  - text:  "🔜 In nur 30 Sekunden machen wir weiter! 👥⏳"
+  - text:  "⌛️ Nur noch 30 Sekunden warten, gleich machen wir weiter. 👥🕒"
+  - text:  "🕒 Gebt den anderen noch maximal 30 Sekunden, dann geht's weiter! ⏳📈"
+  - text:  "⏰ Noch 30 Sekunden, und wir sind zurück! 👥🔄"
+  - text: "🚀 Nur noch 30 Sekunden, bis ich die nächste Frage präsentiere! ⏳👥"
+  - text: "⏳ Gleich geht's weiter, nur noch 30 Sekunden! 👥🔄"
+  - text: "🔜 In 30 Sekunden sind wir zurück für die nächste Frage! 👥⌛️"
+
+  utter_waiting_msg_less_15_sec:
+  - text: ⌛️ Nur noch einen winzigen Moment warten... Ich habe bei der anderen Gruppe noch einmal richtig Druck gemacht! 👥💪"
+  - text: "⏳ Gleich geht's weiter, nur noch eine ganz kurze Wartezeit! Ich habe die andere Gruppe in die Mangel genommen! 👥🔄💨"
+  - text: "🚀 Ganz kurz noch, wir sind fast fertig... Ich habe bei der anderen Gruppe nachgehakt und Druck gemacht! 👥💼💢"
+  - text: "⏰ Bald geht's weiter, nur noch ganz kurz! Ich habe die andere Gruppe ermahnt, damit sie schneller antwortet! 👥📩💥"
+  - text: "🔜 Fast geschafft, nur noch einen Hauch von Geduld... Ich habe bei der anderen Gruppe zusätzlichen Druck ausgeübt! 👥🔄🔥"
+
+  utter_waiting_msg_evaluate_answer:
+  - text: "⏳🔍 Einen Moment bitte, ich bewerte eben eure abgegebene Antwort... 📝👀"
+  - text: "🕒⭐️ Nur einen Augenblick, ich bewerte jetzt eure Antwort! 📊😊"
+  - text: "🔄💭 Einen Moment bitte, ich überlege noch und bewerte eure abgegebene Antwort... 📝🤔"
+  - text: "⌛️📈 Gebt mir einen Moment, ich bewerte gerade eure Antwort! 👨‍⚖️💬"
+  - text: "⌚️📝 Bitte wartet kurz, ich bin dabei, eure abgegebene Antwort zu bewerten... ⭐️👀"
+  - text: "🕒🔍 Ich bewerte eure Antwort! 📝👀"
+  - text: "⏰⭐️ Ich bewerte eben eure Antwort! 📊😊"
+  - text: "🔄💭 Ich denke noch nach, bevor ich eure Antwort bewerte... 📝🤔"
+  - text: "⌚️📈 Einen Moment, ich bewerte gerade eure Antwort! 👨‍⚖️💬"
+  - text: "⌛️👀 Ich bewerte eben eure Antwort! 📊😃"
+  
+  utter_waiting_msg_evaluate_answers:
+  - text: "⏳🔍 Einen Moment bitte, ich bewerte eben eure abgegebenen Antworten... 📝👀"
+  - text: "🕒⭐️ Nur einen Augenblick, ich bewerte jetzt eure Antworten! 📊😊"
+  - text: "🔄💭 Einen Moment bitte, ich überlege noch und bewerte eure abgegebenen Antworten... 📝🤔"
+  - text: "⌛️📈 Gebt mir einen Moment, ich bewerte gerade eure Antworten! 👨‍⚖️💬"
+  - text: "⌚️📝 Bitte wartet kurz, ich bin dabei, eure abgegebenen Antworten zu bewerten... ⭐️👀"
+  - text: "🕒🔍 Ich bewerte eure Antworten! 📝👀"
+  - text: "⏰⭐️ Ich bewerte eben eure Antworten! 📊😊"
+  - text: "🔄💭 Ich denke noch nach, bevor ich eure Antworten bewerte... 📝🤔"
+  - text: "⌚️📈 Einen Moment, ich bewerte gerade eure Antworten! 👨‍⚖️💬"
+  - text: "⌛️👀 Ich bewerte eben eure Antworten! 📊😃"
+
+  utter_waiting_of_opponent:
+  - text: "🕵️‍♂️👀 Ich schaue kurz vorbei, um zu sehen, was das andere Team macht... 👥🔍"
+  - text: "👁️‍🗨️👀 Kurzer Blick, was das andere Team treibt... 🕵️‍♀️🔎"
+  - text: "🚨🕵️‍♂️ Schneller Check, was das andere Team macht... 👥📝"
+  - text: "👀🔍 Ich werfe einen Blick auf das andere Team... 🕵️‍♂️👥"
+  - text: "🧐🔎 Kurzes Beobachten des anderen Teams... 👁️‍🗨️👥"
+
+  utter_continue:
+  - text: "Weiter geht's! 💥🔥"
+  - text: "Weiter geht's, ihr rockt das! 🚀🔥"
+  - text: "Lasst uns weitermachen und durchstarten! 💪🔥"
+  - text: "Keine Zeit verlieren, weiter geht's! 💪🚀"
+  - text: "Volle Kraft voraus! Wir setzen unseren Weg fort! 💪💥"
+  - text: "Weiter geht's! 🚀🏁"
+  - text: "Auf geht's! Weiter machen und nicht aufgeben! 🚀💥"
+
+actions:
+  - validate_quiz_form_KL
+  - validate_quiz_form_OKK
+  - validate_quiz_form_KLOK
+  - validate_quiz_form_KLMK
+  - action_get_channel_members
+  - action_react_to_reminder_countdown_msg
+  - action_set_reminder_countdown_msg
+  - action_react_to_reminder_competition
+  - action_set_reminder_competition
+  - action_forget_reminders_competition
+  - action_start
+  - action_restart
+  - action_ask_introduction
+  - action_ask_competive_goal
+  - action_ask_non_competive_goal
+  - action_ask_team_name
+  - action_ask_frage_01_s
+  - action_ask_frage_02_s
+  - action_ask_frage_03_m
+  - action_ask_frage_04_m
+  - action_ask_frage_05_o
+  - action_ask_frage_06_o
+  - action_forget_reminders
+  - action_fallback
+  - action_set_goal
+  - action_leaderboard
+  - action_winner
+  - action_find_opponent
+  - action_send_greet
+  - action_give_score
+  - action_give_badges
+  - action_give_score_opponent
+  - action_give_badges_opponent
+  - action_why_points_badges_stars
+  - action_ask_ben
+
+slots:
+
+# NOTE: Set these slot after usage to NONE
+  random_person:
+    type: text
+    mappings:
+    - type: custom
+
+  flag:
+    type: bool
+    mappings:
+    - type: custom
+
+  countdown:
+    type: any
+    mappings:
+    - type: custom
+  
+  group_answer:
+    type: any
+    mappings:
+    - type: custom
+
+  answered:
+    type: bool
+    mappings:
+      - type: custom
+  
+  earned_points:
+    type: any
+    mappings:
+      - type: custom
+  
+  solution:
+    type: any
+    mappings:
+      - type: custom
+  
+  level_up:
+    type: bool
+    mappings:
+      - type: custom
+  
+  waiting_countdown:
+    type: any
+    mappings:
+    - type: custom
+###########################
+  my_group:
+    type: any
+    mappings:
+    - type: custom
+
+  opponent_id:
+    type: any
+    mappings:
+    - type: custom
+
+  goal:
+    type: any
+    mappings:
+    - type: custom
+  
+  teamname_value:
+    type: any
+    mappings:
+    - type: custom
+
+  is_user:
+    type: bool
+    mappings:
+    - type: custom
+
+  winner:
+    type: bool
+    mappings:
+    - type: custom
+
+  game_modus:
+    type: any
+    mappings:
+    - type: custom
+
+  non_competive_goal:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
+        - active_loop: quiz_form_KL
+          requested_slot: non_competive_goal
+
+  competive_goal:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
+        - active_loop: quiz_form_KLMK
+          requested_slot: competive_goal
+  
+  team_name:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
+        - active_loop: quiz_form_KL
+          requested_slot: team_name
+        - active_loop: quiz_form_KLMK
+          requested_slot: team_name
+
+  introduction: 
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_introduction
+
+  frage_01_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: multiple_response_quest
+
+  frage_02_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: multiple_response_quest
+  
+  frage_03_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: multiple_response_quest
+  
+  frage_04_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: multiple_response_quest
+  
+  frage_05_o:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
+        - active_loop: quiz_form_KL
+          requested_slot: frage_05_o
+        - active_loop: quiz_form_OKK
+          requested_slot: frage_05_o
+        - active_loop: quiz_form_KLOK
+          requested_slot: frage_05_o
+        - active_loop: quiz_form_KLMK
+          requested_slot: frage_05_o
+  
+  frage_06_o:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
+        - active_loop: quiz_form_KL
+          requested_slot: frage_06_o
+        - active_loop: quiz_form_OKK
+          requested_slot: frage_06_o
+        - active_loop: quiz_form_KLOK
+          requested_slot: frage_06_o
+        - active_loop: quiz_form_KLMK
+          requested_slot: frage_06_o
+
+forms:
+  quiz_form_KLOK:
+    required_slots:
+    - introduction
+    - frage_01_s
+    - frage_02_s
+    - frage_03_m
+    - frage_04_m
+    - frage_05_o
+    - frage_06_o
+
+  quiz_form_KLMK:
+    required_slots:
+    - introduction
+    - team_name
+    - competive_goal
+    - frage_01_s
+    - frage_02_s
+    - frage_03_m
+    - frage_04_m
+    - frage_05_o
+    - frage_06_o
+
+  quiz_form_KL:
+    required_slots: 
+    - introduction
+    - team_name
+    - non_competive_goal
+    - frage_01_s
+    - frage_02_s
+    - frage_03_m
+    - frage_04_m
+    - frage_05_o
+    - frage_06_o
+
+  quiz_form_OKK:
+    required_slots:
+    - introduction
+    - frage_01_s
+    - frage_02_s
+    - frage_03_m
+    - frage_04_m
+    - frage_05_o
+    - frage_06_o
+
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

@@ -1,0 +1,33 @@
+version: "3.1"
+
+stories:
+
+- story: Activate Competitive Learning without Collaboration 
+  steps:
+  - intent: KLOK
+  - action: quiz_form_KLOK
+  - active_loop: quiz_form_KLOK
+  - active_loop: null
+
+- story: Activate Competitive Learning with Collaboration 
+  steps:
+  - intent: KLMK
+  - action: quiz_form_KLMK
+  - active_loop: quiz_form_KLMK
+  - active_loop: null
+
+- story: Activate Collaborative Learning 
+  steps:
+  - intent: KL
+  - action: quiz_form_KL
+  - active_loop: quiz_form_KL
+  - active_loop: null
+
+- story: Activate Learning without Collaboration 
+  steps:
+  - intent: OKK
+  - action: quiz_form_OKK
+  - active_loop: quiz_form_OKK
+  - active_loop: null
+
+

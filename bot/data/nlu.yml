@@ -1,0 +1,414 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - klingt supers
+    - that sounds good
+    - klar 
+    - ja 
+    - aufjedenfall 
+    - j 
+    - jo 
+    - ok 
+    - okay
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+
+- intent: ask_ben
+  examples: |
+    - @Ben
+    - @ben
+    - /ask_ben@Ben
+    - /ask_ben@Ben
+    
+- intent: i_restart_conversation
+  examples: |
+    - /start 
+    - Restart 
+    - restart 
+    - restart bitte 
+    - starte bitte neu
+    - neustart 
+    - neues spiel
+    - neu bitte 
+    - von vorne 
+    - neu
+
+- intent: KLOK
+  examples: |
+    - KLOK 
+    - kompetitives lernen ohne kollaboration 
+    - modus 1
+    - modus eins
+    - modus one
+
+- intent: KLMK
+  examples: |
+    - KLMK 
+    - kompetitives lernen mit kollaboration 
+    - modus 2
+    - modus zwei
+    - modus two
+
+
+- intent: KL
+  examples: |
+    - KL 
+    - kollaboratives lernen
+    - modus 3
+    - modus drei
+    - modus three
+
+
+- intent: OKK
+  examples: |
+    - OKK 
+    - ohne kollaboratives kompetitives lernen
+    - alleine lernen
+    - modus 4
+    - modus vier
+    - modus four
+
+- intent: leaderboard
+  examples: |
+    - leaderboard 
+    - Spieltaganalyse
+    - Spieltag 
+    - analyse
+
+- intent: ask_score
+  examples: |
+    - Ben, wieiviele Punkte habe ich?
+    - wieviele Punke habe ich?
+    - wie viele Punkte habe ich?
+    - Ben, wie viele Punkte habe ich?
+    - Ben, sag mal meine Gesamtpunktzahl
+    - Gesamtpunktzahl
+    - Gib mir mal meinen Punktestand
+    - Punktestand
+    - Zeig mir meine Punkte
+    - Gib mir mal meine Punkte
+    - Wie viele Punkte habe ich erzielt?
+    - Ben, wieiviele Punkte haben wir?
+    - wieviele Punkte haben wir?
+    - wie viele Punkte haben wir?
+    - Ben, wie viele Punkte haben wir?
+    - Ben, zeig mal unsere Punkte
+    - Punkte
+    - Gib mir mal unsere Punkte
+    - Zeig uns mal unsere Punkte
+    - Wie viele Punkte hat unser Team
+    - Wie viele Punkte haben wir
+    - Zeig mal unseren Punktestand
+    - Wie viele Punkte habe ich insgesamt gesammelt?
+    - Wie viele Punkte habe ich heute bereits gesammelt?
+    - Welche Aktivitäten haben mir die meisten Punkte eingebracht?
+    - Wie viele Punkte habe ich durch das Beantworten von Fragen erhalten?
+    - Wie viele Punkte hat unsere Gruppe insgesamt gesammelt?
+    - Wie viele Punkte haben wir als Gruppe heute bereits gesammelt?
+    - Welche Aktivitäten haben unserer Gruppe die meisten Punkte eingebracht?
+    - Wie viele Punkte haben wir als Gruppe durch das Beantworten von Fragen erhalten?
+
+- intent: ask_badges
+  examples: |
+    - Ben, wieiviele Abzeichen habe ich?
+    - verdiente Abzeichen
+    - wieviele Abzeichen habe ich?
+    - wie viele Abzeichen habe ich?
+    - Ben, wie viele Abzeichen habe ich?
+    - Wie viele Abzeichen habe ich erzielt?
+    - Wie viele Badges habe ich erzielt?
+    - Abzeichen 
+    - Ben, wieiviele Abzeichen haben wir?
+    - wieviele Abzeichen haben wir?
+    - wie viele Abzeichen haben wir?
+    - Ben, wie viele Abzeichen haben wir?
+    - Ben, zeig mal unsere Abzeichen
+    - Gib mir mal unsere Abzeichen
+    - Zeig uns mal unsere Abzeichen
+    - Wie viele Abzeichen haben wir
+    - Zeig mal unsere Badges
+    - Wie viele Abzeichen hat unsere Gruppe bisher insgesamt verdient?
+    - Welche Abzeichen haben wir als Gruppe erzielt?
+    - Wie viele Abzeichen haben wir als Gruppe gesammelt?
+    - Ben, wie viele Abzeichen haben wir als Team?
+    - Zeig mal unsere Abzeichen als Gruppe.
+    - Wie viele Abzeichen habe ich durch das Abschließen von Herausforderungen erhalten?
+    - Welche Abzeichen habe ich für das Erreichen bestimmter Ziele erhalten?
+    - Wie viele Abzeichen habe ich durch das Teilen von Inhalten verdient?
+    - Welche Abzeichen habe ich durch das Erreichen von Meilensteinen erhalten?
+    - Wie viele Abzeichen habe ich durch das aktive Engagement in der Community gesammelt?
+
+- intent: ask_points_opponent
+  examples: |
+    - Ben, wieiviele Punkte hat Team 2
+    - wieviele Punkte hat Team 2
+    - wie viele Punkte hat Team 2
+    - Ben, wie viele Punkte hat das andere Team
+    - Ben, zeig mal diese Punkte von Team 2
+    - Punkte von Team 2
+    - wieviele Punkte haben die anderen?
+    - wie viele Punkte haben die anderen?
+    - wieviele Punkte hat unser Gegner?
+    - Gegner Punkte 
+    - Ben, wie viele Punkte hat Team 2 gesammelt?
+    - Wie viele Punkte hat Team 2 insgesamt?
+    - Wie viele Punkte hat das andere Team erzielt?
+    - Ben, zeig mir die Punkte von Team 2.
+    - Wie viele Punkte hat das gegnerische Team?
+    - Zeig mir die Punkte des gegnerischen Teams.
+    - Wie viele Punkte haben die anderen Teams?
+    - Wie viele Punkte haben unsere Gegner insgesamt?
+    - Wie viele Punkte haben die anderen Teilnehmer?
+    - Wie viele Punkte haben unsere Rivalen erreicht?
+    - Ben, wieiviele Punkte hat Team 1
+    - wieviele Punkte hat Team 1
+    - wie viele Punkte hat Team 1
+    - Ben, wie viele Punkte hat das andere Team
+    - Ben, zeig mal diese Punkte von Team 1
+    - Punkte von Team 1
+    
+
+- intent: ask_badges_opponent
+  examples: |
+    - Ben, wieiviele Abzeichen hat Team 2
+    - wieviele Abzeichen hat Team 2
+    - wie viele Abzeichen hat Team 2
+    - Ben, wie viele Abzeichen hat das andere Team
+    - Ben, zeig mal diese Abzeichen von Team 2
+    - Abzeichen von Team 2
+    - wieviele Abzeichen haben die anderen?
+    - wie viele Abzeichen haben die anderen?
+    - Zeig mal deren Badges
+    - wieviele Badges hat Team 2
+    - wieviele Badges hat unser Gegner?
+    - wieviele Abzeichen hat unser Gegner?
+    - Gegner Abzeichen 
+    - Gegner Badges 
+    - Ben, wie viele Abzeichen hat Team 2 verdient?
+    - Wie viele Abzeichen hat Team 2 insgesamt?
+    - Wie viele Abzeichen hat das andere Team erzielt?
+    - Ben, zeig mir die Abzeichen von Team 2.
+    - Wie viele Abzeichen hat das gegnerische Team?
+    - Zeig mir die Abzeichen des gegnerischen Teams.
+    - Wie viele Abzeichen haben die anderen Teams?
+    - Wie viele Abzeichen haben die anderen Teilnehmer?
+    - Zeig mir deren Abzeichen.
+    - Wie viele Badges hat Team 2 gesammelt?
+    - Wie viele Badges hat unser Gegner erreicht?
+    - Wie viele Abzeichen hat unser Gegner verdient?
+    - Wie viele Abzeichen haben unsere Gegner gesammelt?
+    - Wie viele Badges haben unsere Gegner erreicht?
+    - Ben, wieiviele Abzeichen hat Team 1
+    - wieviele Abzeichen hat Team 1
+    - wie viele Abzeichen hat Team 1
+    - Ben, wie viele Abzeichen hat das andere Team
+    - Ben, zeig mal diese Abzeichen von Team 1
+    - Abzeichen von Team 1
+    - wieviele Badges hat Team 1
+
+
+- intent: ask_stars
+  examples: |
+    - Ben, wieiviele Sterne haben wir?
+    - wieviele Sterne haben wir?
+    - wie viele Sterne haben wir?
+    - Ben, wie viele Sterne haben wir?
+    - Ben, zeig mal unsere Sterne
+    - Sterne
+    - Gib mir mal unsere Sterne
+    - Zeig uns mal unsere Sterne
+    - Wie viele Sterne hat unser Team 
+    - Wie viele Sterne haben wir
+    - Zeig mal unseren Sternenstand
+    - Ben, wie viele Sterne haben wir als Team?
+    - Wie viele Sterne haben wir insgesamt gesammelt?
+    - Wie viele Sterne haben wir als Gruppe erreicht?
+    - Ben, zeig mir die Sterne unseres Teams.
+    - Zeig mir unseren aktuellen Sterne-Stand.
+    - Wie viele Sterne haben wir als Team bisher verdient?
+- intent: ask_stars_opponent
+  examples: |
+    - Ben, wieiviele sterne hat Team 2
+    - wieviele Sterne hat Team 2
+    - wie viele Sterne hat Team 2
+    - Ben, wie viele Sterne hat das andere Team
+    - Ben, zeig mal diese Sterne von Team 2
+    - Sterne von Team 2
+    - wieviele Sterne haben die anderen?
+    - wie viele Sterne haben die anderen?
+    - wieviele Sterne hat unser Gegner?
+    - Gegner Sterne 
+    - Ben, wie viele Sterne hat Team 2 gesammelt?
+    - Wie viele Sterne hat Team 2 insgesamt?
+    - Wie viele Sterne hat das andere Team erzielt?
+    - Ben, zeig mir die Sterne von Team 2.
+    - Wie viele Sterne hat das gegnerische Team?
+    - Zeig mir die Sterne des gegnerischen Teams.
+    - Wie viele Sterne haben die anderen Teams?
+    - Wie viele Sterne haben die anderen Teilnehmer?
+    - Wie viele Sterne hat unser Gegner erreicht?
+    - Wie viele Sterne haben unsere Gegner gesammelt?
+    - Ben, wie viele Sterne hat Team 1 gesammelt?
+    - Wie viele Sterne hat Team 1 insgesamt?
+    - Wie viele Sterne hat das andere Team erzielt?
+    - Ben, zeig mir die Sterne von Team 1.
+    - Wie viele Sterne hat das gegnerische Team?
+    - Zeig mir die Sterne des gegnerischen Teams.
+    - Wie viele Sterne haben die anderen Teams?
+    - Wie viele Sterne haben die anderen Teilnehmer?
+    - Wie viele Sterne hat unser Gegner erreicht?
+    - Wie viele Sterne haben unsere Gegner gesammelt?
+- intent: ask_why_points_badges_stars
+  examples: |
+    - wofür erhalte ich [Punkte](e_why_points_badges_stars)?
+    - warum erhalte ich [Punkte](e_why_points_badges_stars)?
+    - wofür erhalte ich [Abzeichen](e_why_points_badges_stars)?
+    - warum erhalte ich [Abzeichen](e_why_points_badges_stars)?
+    - wofür erhalte ich [badges](e_why_points_badges_stars)?
+    - warum erhalte ich [badges](e_why_points_badges_stars)?
+    - wofür erhalte ich [stars](e_why_points_badges_stars)?
+    - warum erhalte ich [stars](e_why_points_badges_stars)?
+    - wofür erhalte ich [Sterne](e_why_points_badges_stars)?
+    - warum erhalte ich [Sterne](e_why_points_badges_stars)?
+    - warum erhalte ich [Sterne](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - warum erhalte ich [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - wofür erhalte ich [Sterne](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - wofür erhalte ich [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - warum erhalte ich [Punkte](e_why_points_badges_stars) und [Abzeichen](e_why_points_badges_stars)?
+    - warum erhalte ich [Abzeichen](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - wofür erhalte ich [Sterne](e_why_points_badges_stars) und [Abzeichen](e_why_points_badges_stars)?
+    - wofür erhalte ich [Abzeichen](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - wofür bekomme ich [Punkte](e_why_points_badges_stars)?
+    - warum bekomme ich [Punkte](e_why_points_badges_stars)?
+    - wofür bekomme ich [Abzeichen](e_why_points_badges_stars)?
+    - warum bekomme ich [Abzeichen](e_why_points_badges_stars)?
+    - wofür bekomme ich [badges](e_why_points_badges_stars)?
+    - warum bekomme ich [badges](e_why_points_badges_stars)?
+    - wofür bekomme ich [stars](e_why_points_badges_stars)?
+    - warum bekomme ich [stars](e_why_points_badges_stars)?
+    - wofür bekomme ich [Sterne](e_why_points_badges_stars)?
+    - wofür bekomme ich [Sterne](e_why_points_badges_stars)
+    - warum bekomme ich [Sterne](e_why_points_badges_stars)?
+    - warum bekomme ich [Sterne](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - warum bekomme ich [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - was bringen [Sterne](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - was bringen [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - was bringen [Punkte](e_why_points_badges_stars)?
+    - was bringen [Abzeichen](e_why_points_badges_stars)?
+    - was bringen [badges](e_why_points_badges_stars)?
+    - was bringen [stars](e_why_points_badges_stars)?
+    - was bringen [Sterne](e_why_points_badges_stars)?
+    - was bringen [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - was bedeuten [Sterne](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - was bedeuten [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - was bedeuten [Sterne](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - was bedeuten  [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - was bedeuten  [Punkte](e_why_points_badges_stars)?
+    - was bedeuten [Abzeichen](e_why_points_badges_stars)?
+    - was bedeuten  [badges](e_why_points_badges_stars)?
+    - was bedeuten  [stars](e_why_points_badges_stars)?
+    - was bedeuten  [Sterne](e_why_points_badges_stars)?
+    - was bedeuten  [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - warun [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - was bedeuten [Sterne](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - warum [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - warum [Sterne](e_why_points_badges_stars) und [Punkte](e_why_points_badges_stars)?
+    - warum  [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - warum  [Punkte](e_why_points_badges_stars)?
+    - warum [Abzeichen](e_why_points_badges_stars)?
+    - warum  [badges](e_why_points_badges_stars)?
+    - warum  [stars](e_why_points_badges_stars)?
+    - warum  [Sterne](e_why_points_badges_stars)?
+    - warum  [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - Wofür erhalte ich [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars)?
+    - Warum sind [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars) wichtig?
+    - Welche Vorteile bieten [Punkte](e_why_points_badges_stars), Abzeichen und [Sterne](e_why_points_badges_stars)?
+    - Wie kann ich [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars) sammeln?
+    - Gibt es unterschiedliche Arten von [Abzeichen](e_why_points_badges_stars) und was bedeuten sie jeweils?
+    - Welche Aktionen oder Aktivitäten werden mit [Punkte](e_why_points_badges_stars) belohnt?
+    - Wie viele [Sterne](e_why_points_badges_stars) benötige ich, um bestimmte Belohnungen zu erhalten?
+    - Welche Auswirkungen haben [Punkte](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars) auf meine Mitgliedschaft oder mein Konto?
+    - Wird meine [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) jemals zurückgesetzt oder reduziert?
+    - Wie kann ich sehen, wie viele [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) ich bereits gesammelt habe?
+    - Werden [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) verfallen oder haben sie ein Ablaufdatum?
+    - Welche Rolle spielen [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars) bei Ranglisten oder Bestenlisten?
+    - Gibt es spezielle Belohnungen für diejenigen, die viele [Abzeichen](e_why_points_badges_stars) sammeln?
+    - Was sind die häufigsten Gründe, [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) zu verlieren?
+    - Welche Kriterien müssen erfüllt sein, um bestimmte [Abzeichen](e_why_points_badges_stars) zu erhalten?
+    - Wird die Anzahl der [Punkte](e_why_points_badges_stars), die ich erhalte, von meinen Aktivitäten abhängen?
+    - Was passiert, wenn ich meine [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) mit anderen teile?
+    - Können [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) gegen Prämien oder Vergünstigungen eingelöst werden?
+    - Welche Art von Belohnungen kann ich mit meinen gesammelten [Punkte](e_why_points_badges_stars) erwarten?
+    - Gibt es verschiedene Stufen oder Level von [Abzeichen](e_why_points_badges_stars), die ich erreichen kann?
+    - Wofür stehen bestimmte [Abzeichen](e_why_points_badges_stars) oder Symbole, die ich verdiene?
+    - Wie kann ich meine Freunde dazu motivieren, auch [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) zu sammeln?
+    - Was sind einige ungewöhnliche Wege, um [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) zu erhalten?
+    - Wie werden [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) berechnet und zugewiesen?
+    - Welche [Abzeichen](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) sind am seltensten oder schwersten zu erhalten?
+    - Wofür werden bestimmte Arten von [Abzeichen](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) vergeben?
+    - Gibt es Möglichkeiten, [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) schneller zu sammeln?
+    - Welche Rolle spielen [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) bei der Community-Interaktion?
+    - Können [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) als Währung in bestimmten Bereichen der Plattform verwendet werden?
+    - Welche Auswirkungen haben negative Aktivitäten auf meine [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars)?
+    - Was passiert, wenn ich ein [Abzeichen](e_why_points_badges_stars) oder eine bestimmte Anzahl von [Punkte](e_why_points_badges_stars) erreiche?
+    - Wer entscheidet, welche Aktivitäten mit [Punkte](e_why_points_badges_stars) oder [Abzeichen](e_why_points_badges_stars) belohnt werden?
+    - Gibt es saisonale oder zeitlich begrenzte Events, um zusätzliche [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) zu sammeln?
+    - Welche anderen Elemente oder Belohnungen kann ich neben [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars) verdienen?
+    - Wie kann ich meine Fortschritte im Hinblick auf [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars) verfolgen?
+    - Welche Möglichkeiten gibt es, um auf der Plattform schnell viele [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) zu sammeln?
+    - Welche Strategien kann ich nutzen, um viele [Abzeichen](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) zu erhalten?
+    - Welche Community-Anerkennung erhalte ich für meine [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars)?
+    - Wie kann ich meine [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) in sozialen Medien oder meinem Profil teilen?
+    - Gibt es bestimmte Aktivitäten, die von der Vergabe von [Punkte](e_why_points_badges_stars) oder [Abzeichen](e_why_points_badges_stars) ausgeschlossen sind?
+    - Welche Auswirkungen haben [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) auf die Sichtbarkeit meines Profils?
+    - Wie kann ich meine [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) effektiv einsetzen, um Ziele zu erreichen?
+    - Welche Arten von [Abzeichen](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) können in meinem Bereich besonders nützlich sein?
+    - Gibt es Möglichkeiten, meine [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) mit anderen Nutzern zu vergleichen?
+    - Wie fördern [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars) das Engagement der Community?
+    - Gibt es spezielle Belohnungen oder Aktionen für die besten [Punkte](e_why_points_badges_stars)?
+    - Welche neuen Funktionen oder Möglichkeiten werden durch [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) freigeschaltet?
+    - Werden [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) in allen Bereichen der Plattform vergeben oder nur in bestimmten?
+    - Welche Arten von Aktivitäten bringen mir die meisten [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars) ein?
+    - Gibt es eine Obergrenze für die Anzahl der [Punkte](e_why_points_badges_stars) oder [Sterne](e_why_points_badges_stars), die ich sammeln kann?
+    - Wie werden [Punkte](e_why_points_badges_stars), [Abzeichen](e_why_points_badges_stars) und [Sterne](e_why_points_badges_stars) in der Community allgemein wahrgenommen?

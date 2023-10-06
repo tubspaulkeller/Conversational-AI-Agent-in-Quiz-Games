@@ -103,12 +103,7 @@ class AchievementHandler():
 
     async def max_points(self):
         try:
-            max_points = 0 
-            cursor = self.solution_collection.find()
-            solutions = await cursor.to_list(length=None) 
-            for solution in solutions:
-                max_points += solution['points']
-            return max_points
+            return int(get_credentials("MAX_POINTS"))
         except Exception as e: 
             logger.exception("\033[91Exception: %s\033[0m" %e)
             return 0
@@ -122,22 +117,22 @@ class AchievementHandler():
             points_of_group = await self.get_total_points_of_group(filter)
             max_points_of_game = await self.max_points()
 
-            # TODO  Sicherstellen dass kein SPAM an Batches kommt
+            # TODO  Sicherstellen dass kein SPAM an Batches kommt 
             achievements = {
                 # group got first quest correct
-                "KORREKTE_ANTWORT": ("correct", 1),
+                "KORREKTE_ANTWORT": ("correct",int(get_credentials('FIRST_CORRECT_TRESHHOLD'))), 
                 # collaboration ->  teamwork
                 "TEAMWORK": ("collaboration", int(get_credentials('COLLABORATION_TRESHHOLD'))),
                 # in_time -> schnelles antworten
-                "SCHNELLES_ANTWORTEN": ("in_time", 8),
+                "SCHNELLES_ANTWORTEN": ("in_time", int(get_credentials('IN_TIME_TRESHHOLD'))),
                 # Punkte Treshhold -> 60% -> quiz master
                 "QUIZ_MASTER": (None, int(max_points_of_game*0.6)),
                 # alle correct -> naturtalent
                 "NATURTALENT": ("correct", len(slots)), 
                 # Fragearten
-                "SINGLE_CHOICE": ("correct", 2),
-                "MULTIPLE_CHOICE":("correct", 2),
-                "OFFENE_FRAGE":("correct", 2)
+                "SINGLE_CHOICE": ("correct", int(get_credentials('SINGLE_CHOICE_TRESHHOLD'))),
+                "MULTIPLE_CHOICE":("correct", int(get_credentials('MULTIPLE_CHOICE_TRESHHOLD'))),
+                "OFFENE_FRAGE":("correct", int(get_credentials('OFFENE_FRAGE_TRESHHOLD')))
             }
             game_mode_handler = GameModeHandler()
             for achievement, (status, threshold) in achievements.items():

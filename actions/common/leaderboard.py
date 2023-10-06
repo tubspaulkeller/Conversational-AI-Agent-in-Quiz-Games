@@ -3,7 +3,7 @@ from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import UserUtteranceReverted, FollowupAction, AllSlotsReset, Restarted
 from actions.game.gamemodehandler import GameModeHandler
-from actions.common.common import get_requested_slot, async_connect_to_db, delete_folder, create_folder_if_not_exists
+from actions.common.common import get_requested_slot, async_connect_to_db, delete_folder, create_folder_if_not_exists, get_credentials
 from actions.common.reset import reset_points
 from actions.game.competition.competitionmodehandler import CompetitionModeHandler
 from actions.timestamps.timestamphandler import TimestampHandler
@@ -63,6 +63,7 @@ class ActionLeaderboard(Action):
             badges = ', '.join(mapped_achievements)
             total_points = session['total_points'] 
             max_game_points = await session_handler.max_points()
+            max_level = int(get_credentials("MAX_LEVEL"))
             goal = tracker.get_slot("goal")
 
             if loop == 'OKK':
@@ -72,7 +73,7 @@ class ActionLeaderboard(Action):
             if loop == 'KL' or loop == 'KLMK':
                 # openai
                 role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik. Du befindest dich mit in einem Quiz-Spiel wobei Studierende der Wirtschaftsinformatik versuchen Quizfragen zu lösen. Dabei spielen die Studierenden entweder gegen eine andere Gruppe oder versuchen als Team die Fragen zu beantworten. Du bist ein Chatbot namens Ben, der als Moderator dient. Die Studierenden haben am Anfang folgendes Ziel festgelegt %s."%goal
-                msg = "Überprüfe mit der gemachten Punktzahl:%s von %s und deren verdienten Abzeichen, die sie während des Quizes gesammelt haben:%s, Level: %s von 4 Level, wie gut sie ihr Ziel erreicht haben. Fasse dich bei deiner Bewertung kurz (maximal 2 Sätze) und sei dabei motivierend inkl. Emojis. Verabschiede dich anschließend"%(total_points,max_game_points, badges, level)
+                msg = "Überprüfe mit der gemachten Punktzahl:%s von %s und deren verdienten Abzeichen, die sie während des Quizes gesammelt haben:%s, Level: %s von %s Level, wie gut sie ihr Ziel erreicht haben. Fasse dich bei deiner Bewertung kurz (maximal 2 Sätze) und sei dabei motivierend inkl. Emojis. Verabschiede dich anschließend"%(total_points,max_game_points, badges, level, max_level)
                 ben_answer = ask_openai(role, msg)
                 dispatcher.utter_message(text = ben_answer)  
             if loop == 'KLOK': 

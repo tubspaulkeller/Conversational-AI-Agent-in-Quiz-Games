@@ -13,5 +13,4 @@ credentials_local.yml
 endpoints_local.yml 
 KLOK_example.json 
 KLMK_example.json
-ngrok.yml 
 docker-compose.yml  

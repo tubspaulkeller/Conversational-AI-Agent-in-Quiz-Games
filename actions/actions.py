@@ -43,6 +43,18 @@ from actions.users.klokanswerhandler import KlokAnswersHandler
 import logging
 logger = logging.getLogger(__name__)
 '''
+TODO: SPRINT 7
+- KLOK ungerade Anzahl
+- Docker -> Credentials
+
+ * Prompts überarbeiten (OPENAI-Test mit Punktefragen etc. ) role = TODO TEST
+ - Zeitlimits festlegen
+ - # TODO Test: Bei offnene Fragen, wenn Team spät antwortet, dann braucht Openai zu lange, und Bot sagt Team möchte nciht mehr weiterspielen -> Sobald Antworten eingeben wurden Evaluation auf true setzen 
+ - Frage1 in Docker DB anpassen und Solution zu Frage1 auch
+ - Informationszettel mit # Antworten, @Ben, #Gegner sprechen, #restart, Buttons für Single/Multiple, #Antwort für Offene Fragen
+'''
+
+'''
 Gruppen:
 A: KLMK 
 B: KLOK
@@ -188,6 +200,29 @@ class ValidateQuizFormKLMK(FormValidationAction):
         goalhandler = GoalHandler()
         return await goalhandler.set_competive_goal(slot_value, tracker, dispatcher)
     
+    # async def required_slots(
+    #     self,
+    #     domain_slots: List[Text],
+    #     dispatcher: "CollectingDispatcher",
+    #     tracker: "Tracker",
+    #     domain: "DomainDict",
+    # ) -> List[Text]:
+    #     updated_slots = domain_slots.copy()
+    #     print(updated_slots)
+    #     timestamp_handler = TimestampHandler()
+    #     timestamp, loop, quest_id,_ = timestamp_handler.get_timestamp(tracker.sender_id, 'waiting')
+    #     print("REQUESTED SLOT",quest_id)
+
+    #     if len(updated_slots) > 1: 
+    #         print(updated_slots[0])
+    #         print(tracker.slots.get(updated_slots[0]))
+    #         print(updated_slots[1])
+    #         if tracker.slots.get(updated_slots[0]) == 'answered' and quest_id == updated_slots[1]:
+    #             print("INSIDE")
+    #             updated_slots.remove(updated_slots[0])
+    #             print(updated_slots)
+    #     return updated_slots
+
     def create_validation_function_for_slots_in_quiz_form_klmk(name_of_slot):
         async def validate_slot(
             self,

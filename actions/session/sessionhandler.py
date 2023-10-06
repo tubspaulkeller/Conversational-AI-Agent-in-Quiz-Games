@@ -51,14 +51,18 @@ class SessionHandler:
         return await collection.find_one(filter)
 
     async def max_points(self):
-        solution_collection = async_connect_to_db("rasa_ben", 'Solutions')
+        #solution_collection = async_connect_to_db("rasa_ben", 'Solutions')
         try:
+            '''
+            handle via docker variable
             max_points = 0 
             cursor = solution_collection.find()
             solutions = await cursor.to_list(length=None) 
             for solution in solutions:
                 max_points += solution['points']
             return max_points
+            '''
+            return int(get_credentials("MAX_POINTS"))
         except Exception as e: 
             logger.exception("\033[91Exception: %s\033[0m" %e)  
             return 0

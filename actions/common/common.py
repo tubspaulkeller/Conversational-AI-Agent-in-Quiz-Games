@@ -78,11 +78,7 @@ def get_credentials(keyname):
     get value from env file
     '''
     try:
-        return (
-            os.environ[keyname]
-            if os.environ[keyname] is not None
-            else os.getenv(keyname)
-        )
+        return os.environ[keyname] if keyname in os.environ else os.getenv(keyname)
     except:
         return os.getenv(keyname)
 

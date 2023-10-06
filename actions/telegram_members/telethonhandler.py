@@ -29,7 +29,13 @@ class TelethonHandler:
             group_handler = GroupHandler()
 
             try:
-                telethon_object = await client.get_entity(int(sender_id))
+                print("SENDER", sender_id)
+                if sender_id.startswith("-"):
+                    telethon_object = await client.get_entity(get_credentials(sender_id + '_' +'TELEGRAM_INVITE_LINK')) #await client.get_entity(int(sender_id))
+                else: 
+                    telethon_object = await client.get_entity(int(sender_id)) #await client.get_entity(int(sender_id))
+
+                print("TELETHONOBJECT", telethon_object)
                 if isinstance(telethon_object, telethon.tl.types.Channel):
                     users = await client.get_participants(telethon_object)
                 else:

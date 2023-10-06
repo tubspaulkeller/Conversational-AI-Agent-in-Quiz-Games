@@ -51,7 +51,6 @@ async def set_team_name(slot_value, tracker, dispatcher, competition_mode_handle
             active_loop = tracker.active_loop.get('name') 
             modus = '_'.join(active_loop.split('_')[2:])
             if modus == 'KLOK' or modus == 'KLMK':
-                dispatcher.utter_message(text = f"Cool! Euer Teamname ist: {team_name} 🚀💥")
                 dispatcher.utter_message(response="utter_waiting_of_opponent")
                 return{"answered": True,"team_name": team_name,"teamname_value": team_name, "requested_slot": None}
             filter = session_handler.get_session_filter(tracker)

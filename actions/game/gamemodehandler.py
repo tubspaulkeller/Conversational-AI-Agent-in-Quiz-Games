@@ -128,7 +128,7 @@ class GameModeHandler(BaseHandler):
         except Exception as e: 
             logger.exception("\033[91Exception: %s\033[0m" %e)  
 
-    def rate_open_question(self, answer, quest, retries=10):
+    def rate_open_question(self, answer, quest, retries=5):
         '''
         a call to open ai to evaluate open questions
         '''
@@ -160,10 +160,14 @@ class GameModeHandler(BaseHandler):
                 print("IN IndexError")
                 if retries > 0:
                     return self.rate_open_question(answer, quest, retries - 1)
+                else:
+                    return 0, "Es konnte keine Bewertung stattfinden", "Keine Lösung"
             except Exception:
                 print("IN Exception")
                 if retries > 0:
                     return self.rate_open_question(answer, quest, retries - 1)
+                else: 
+                    return 0, "Es konnte keine Bewertung stattfinden", "Keine Lösung"
             return int(points), evaluation, solution
         except Exception as e:   
             logger.exception("\033[91Exception: %s\033[0m" %e)

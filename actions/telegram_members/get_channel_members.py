@@ -32,6 +32,8 @@ class ActionGetChannelMembers(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         try:
+            is_user = False
+            team_mates = None
             if not tracker.get_slot('my_group'): 
                 user_handler = UserHandler() 
                 telethon_handler = TelethonHandler()
@@ -42,6 +44,8 @@ class ActionGetChannelMembers(Action):
                 return[SlotSet('is_user', is_user), SlotSet('my_group',team_mates), FollowupAction("action_start")]
             else:
                 print("\033[94mdont call get members again\033[0m")
+            
+            print("is_user", is_user)
         except Exception as e:
             logger.exception("\033[91Exception: %s\033[0m" %e)
             return[SlotSet('is_user', is_user), SlotSet('my_group',team_mates), FollowupAction("action_start")]

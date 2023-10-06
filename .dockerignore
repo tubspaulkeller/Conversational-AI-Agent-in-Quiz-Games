@@ -3,3 +3,12 @@ models/*
 **/*.md
 /venv
 .DS_Store 
+rasa/* 
+.rasa
+.env 
+docker-compose.yml 
+*.session 
+credentials_local.yml 
+nginx.conf 
+ngrok.yml 
+profilephoto.jpg 

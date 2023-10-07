@@ -284,9 +284,7 @@ class GameModeHandler(BaseHandler):
             curr_level =  session_object['level'] 
             max_points = await session_handler.max_points()
             level_up = False
-
-            level_points = [(1 , max_points - 55), (2, max_points - 45), (3,max_points -25), (4, max_points)]
-
+            level_points = [(1 , max_points - 23), (2, max_points - 13), (3,max_points - 3), (4, max_points)]
             if loop and loop == 'KLOK':
                 mates_number = mates_number
                 avg_points = new_total_points / mates_number

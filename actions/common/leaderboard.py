@@ -67,7 +67,7 @@ class ActionLeaderboard(Action):
             goal = tracker.get_slot("goal")
 
             if loop == 'OKK':
-                dispatcher.utter_message(text ="Gut gespielt! 👏🤗 Bis zum nächsten Mal! 👋🚀")
+                dispatcher.utter_message(text ="Gut gespielt! 👏🤗 Bitte füllen nun den Fragebogen aus: https://limesurvey.rz.tu-bs.de/138341?lang=de 👋🚀")
                 return []
 
             if loop == 'KL' or loop == 'KLMK':

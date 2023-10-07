@@ -164,7 +164,7 @@ async def add_text_to_image(text, image_path, output_path, session_object, quest
         # calculate percentage to reach the next level
         if points_of_group > 0:
             # get level                       
-            level_points = [(1, max_game_points - (max_game_points - 5)), (2, max_game_points - (max_game_points - 15)), (3, max_game_points - (max_game_points - 25)), (4, 60)] # Level 4 sind 60 Punkte
+            level_points = [(1, max_game_points - 23), (2, max_game_points - 13), (3, max_game_points - 3), (4, 30)] 
             next_level = curr_level + 1
             if next_level <= len(level_points):
                 points_required_for_next_level = level_points[next_level - 1][1]

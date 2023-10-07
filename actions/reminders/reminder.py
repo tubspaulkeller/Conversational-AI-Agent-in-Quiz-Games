@@ -232,8 +232,11 @@ class ForgetReminderCompetition(Action):
         timestamp_handler = TimestampHandler()
         _, active_loop, quest_id, opponent_id = timestamp_handler.get_timestamp(filter['channel_id'], 'waiting')
         slots = [key for key in tracker.slots.keys() if key.startswith('frage_')]   
-        # Last slot: -2 dann frage_05_o bei -1: frage_06_o
-        if quest_id == slots[int(get_credentials("LAST_SLOT"))]:
+        # Last slot: -2 dann frage_05_o bei -1: frage_06_o for okk 
+        if active_loop == 'quiz_form_OKK':
+            if quest_id == slots[int(get_credentials("LAST_SLOT"))]:
+                return [ReminderCancelled(name="reminder_group_%s"%tracker.sender_id), FollowupAction("action_winner")] 
+        if quest_id == slots[-1]:
             return [ReminderCancelled(name="reminder_group_%s"%tracker.sender_id), FollowupAction("action_winner")] 
         if active_loop == 'quiz_form_KLMK':
             return [ReminderCancelled(name="reminder_group_%s"%tracker.sender_id), FollowupAction("quiz_form_KLMK")]

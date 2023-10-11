@@ -8,7 +8,9 @@ class Start(Action):
     def name(self) -> Text:
         return "action_start"
     async def run(self, dispatcher: CollectingDispatcher,tracker: Tracker,domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        if not tracker.get_slot('game_modus'):     
+        if not tracker.get_slot('game_modus'):   
+            # it depends if a group mode or a single play mode is activated. 
+            # in single play mode: the chatbot gives a introduction to game rules   
             if tracker.get_slot('is_user'):
 
                 btn_lst = [
@@ -16,6 +18,7 @@ class Start(Action):
                 ]
                 text = "❗ALLGEMEINE SPIELHINWEISE❗\nDu hast eine begrenzte Zeitspanne (Countdown), um dir Gedanken über die Antwort auf die Fragen zu machen. Wenn dann der Hinweis kommt, zu antworten, musst du schnell handeln, sonst verlierst du Punkte! Außerdem kannst du Abzeichen und Sterne verdienen sowie Level aufsteigen, wenn du erfolgreich bist!\n\nDas Quiz beinhaltet sechs Fragen (2x Single-Choice, 2x Multiple-Choice, 2x offene Fragen). Die Buttons zum Antworten der Single- und Multiple-Choice Fragen kommen, sobald der Timer abgelaufen ist. Um offene Fragen zu beantworten, verwende bitte vor deiner Antwort ein '#' und antworte kurz nach Ablauf des Timers, z.B. # Antwort.\n\nWährend des Quiz kannst du mir jederzeit Fragen zur aktuellen Frage stellen. Dazu setzt du einfach '@Ben' vor deine Frage, z.B. @Ben Wie geht es dir?.\nMit '# restart' kannst du das Spiel neustarten.\nIch bitte dich den Fragebogen nach der Interaktion auszufüllen, Ben schickt ihn dir zu, sobald du alle sechs Fragen absolviert hast.\n\nBist du bereit für diese Herausforderung? 😎"
             else: 
+            # in group mode the users can select a specific play mode 
                 btn_lst = [
                 {"title": "A (KLMK)", "payload": "/KLMK"},
                 {"title": "B (KLOK)", "payload": "/KLOK"},
@@ -40,4 +43,5 @@ class ActionIGreet(Action):
                 }
             }
         dispatcher.utter_message(text="Hey 🤘\nIch bin Ben, der Lern-Moderator von Quizmania und ich freue mich auf einen weiteren spannenden Spieltag voller gemeinsamer Quiz-Abenteuer. 🧠💡\nViel Glück 🎰🍀")
+        # 
         return [UserUttered(text="/greet", parse_data=data), FollowupAction("action_get_channel_members")]

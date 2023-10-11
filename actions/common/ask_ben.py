@@ -22,6 +22,7 @@ class ActionAskBen(Action):
         domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
         try:
+            # Get Message from User with Question to Ben 
             message = " "
             for event in reversed(tracker.events):
                     if event['event'] == 'user':
@@ -51,6 +52,7 @@ class ActionAskBen(Action):
                 "other_group": int(tracker.sender_id)
 
             }
+            # get achievements 
             loop = tracker.active_loop.get('name') 
             session_obj_opponent = await session_handler.session_collection.find_one(filter_opponent)
             points_opponent = session_obj_opponent['total_points'] if session_obj_opponent else 0
@@ -59,7 +61,7 @@ class ActionAskBen(Action):
             game_modus = '_'.join(loop.split('_')[2:]) if loop else None
             team_name = tracker.get_slot("team_name")
 
-            # ask Ben 
+            # role for Ben 
             role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik.\
             Du befindest dich mitten in einem Quiz-Spiel wobei Studierende der Wirtschaftsinformatik versuchen Quizfragen zu lösen. Dabei spielen die Studierenden entweder gegen\
             eine andere Gruppe, versuchen als Team die Fragen zu beantworten oder lösen das Quiz alleine. Du bist ein Chatbot namens Ben, der als Moderator dient und auch für Fragen im Thema der Wirtschaftsinformatik \
@@ -79,11 +81,12 @@ class ActionAskBen(Action):
             quest_id = get_requested_slot(tracker)
             filter = {"question_id": quest_id}
             question = await collection.find_one(filter)
+            # get current question of game
             if question:
                 curr_question = "Die aktuelle Quizfrage ist %s" %question['display_question']
                 role = role + curr_question
             
-            # ask openai
+            # ask openai with role and question from the use
             ben_answer = ask_openai(role, message)
             dispatcher.utter_message(text = ben_answer)
             return [UserUtteranceReverted()]

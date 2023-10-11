@@ -151,7 +151,7 @@ async def add_text_to_image(text, image_path, output_path, session_object, quest
     create question as image and fill the image fill infos about current game elements like points, level, badges
     '''
     try:
-        # get scores
+        # get scores, level, badges
         session_handler = SessionHandler()
         mode = loop if loop else None
         curr_level = session_object['level'] if session_object else 0
@@ -164,7 +164,7 @@ async def add_text_to_image(text, image_path, output_path, session_object, quest
         # calculate percentage to reach the next level
         if points_of_group > 0:
             # get level                       
-            level_points = [(1, max_game_points - 23), (2, max_game_points - 13), (3, max_game_points - 3), (4, 30)] 
+            level_points = [(1, max_game_points - 53), (2, max_game_points - 43), (3, max_game_points - 22), (4, max_game_points)]
             next_level = curr_level + 1
             if next_level <= len(level_points):
                 points_required_for_next_level = level_points[next_level - 1][1]
@@ -172,9 +172,16 @@ async def add_text_to_image(text, image_path, output_path, session_object, quest
                 # KLOK MODE: we caluclate the percentage to reach the next level with the average score 
                 if mode == 'KLOK':
                     avg_points = points_of_group/mates_number
-                    points_to_next_level = avg_points / points_required_for_next_level
+                    if curr_level > 0:
+                        points_to_next_level = (avg_points - level_points[curr_level - 1][1]) / (points_required_for_next_level - level_points[curr_level - 1][1])
+                    else: 
+                        points_to_next_level = avg_points / points_required_for_next_level
                 else:
-                    points_to_next_level = points_of_group / points_required_for_next_level
+                    if curr_level > 0:
+                        points_to_next_level = (points_of_group - level_points[curr_level - 1][1]) / (points_required_for_next_level - level_points[curr_level - 1][1])
+                    else: 
+                        points_to_next_level = points_of_group / points_required_for_next_level
+                
                 percentage_to_next_level = round(points_to_next_level * 100)
 
         percent = percentage_to_next_level if percentage_to_next_level  else 0
@@ -216,7 +223,7 @@ def draw_progress_bar_and_badges(image, percent, texts_and_positions, bar_x, bar
         badge_image = Image.open(f'actions/image_gen/input/icons/{badge_name}.png')
         position = badges_and_positions[index][1]
 
-        # ohne Mask
+        # ohne Mask (Rand der Icons)
         if badge_name == 'SINGLE_CHOICE' or badge_name == 'MULTIPLE_CHOICE':
             image_with_progress.paste(badge_image, position)
         else:

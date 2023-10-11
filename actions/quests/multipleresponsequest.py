@@ -88,7 +88,7 @@ class MultipleResponseQuest:
                     "other_group": session_handler.get_opponent(tracker)
                 }
                 active_loop = tracker.active_loop.get('name') 
-
+                # check if session exists, otherwise create a new session 
                 if await session_handler.exist_session(filter, active_loop, tracker.sender_id, tracker.get_slot("my_group")):               
                     ''' create countdown '''
                     countdown = Countdown(tracker.sender_id, self.quest_id, active_loop)

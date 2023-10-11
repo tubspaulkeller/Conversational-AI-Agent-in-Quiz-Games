@@ -106,12 +106,13 @@ class CountdownHandler(BaseHandler):
         '''
         countdown_old_val, message_id, countdown_intervall = countdown['countdown'], countdown['message_id'], countdown['intervall']
         try:
-            # countdown active
+            # check if countdown still active
             if countdown_old_val > countdown_intervall:
                 countdown_old_val -= countdown_intervall
                 countdown['countdown'] = countdown_old_val
                 if active_loop == 'quiz_form_KLMK' or active_loop == 'quiz_form_KL':
                     await self.boost_collaboration(countdown, dispatcher, follow_reminder, multiple_response_quest, competition_mode_handler, countdown_old_val, active_loop, sender_id, group, filter)
+                # change countdownnumber in message 
                 await self.telegram_bot_send_message('edit', countdown['sender_id'],"⏳ %s Sek.\n\n" % (countdown_old_val), message_id=message_id)
                 await self.telegram_bot_send_message('pin', countdown['sender_id'], " ", message_id=message_id)
                 return [SlotSet("countdown", countdown), FollowupAction(follow_reminder)]

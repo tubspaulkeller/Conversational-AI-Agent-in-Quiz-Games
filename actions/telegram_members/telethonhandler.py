@@ -31,25 +31,33 @@ class TelethonHandler:
             try:
                 print("SENDER", sender_id)
                 if sender_id.startswith("-"):
+                    # ID is a Group_ID we want the credentials for each group member, therefore we use the invite_link
                     telethon_object = await client.get_entity(get_credentials(sender_id + '_' +'TELEGRAM_INVITE_LINK')) #await client.get_entity(int(sender_id))
                 else: 
+                    # we want the user in single play mode
                     telethon_object = await client.get_entity(int(sender_id)) #await client.get_entity(int(sender_id))
 
                 print("TELETHONOBJECT", telethon_object)
                 if isinstance(telethon_object, telethon.tl.types.Channel):
+                    # get users for a group
                     users = await client.get_participants(telethon_object)
                 else:
+                    # here we are checking the user for single play mode
+                    # check if user exists otherewise create a new user 
                     existing_user = await user_handler.user_collection.find_one({"user_id": int(telethon_object.id)})
                     if not existing_user:
                         new_user = User(username=telethon_object.first_name, lastname=telethon_object.last_name, user_id=telethon_object.id)
                         await user_handler.inserted_user(new_user)
                         existing_user = new_user.to_dict()
+                    # return usercredentials and true for that we are playing in a single play mode 
                     return existing_user, True
-
+                # otherwise we creeate a user lists for the group
                 users_list = []
                 for user in users:
-                    # if user is me or bot: 
+                    # if user is me, or John, or bot: 
+                    # set ADMIN_ID to -1 so, I can play with others in the group, if my person has to be ignored set ADMIN_ID to my ID, same for JOHN_ID, which is the second Account, which I used for testing 
                     if not (str(user.id) == get_credentials('ADMIN_ID') or str(user.id) == get_credentials('JOHN_ID')  or user.bot):
+                        # check if user exists otherwise create a new user
                         existing_user = await user_handler.user_collection.find_one({"user_id": int(user.id)})
                         if not existing_user and str(user.id) != str(sender_id):
                             new_user = User(username=user.first_name, lastname=user.last_name, user_id=user.id)
@@ -57,7 +65,7 @@ class TelethonHandler:
                             await user_handler.inserted_user(new_user)
                         elif existing_user:
                             users_list.append(existing_user)
-
+                # check if there are any changes due to users in the group, e.g. a user left the group or a new user joint the group
                 return await group_handler.checked_and_updated_group(users_list, sender_id, telethon_object.title), False
             
             except sqlite3.OperationalError as e:

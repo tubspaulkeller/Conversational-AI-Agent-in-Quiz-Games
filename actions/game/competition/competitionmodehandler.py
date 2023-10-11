@@ -39,7 +39,7 @@ class CompetitionModeHandler(GameModeHandler):
             print("UNGERADE ZAHL")
             difference_of_people = num_of_opponent - num_of_my_group
             average_points_of_my_group = earned_points / num_of_my_group 
-            earned_points += (average_points_of_my_group*difference_of_people)
+            earned_points += (int(average_points_of_my_group)*int(difference_of_people))
         
         _, level_up = await self.update_session(filter, name_of_slot, earned_points,  group_answers, 'KLOK', mates_number=num_of_my_group)
         return earned_points, solution, level_up
@@ -52,11 +52,11 @@ class CompetitionModeHandler(GameModeHandler):
         return earned_points, solution, level_up
     
     async def handle_validation_of_group_answer(self, name_of_slot, filter, dispatcher , active_loop, sender_id, group_answer, quest, num_of_my_group): 
-        await self.set_status("evaluated", name_of_slot, filter, self.session_collection , True)
         if active_loop == "quiz_form_KLOK":
            earned_points, solution, level_up =  await self.handle_validation_of_group_answers_KLOK(name_of_slot, filter , active_loop, sender_id, group_answer, quest, num_of_my_group)
         else: 
             earned_points, solution, level_up=  await self.handle_validation_of_group_answers_KLMK(name_of_slot, filter , active_loop, sender_id, group_answer, quest, num_of_my_group)
+        await self.set_status("evaluated", name_of_slot, filter, self.session_collection , True)
         waiting_countdown, utter_message = await self.msg_check_evaluation_status_of_opponent(filter['other_group'], name_of_slot, sender_id, active_loop, False)
         dispatcher.utter_message(response=utter_message)
         return [SlotSet("earned_points", earned_points), SlotSet("solution", solution), SlotSet("level_up", level_up),SlotSet("waiting_countdown", waiting_countdown.to_dict()), FollowupAction('action_set_reminder_competition')] 

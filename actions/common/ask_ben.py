@@ -60,6 +60,7 @@ class ActionAskBen(Action):
             level_opponent = session_obj_opponent['level'] if session_obj_opponent else 0
             game_modus = '_'.join(loop.split('_')[2:]) if loop else None
             team_name = tracker.get_slot("team_name")
+            goal = tracker.get_slot("goal")
 
             # role for Ben 
             role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik.\
@@ -73,8 +74,8 @@ class ActionAskBen(Action):
             KLMK-Modus: In diesem Modus treten die Studierenden gegen ein anderes Team an und haben die Möglichkeit, sich innerhalb ihres eigenen Teams abzustimmen, bevor sie die Quizfrage beantworten.\
             KL-Modus: Hier spielen die Studierende nicht gegen ein anderes Team, sondern lösen die Quizfragen gemeinsam.\
             OKK-Modus: Hier tritt jeder Spieler individuell an und spielt alleine, ohne ein Team oder ein anderes Team als Gegner zu haben.\
-            Der Teamname der Gruppe ist: %s, der OKK-Modus hat keinen Teamnamen.\
-            Bei Beleidungen, kannst du gerne daraufhinweisen, dass dieses Verhalten während des Quizes nicht gestattet ist und zu Bestrafungen führen kann. Verwende bei deinen Antworten motivierende Emojis."%(my_points, points_opponent, my_badges, badges_opponent, my_level, level_opponent, game_modus, team_name) 
+            Das Ziel der Gruppe ist: %s. Der Teamname der Gruppe ist: %s, der OKK-Modus hat keinen Teamnamen.\
+            Bei Beleidungen, kannst du gerne daraufhinweisen, dass dieses Verhalten während des Quizes nicht gestattet ist und zu Bestrafungen führen kann. Verwende bei deinen Antworten motivierende Emojis."%(my_points, points_opponent, my_badges, badges_opponent, my_level, level_opponent, game_modus,goal, team_name) 
 
             db = get_credentials("DB_NAME")
             collection = async_connect_to_db(db, 'Questions')

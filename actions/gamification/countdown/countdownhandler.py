@@ -176,35 +176,46 @@ class CountdownHandler(BaseHandler):
         3. if groupmems >2, one person has to ask after the meaning of an other user
         '''
         try:
+            # a group exitsts if there were allready a discussion for a question 
             existing_group = await self.collab_collection.find_one({"group_id": int(sender_id)})
+            
+            if existing_group: 
+                person_with_lowest_counter = min(existing_group['users'], key=lambda x: x['counter'])
+                # if the person who had said least but had more than three interaction in a discussion for one quesion, the team gets a badge for good communication
+                if person_with_lowest_counter and person_with_lowest_counter['counter'] > 3: #TODO check treshhold
+                    # lots of communication in group
+                    await competition_mode_handler.set_status("collaboration", countdown['quest_id'], filter, competition_mode_handler.session_collection , True)
+                    
             if not existing_group and countdown_old_val == (get_countdown_value(multiple_response_quest.quest_id,active_loop) - 20) :
                 text = "Versucht gemeinsam zu diskutieren und eine Lösung zu erarbeiten\. 🤓\nGerne könnt ihr mich mit *'@Ben'* ansprechen und mich nach einem Tipp fragen\. 🙂"
                 dispatcher.utter_message(json_message=get_json_msg(sender_id, text))
 
+            # a user_group exists if they have allready talked in the group about a question, this is tracked in the table 'Kollaboration'
             if existing_group and countdown_old_val == get_countdown_value(multiple_response_quest.quest_id,active_loop) / 2:
-                # if user_group has just two members, bot speaks on person directly to ask for conversation to the group
+                # if user_group has just two members, bot speaks to a person directly who has said at least and motivates for more conversation to the group
                 if len(existing_group['users']) == 2:
                     person_with_lowest_counter = min(existing_group['users'], key=lambda x: x['counter'])
                     if person_with_lowest_counter['counter'] < 2: 
                         text = "*%s* was denkst du zu dieser Frage? Teile gerne deine Meinung\. 🤓 " % person_with_lowest_counter['username']
+                        await asyncio.sleep(1.25)
                         dispatcher.utter_message(json_message=get_json_msg(sender_id, text))
-
-                    elif person_with_lowest_counter['counter'] > 3: #TODO check treshhold
-                        # lots of communication in group
-                        await competition_mode_handler.set_status("collaboration", countdown['quest_id'], filter, competition_mode_handler.session_collection , True)
-
                 # if user_group has more than two members, bot says to one person that he should ask about the opinion of another user
                 else:
-                    lowest_counters = sorted(existing_group['users'], key=lambda x: x['counter'])[:2]
+                    # get two users with the lowest counter value, there are the person who said least
+                    lowest_counters = sorted(existing_group['users'], key=lambda x: x['counter'])[:2] 
                     if lowest_counters[0]['counter'] < 2: 
                         text = "*%s* frage *%s* nach seiner Meinung zu diesem Thema\. 🤓" %(lowest_counters[1]['username'], lowest_counters[0]['username'])
+                        await asyncio.sleep(1.25)
                         dispatcher.utter_message(json_message=get_json_msg(sender_id, text))
             
-            # if nobody has something, bot will chose a random perosn
+            # if nobody has said something in a discussion for a question, bot will chose a random perosn
             elif not existing_group and countdown_old_val == get_countdown_value(multiple_response_quest.quest_id,active_loop)/2:
                 random_users = random.sample(group['users'], 2)
                 text = "*%s* frage *%s* nach seiner Meinung zu diesem Thema\. 🤓" %(random_users[0]['username'], random_users[1]['username'])
+                await asyncio.sleep(1.25)
                 dispatcher.utter_message(json_message=get_json_msg(sender_id, text))
+            
+
         except Exception as e:
             logger.exception("\033[91Exception: %s\033[0m" %e) 
 

@@ -72,7 +72,13 @@ class ActionLeaderboard(Action):
 
             if loop == 'KL' or loop == 'KLMK':
                 # openai
-                role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik. Du befindest dich mit in einem Quiz-Spiel wobei Studierende der Wirtschaftsinformatik versuchen Quizfragen zu lösen. Dabei spielen die Studierenden entweder gegen eine andere Gruppe oder versuchen als Team die Fragen zu beantworten. Du bist ein Chatbot namens Ben, der als Moderator dient. Die Studierenden haben am Anfang folgendes Ziel festgelegt %s."%goal
+                role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik.\
+                Du befindest dich mit in einem Quiz-Spiel wobei Studierende der Wirtschaftsinformatik versuchen Quizfragen zu lösen.\
+                Das Quiz-Spiel hat sechs Fragen (2x Single-Choice, 2x Multiple-Choice und 2x Offene Fragen). \
+                Die Spieler hatten für jede Frage einne bestimmten Zeitraum, um sich zu besprechen. \
+                Der Zeitraum ist abhängig von der Frageart und kann zwischen 60 und 100 Sekunden betragen.\
+                Dabei spielen die Studierenden entweder gegen ein andere Gruppe oder versuchen als Team die Fragen zu beantworten.\
+                Du bist ein Chatbot namens Ben, der als Moderator dient. Die Studierenden haben am Anfang folgendes Ziel festgelegt %s."%goal
                 msg = "Überprüfe mit der gemachten Punktzahl:%s von %s und deren verdienten Abzeichen, die sie während des Quizes gesammelt haben:%s, Level: %s von %s Level, wie gut sie ihr Ziel erreicht haben. Fasse dich bei deiner Bewertung kurz (maximal 2 Sätze) und sei dabei motivierend inkl. Emojis. Verabschiede dich anschließend"%(total_points,max_game_points, badges, level, max_level)
                 ben_answer = ask_openai(role, msg)
                 dispatcher.utter_message(text = ben_answer)  

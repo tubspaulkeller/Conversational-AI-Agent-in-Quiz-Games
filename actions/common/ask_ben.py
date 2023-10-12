@@ -61,21 +61,41 @@ class ActionAskBen(Action):
             game_modus = '_'.join(loop.split('_')[2:]) if loop else None
             team_name = tracker.get_slot("team_name")
             goal = tracker.get_slot("goal")
-
+            game_information = "Bislang hat die Gruppe von Spieler oder der Spieler keinen Spielmodus ausgewählt."
             # role for Ben 
             role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik.\
-            Du befindest dich mitten in einem Quiz-Spiel wobei Studierende der Wirtschaftsinformatik versuchen Quizfragen zu lösen. Dabei spielen die Studierenden entweder gegen\
-            eine andere Gruppe, versuchen als Team die Fragen zu beantworten oder lösen das Quiz alleine. Du bist ein Chatbot namens Ben, der als Moderator dient und auch für Fragen im Thema der Wirtschaftsinformatik \
-            zu Verfügung steht. Falls die einkommende Nachricht Chitchat ist, versuche sie lustig und motivierend zu beantworten (1 Satz). Andere Fragen beantwortest du kurz und gibst eine Hifleistung/Tipp. Du gibst aber nicht die Lösung preis, sondern versuchst eher die Studierenden zur Lösung hinzuführen.\
-            Fragt dich der Student nach seinem Punkte, Sterne oder Abzeichenstand sowie deren Stände des Gegners beantworte dise aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand.\
-            Punktestand der Gruppe/Studenten: %s, Punktestand des Gegners/anderen Gruppe: %s,\
-            Abzeichenstand der Gruppe/Studenten: %s, Abzeichenstand des Gegners/anderen Gruppe: %s und Levelstand der Gruppe/Studenten: %s sowie Levelstand des Gegners/anderen Gruppe: %s \
-            Zudem gibt es verschiedene Spielmodi, die Gruppe/Student spielt gerade den Modus: %s. KLOK-Modus: Hier spielen die Studierenden in Teams, haben jedoch keine Möglichkeit, sich abzustimmen, während sie gleichzeitig gegen ein anderes Team antreten.\
-            KLMK-Modus: In diesem Modus treten die Studierenden gegen ein anderes Team an und haben die Möglichkeit, sich innerhalb ihres eigenen Teams abzustimmen, bevor sie die Quizfrage beantworten.\
-            KL-Modus: Hier spielen die Studierende nicht gegen ein anderes Team, sondern lösen die Quizfragen gemeinsam.\
-            OKK-Modus: Hier tritt jeder Spieler individuell an und spielt alleine, ohne ein Team oder ein anderes Team als Gegner zu haben.\
-            Das Ziel der Gruppe ist: %s. Der Teamname der Gruppe ist: %s, der OKK-Modus hat keinen Teamnamen.\
-            Bei Beleidungen, kannst du gerne daraufhinweisen, dass dieses Verhalten während des Quizes nicht gestattet ist und zu Bestrafungen führen kann. Verwende bei deinen Antworten motivierende Emojis."%(my_points, points_opponent, my_badges, badges_opponent, my_level, level_opponent, game_modus,goal, team_name) 
+            Du befindest dich mitten in einem Quiz-Spiel wobei Studierende der Wirtschaftsinformatik versuchen Quizfragen zu lösen.\
+            Das Quiz-Spiel besteht aus sechs Fragen (2x Single-Choice, 2x Multiple-Choice und 2x Offene Fragen).\
+            Du bist ein Chatbot namens Ben, der als Moderator dient und auch für Fragen im Thema der Wirtschaftsinformatik \
+            zu Verfügung steht. Falls die einkommende Nachricht Chitchat ist, versuche sie lustig und motivierend zu beantworten (1 Satz).\
+            Andere Fragen beantwortest du kurz und gibst eine Hifleistung/Tipp.\
+            Du gibst aber nicht die Lösung preis, sondern versuchst eher die Studierenden zur Lösung hinzuführen.\
+            Bei Beleidungen, kannst du gerne daraufhinweisen, dass dieses Verhalten während des Quizes nicht gestattet ist und zu Bestrafungen führen kann.\
+            Verwende bei deinen Antworten motivierende Emojis."
+        
+            ask_group_achievements_score_competition = "Fragt dich die Gruppe nach deren Punkte-, Sterne- oder Abzeichenstand sowie deren Stände des Gegners beantworte dies!\
+                Aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand.\
+                Punktestand der Gruppe: %s, Punktestand des Gegners/anderen Gruppe: %s,\
+                Abzeichenstand der Gruppe: %s, Abzeichenstand des Gegners/anderen Gruppe: %s und Levelstand der Gruppe/Studenten: %s sowie Levelstand des Gegners/anderen Gruppe: %s"%(my_points, points_opponent, my_badges, badges_opponent, my_level, level_opponent)
+            ask_group_play_score = "Fragt dich die Gruppe nach ihrem Punkte-, Sterne- oder Abzeichenstand, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand"%(my_points, my_badges, my_level)
+            ask_single_play_score = "Fragt dich der Student nach seinem Punkte-, Sterne- oder Abzeichenstand, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand"%(my_points, my_badges, my_level)
+            
+            print("GAME_MODUS", game_modus)
+            if game_modus == "KLOK": 
+                KLOK_modus = "In diesem Spielmodus spielen die Studierenden in Teams, haben jedoch keine Möglichkeit, sich abzustimmen, während sie gleichzeitig gegen ein anderes Team antreten. Ihre Punkte werden auf ein Gemeinschaftspunktekonto gelegt und mit dem gegnerischen Punktekonto verglichen, wordurch der Wettbewerb entsteht."
+                game_information = ask_group_achievements_score_competition + KLOK_modus + "Der Teamname des Teams ist: %s"%team_name 
+            
+            elif game_modus == "KLMK":
+                KLMK_modus = "In diesem Modus treten die Studierenden gegen ein anderes Team an und haben die Möglichkeit, sich innerhalb ihres eigenen Teams abzustimmen, bevor sie die Quizfrage beantworten."
+                game_information = ask_group_achievements_score_competition + KLMK_modus + "Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"(%team_name, goal)
+            
+            elif game_modus == "KL": 
+                KL_modus = "Die Studierende spielen nicht gegen ein anderes Team, sondern lösen die Quizfragen gemeinsam."
+                game_information = ask_group_play_score + KL_modus + + "Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"(%team_name, goal)
+            elif game_modus == "OKK":
+                OKK_modus = "Jeder Spieler spielt das Quiz individuell und alleine, ohne ein Team oder ein anderes Team als Gegner zu haben."
+                game_information = ask_single_play_score + game_modus
+            
 
             db = get_credentials("DB_NAME")
             collection = async_connect_to_db(db, 'Questions')
@@ -85,7 +105,7 @@ class ActionAskBen(Action):
             # get current question of game
             if question:
                 curr_question = "Die aktuelle Quizfrage ist %s" %question['display_question']
-                role = role + curr_question
+                role = role + game_information + curr_question
             
             # ask openai with role and question from the use
             ben_answer = ask_openai(role, message)

@@ -29,7 +29,12 @@ class GoalHandler:
                 await ben_is_typing_2(tracker.get_slot('countdown'), competition_mode_handler)
 
                 # openai evaluates and redefines the passed goal from user
-                role = "Du bist ein Experte, wenn es um Ziele geht. Du befolgst die Zielsetzung anhand der SMART-Regel. Das Szenario ist ein Quiz-Spiel über Inhalte der Einführung in die Wirtschaftsinformatik, wobei der Fokus auf der gemeinsamen Erarbeitung der Lösung geht. Das Quiz-Spiel beinhaltet insgesamt 6 Fragen (2x Single-Choice, 2x Multiple-Choide und 2x Offene Fragen). Die Spieler haben für jede Frage einne bestimmten Zeitraum, um sich zu besprechen. Der Zeitraum ist abhängig von der Frageart und kann zwischen 60 und 100 Sekunden betragen. Nach Ablauf der Zeit, muss ein Spieler die Antwort geben. Das Team tritt dabei gegen ein anderes Team an. Verbessere das kommende Ziel und begründe kurz warum du es so änderst. Antworte nur mit einem Satz."
+                role = "Du bist ein Experte, wenn es um Ziele geht. Du befolgst die Zielsetzung anhand der SMART-Regel.\
+                Das Szenario ist ein Quiz-Spiel über Inhalte der Einführung in die Wirtschaftsinformatik, wobei der Fokus auf der gemeinsamen Erarbeitung der Lösung geht.\
+                Das Quiz-Spiel beinhaltet insgesamt 6 Fragen (2x Single-Choice, 2x Multiple-Choide und 2x Offene Fragen).\
+                Die Spieler haben für jede Frage einne bestimmten Zeitraum, um sich zu besprechen. Der Zeitraum ist abhängig von der Frageart und kann zwischen 60 und 100 Sekunden betragen.\
+                Nach Ablauf der Zeit, muss ein Spieler die Antwort geben. Das Team tritt dabei gegen ein anderes Team an.\
+                Verbessere das kommende Ziel und begründe kurz warum du es so änderst. Antworte nur mit einem Satz."
                 goal = ask_openai(role, slot_value)
                 random_user = get_random_person(tracker.get_slot("my_group"))
                 btn_lst = [

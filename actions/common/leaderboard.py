@@ -64,7 +64,7 @@ class ActionLeaderboard(Action):
             total_points = session['total_points'] 
             max_game_points = await session_handler.max_points()
             max_level = int(get_credentials("MAX_LEVEL"))
-            goal = tracker.get_slot("goal")
+            goal = tracker.get_slot("goal") if goal else None
 
             if loop == 'OKK':
                 dispatcher.utter_message(text ="Gut gespielt! 👏🤗 Bitte füllen nun den Fragebogen aus: https://limesurvey.rz.tu-bs.de/138341?lang=de 👋🚀")

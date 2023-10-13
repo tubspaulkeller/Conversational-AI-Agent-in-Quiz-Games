@@ -59,8 +59,8 @@ class ActionAskBen(Action):
             badges_opponent = len(session_obj_opponent['achievements']) if session_obj_opponent else 0
             level_opponent = session_obj_opponent['level'] if session_obj_opponent else 0
             game_modus = '_'.join(loop.split('_')[2:]) if loop else None
-            team_name = tracker.get_slot("team_name")
-            goal = tracker.get_slot("goal")
+            team_name = tracker.get_slot("team_name") if team_name else None
+            goal = tracker.get_slot("goal") if goal else None
             game_information = "Bislang hat die Gruppe von Spieler oder der Spieler keinen Spielmodus ausgewählt."
             # role for Ben 
             role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik.\
@@ -87,11 +87,11 @@ class ActionAskBen(Action):
             
             elif game_modus == "KLMK":
                 KLMK_modus = "In diesem Modus treten die Studierenden gegen ein anderes Team an und haben die Möglichkeit, sich innerhalb ihres eigenen Teams abzustimmen, bevor sie die Quizfrage beantworten."
-                game_information = ask_group_achievements_score_competition + KLMK_modus + "Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"(%team_name, goal)
+                game_information = ask_group_achievements_score_competition + KLMK_modus + "Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"%(team_name, goal)
             
             elif game_modus == "KL": 
                 KL_modus = "Die Studierende spielen nicht gegen ein anderes Team, sondern lösen die Quizfragen gemeinsam."
-                game_information = ask_group_play_score + KL_modus + + "Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"(%team_name, goal)
+                game_information = ask_group_play_score + KL_modus + + "Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"%(team_name, goal)
             elif game_modus == "OKK":
                 OKK_modus = "Jeder Spieler spielt das Quiz individuell und alleine, ohne ein Team oder ein anderes Team als Gegner zu haben."
                 game_information = ask_single_play_score + game_modus

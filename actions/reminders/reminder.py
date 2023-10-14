@@ -13,6 +13,7 @@ from actions.game.competition.competitionmodehandler import CompetitionModeHandl
 from actions.achievements.achievementshandler import AchievementHandler
 from actions.session.sessionhandler import SessionHandler
 from actions.timestamps.timestamphandler import TimestampHandler
+from actions.timestamps.timestamp import Timestamp
 import logging
 logger = logging.getLogger(__name__)
 
@@ -126,73 +127,82 @@ class ReactToReminderCompetition(Action):
         return "action_react_to_reminder_competition"
 
     async def handle_non_quest_slots(self, last_requested_slot, quest_id, active_loop, filter, session_handler, tracker, dispatcher):
-        competition_mode_handler = CompetitionModeHandler()
-        # check if my group got evaluated
-        if await competition_mode_handler.check_status("evaluated", last_requested_slot, filter, session_handler.session_collection):
-            # check if opponent has answered
-            opponent_has_answered, waiting_countdown, exceeded = await competition_mode_handler.waiting_of_opponent(last_requested_slot, tracker.sender_id, filter['other_group'], tracker.get_slot("waiting_countdown"), dispatcher)
-            if not opponent_has_answered and not exceeded:
-                # another round to wait
-                return [FollowupAction('action_set_reminder_competition'), SlotSet("waiting_countdown",waiting_countdown)]
-            elif not opponent_has_answered and exceeded:
-                # other group did not answered 
-                dispatcher.utter_message(text= "Das andere Team möchte nicht mehr weiterspielen...\nIhr seid die Sieger 🏆")
-                achievement = "GESAMTSIEGER"
-                achievement_handler = AchievementHandler()
-                if await achievement_handler.insert_achievement(filter, achievement):
-                    badges = get_dp_inmemory_db("./badges.json")
-                    dispatcher.utter_message(image = badges[achievement])
+        try: 
+            competition_mode_handler = CompetitionModeHandler()
+            # check if my group got evaluated
+            if await competition_mode_handler.check_status("evaluated", last_requested_slot, filter, session_handler.session_collection):
+                # check if opponent has answered
+                opponent_has_answered, waiting_countdown, exceeded = await competition_mode_handler.waiting_of_opponent(last_requested_slot, tracker.sender_id, filter['other_group'], tracker.get_slot("waiting_countdown"), active_loop, dispatcher)
+                if not opponent_has_answered and not exceeded:
+                    # another round to wait
+                    return [FollowupAction('action_set_reminder_competition'), SlotSet("waiting_countdown",waiting_countdown)]
+                elif not opponent_has_answered and exceeded:
+                    # other group did not answered 
+                    dispatcher.utter_message(text= "Das andere Team möchte nicht mehr weiterspielen...\nIhr seid die Sieger 🏆")
+                    achievement = "GESAMTSIEGER"
+                    achievement_handler = AchievementHandler()
+                    if await achievement_handler.insert_achievement(filter, achievement):
+                        badges = get_dp_inmemory_db("./badges.json")
+                        dispatcher.utter_message(image = badges[achievement])
+                else:
+                    # other group answered
+                    dispatcher.utter_message(response="utter_continue")
+                    await ben_is_typing(tracker.get_slot('countdown'), competition_mode_handler)
+                    return [SlotSet(last_requested_slot, "answered"), SlotSet("random_person", None), SlotSet("flag", None), SlotSet("countdown", None),SlotSet("answered", None), SlotSet("waiting_countdown", None), FollowupAction("action_forget_reminders_competition")]   
             else:
-                # other group answered
-                dispatcher.utter_message(response="utter_continue")
-                await ben_is_typing(tracker.get_slot('countdown'), competition_mode_handler)
-                return [SlotSet(last_requested_slot, "answered"), SlotSet("random_person", None), SlotSet("flag", None), SlotSet("countdown", None),SlotSet("answered", None), SlotSet("waiting_countdown", None), FollowupAction("action_forget_reminders_competition")]   
-        else:
-            # set my group to evaluated, create waiting countdown 
-            await competition_mode_handler.set_status('evaluated', quest_id, filter, session_handler.session_collection, True)
-            waiting_countdown, utter_message = await competition_mode_handler.msg_check_evaluation_status_of_opponent(filter['other_group'], last_requested_slot, tracker.sender_id, active_loop, False)
-            dispatcher.utter_message(response=utter_message)
-            return [SlotSet("waiting_countdown", waiting_countdown.to_dict()), FollowupAction('action_set_reminder_competition')] 
+                # set my group to evaluated, create waiting countdown 
+                await competition_mode_handler.set_status('evaluated', quest_id, filter, session_handler.session_collection, True)
+                waiting_countdown, utter_message = await competition_mode_handler.msg_check_evaluation_status_of_opponent(filter['other_group'], last_requested_slot, tracker.sender_id, active_loop, False)
+                #dispatcher.utter_message(response=utter_message)
+                return [SlotSet("waiting_countdown", waiting_countdown.to_dict()), FollowupAction('action_set_reminder_competition')] 
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.exception("\033[91m Method: handle_non_quest_slots, Error occurred:\033[0m %s", e)
     
     async def handle_quest_slots(self, last_requested_slot, quest_id, active_loop, filter, session_handler, tracker, dispatcher):
-        competition_mode_handler = CompetitionModeHandler()
-        # check if my group got evaluated
-        if await competition_mode_handler.check_status("evaluated", last_requested_slot, filter, session_handler.session_collection):
-            # check if opponent has answered
-            opponent_has_answered, waiting_countdown, exceeded = await competition_mode_handler.waiting_of_opponent(last_requested_slot, tracker.sender_id, filter['other_group'], tracker.get_slot("waiting_countdown"), dispatcher)
-            if not opponent_has_answered and not exceeded:
-                # another round to wait
-                return [FollowupAction('action_set_reminder_competition'), SlotSet("waiting_countdown",waiting_countdown)]
-            elif not opponent_has_answered and exceeded:
-                # other group did not answered
-                dispatcher.utter_message(text= "Das andere Team möchte nicht mehr weiterspielen...\nIhr seid die Sieger 🏆")
-                achievement = "GESAMTSIEGER"
-                achievement_handler = AchievementHandler()
-                if await achievement_handler.insert_achievement(filter, achievement):
-                    badges = get_dp_inmemory_db("./badges.json")
-                    dispatcher.utter_message(image = badges[achievement])
-                #get achievements
-                await achievement_handler.earn_achievement(filter, tracker.slots.keys(),tracker.sender_id)
-                return [FollowupAction("action_leaderboard")] 
+        try:
+            competition_mode_handler = CompetitionModeHandler()
+            # check if my group got evaluated
+            if await competition_mode_handler.check_status("evaluated", last_requested_slot, filter, session_handler.session_collection):
+                # check if opponent has answered
+                opponent_has_answered, waiting_countdown, exceeded = await competition_mode_handler.waiting_of_opponent(last_requested_slot, tracker.sender_id, filter['other_group'], tracker.get_slot("waiting_countdown"), active_loop, dispatcher)
+                if not opponent_has_answered and not exceeded:
+                    # another round to wait
+                    return [FollowupAction('action_set_reminder_competition'), SlotSet("waiting_countdown",waiting_countdown)]
+                elif not opponent_has_answered and exceeded:
+                    # other group did not answered
+                    dispatcher.utter_message(text= "Das andere Team möchte nicht mehr weiterspielen...\nIhr seid die Sieger 🏆")
+                    achievement = "GESAMTSIEGER"
+                    achievement_handler = AchievementHandler()
+                    if await achievement_handler.insert_achievement(filter, achievement):
+                        badges = get_dp_inmemory_db("./badges.json")
+                        dispatcher.utter_message(image = badges[achievement])
+                    #get achievements
+                    await achievement_handler.earn_achievement(filter, tracker.slots.keys(),tracker.sender_id)
+                    return [FollowupAction("action_leaderboard")] 
+                else:
+                    # other group answered, get winner 
+                    return await competition_mode_handler.get_winner_of_round(last_requested_slot, tracker.get_slot("earned_points"), tracker.get_slot("solution"), tracker.get_slot("group_answer"), tracker.get_slot("level_up"),  tracker.sender_id, tracker.get_slot('countdown'), tracker.slots.keys(), filter, active_loop)
             else:
-                # other group answered, get winner 
-                return await competition_mode_handler.get_winner_of_round(last_requested_slot, tracker.get_slot("earned_points"), tracker.get_slot("solution"), tracker.get_slot("group_answer"), tracker.get_slot("level_up"),  tracker.sender_id, tracker.get_slot('countdown'), tracker.slots.keys(), filter, active_loop)
-        else:
-            # set my group to evaluated and calc points, level
-            sender_id = tracker.sender_id 
-            group_answer = tracker.get_slot("group_answer")
-            quest = tracker.get_slot("countdown")['question']['display_question']
-            num_of_my_group = len(tracker.get_slot("my_group")['users'])
-            return await competition_mode_handler.handle_validation_of_group_answer(last_requested_slot, filter, dispatcher, active_loop, sender_id, group_answer, quest, num_of_my_group)
-
+                # set my group to evaluated and calc points, level
+                sender_id = tracker.sender_id 
+                group_answer = tracker.get_slot("group_answer")
+                quest = tracker.get_slot("countdown")['question']['display_question']
+                num_of_my_group = len(tracker.get_slot("my_group")['users'])
+                return await competition_mode_handler.handle_validation_of_group_answer(last_requested_slot, filter, dispatcher, active_loop, sender_id, group_answer, quest, num_of_my_group)
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.exception("\033[91m Method: handle_quest_slots, Error occurred:\033[0m %s", e)
     async def run(
         self,
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-        print("REACT REMINDER GOT CALLED")
+        print("REACT REMINDER GOT CALLED") 
         try: 
+ 
+            
             timestamp_handler = TimestampHandler()
             session_handler = SessionHandler()
             '''get Filter of session '''
@@ -201,6 +211,8 @@ class ReactToReminderCompetition(Action):
             countdown = tracker.get_slot("countdown")
             last_requested_slot = countdown['quest_id']
             timestamp, active_loop, quest_id, opponent_id = timestamp_handler.get_timestamp(filter['channel_id'], 'waiting')
+
+           
             #print("Info:\nlast_requested_slot: %s\n quest_id: %s\nloop: %s"%(last_requested_slot, quest_id, active_loop))
 
             if quest_id == "introduction" or quest_id == "team_name" or quest_id == "competive_goal": 
@@ -240,3 +252,40 @@ class ForgetReminderCompetition(Action):
             return [ReminderCancelled(name="reminder_group_%s"%tracker.sender_id), FollowupAction("quiz_form_KLMK")]
         else: 
             return [ReminderCancelled(name="reminder_group_%s"%tracker.sender_id), FollowupAction("quiz_form_KLOK")]
+
+
+
+class ActionStopCountdown(Action):
+    def name(self) -> Text:
+        return "action_stop_countdown"
+
+    async def run(
+        self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:        
+        
+
+        # TIMESTAMPHANDLING?
+        timestamp_handler = TimestampHandler()
+        session_handler = SessionHandler()
+        '''get Filter of session '''
+        filter = session_handler.get_session_filter(tracker)
+
+        timestamp, active_loop, quest_id, opponent_id = timestamp_handler.get_timestamp(tracker.sender_id, 'waiting')
+        timestamp_handler.delete_timestamps_for_group(tracker.sender_id, 'waiting')
+        # create new timestamp 
+        new_timestamp = Timestamp(tracker.sender_id, quest_id, active_loop, filter['other_group']).to_dict()
+        # A large number must be subtracted from the new timestamp so that it is smaller than timestamp + countdown
+        new_timestamp['timestamp'] = new_timestamp['timestamp'] - 500
+        timestamp_handler.insert_new_timestamp(new_timestamp, 'waiting')
+
+        if tracker.get_slot("countdown") is None:
+            default_countdown = Countdown(tracker.sender_id, quest_id, active_loop)
+            mqr = MultipleResponseQuest(quest_id)
+            question =await mqr.get_quest() 
+            default_countdown.question = question
+            default_countdown.countdown = 10
+            return [FollowupAction('action_react_to_reminder_countdown_msg'), SlotSet("countdown",default_countdown.to_dict())]
+        else: 
+            default_countdown = tracker.get_slot("countdown")
+            default_countdown['countdown'] = 10
+            return [FollowupAction('action_react_to_reminder_countdown_msg'), SlotSet("countdown",default_countdown)]
+        

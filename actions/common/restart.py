@@ -20,11 +20,11 @@ class ActionRestart(Action):
         delete entry in session table
         '''
         session_handler = SessionHandler()
-        game_mode_handler = GameModeHandler()
         game_modus = tracker.get_slot("game_modus") 
-        if not game_modus is None: 
-            session_filter = session_handler.get_session_filter(tracker)
-            await game_mode_handler.session_collection.delete_one(session_filter)   
+        
+        #if not game_modus is None: 
+        session_filter = session_handler.get_session_filter(tracker)
+        await session_handler.session_collection.delete_one(session_filter)   
 
         ''' 
         delete timestamps for specifc group

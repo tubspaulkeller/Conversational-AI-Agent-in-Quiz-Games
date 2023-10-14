@@ -75,50 +75,55 @@ class CompetitionModeHandler(GameModeHandler):
 
         return [SlotSet(name_of_slot, "answered"), SlotSet("random_person", None), SlotSet("flag", None), SlotSet("countdown", None),SlotSet("answered", None), SlotSet("waiting_countdown", None), FollowupAction("action_forget_reminders_competition")]   
     
-    async def waiting_of_opponent(self, name_of_slot,sender_id, group_id_opponent, waiting_countdown, dispatcher):
-        filter = {
-                    "channel_id": str(group_id_opponent),     
-                    "other_group": int(sender_id)
-                }
-        evaluated = await self.check_status('evaluated', name_of_slot, filter, self.session_collection)
-        exceeded = False
-        if not evaluated and waiting_countdown['countdown'] == 0: 
-            await self.set_status('exceeded', name_of_slot, filter , self.session_collection, True)
-            exceeded = True
-            # and die andere Gruppe 
-            text="Ihr wart zu langsam ⏳😔 und verliert das Spiel. 😢🎮"
-            await self.telegram_bot_send_message('text', str(group_id_opponent), text)
+    async def waiting_of_opponent(self, name_of_slot,sender_id, group_id_opponent, waiting_countdown, loop, dispatcher):
+        try: 
+            filter = {
+                        "channel_id": str(group_id_opponent),     
+                        "other_group": int(sender_id)
+                    }
+            evaluated = await self.check_status('evaluated', name_of_slot, filter, self.session_collection)
+            exceeded = False
+            if not evaluated and waiting_countdown['countdown'] == 0: 
+                await self.set_status('exceeded', name_of_slot, filter , self.session_collection, True)
+                exceeded = True
+                # and die andere Gruppe 
+                text="Ihr wart zu langsam ⏳😔 und verliert das Spiel. 😢🎮"
+                await self.telegram_bot_send_message('text', str(group_id_opponent), text)
 
-            return evaluated, None,exceeded
-        
-        # nach 15 Sekunden warten
-        if not evaluated and waiting_countdown['countdown'] == (int(get_credentials("WAITING_COUNTDOWN"))-14):
-            carry_on_message = ["Die andere Gruppe ist fertig und wartet schon 🕰️",
-                                    "🙋‍♂️ die andere Gruppe ist schon bereit, seht zu 🚀",
-                                    "👋 die andere Gruppe wartet schon geduldig 🤔",
-                                    "Die andere Gruppe 🤝 ist fertig, beeilt euch 🎯",
-                                    "📢 die andere Gruppe 🤝 erwartet euch, werdet fertig 🏁"]
-            text=random.choice(carry_on_message)
-            await self.telegram_bot_send_message('text', str(group_id_opponent), text)
+                return evaluated, None,exceeded
+            
+            # nach 15 Sekunden warten
+            if not evaluated and waiting_countdown['countdown'] == (int(get_credentials("WAITING_COUNTDOWN"))-14):
+                carry_on_message = ["Die andere Gruppe ist fertig und wartet schon 🕰️",
+                                        "🙋‍♂️ die andere Gruppe ist schon bereit, seht zu 🚀",
+                                        "👋 die andere Gruppe wartet schon geduldig 🤔",
+                                        "Die andere Gruppe 🤝 ist fertig, beeilt euch 🎯",
+                                        "📢 die andere Gruppe 🤝 erwartet euch, werdet fertig 🏁"]
+                text=random.choice(carry_on_message)
+                await self.telegram_bot_send_message('text', str(group_id_opponent), text)
 
-            dispatcher.utter_message(response = "utter_waiting_msg_after_15_sec")
-        
-        # nach der Hälfte
-        if not evaluated and waiting_countdown['countdown'] == (int(get_credentials("WAITING_COUNTDOWN"))/2):
-            dispatcher.utter_message(response = "utter_waiting_msg_after_30_sec")
- 
-        # 15 Sekunden vor schluss 
-        if not evaluated and waiting_countdown['countdown'] == ((int(get_credentials("WAITING_COUNTDOWN"))*0.25) - 1):
-            warning_msg = ["⏰🔴 Achtung! ⏳💬 Ihr müsst eure Antwort nun abgeben! 🕒 In 15 Sekunden ist das Spiel sonst vorbei und ihr verliert es! 😱🆘",
-                        "🔴 Achtung! 📝💨 Ihr müsst eure Antwort jetzt abgeben! 🕐 In 15 Sekunden ist das Spiel vorbei und ihr verliert es! 😓🆘",
-                        "🚨🔴 Achtung! 🗣️🏃‍♂️ Ihr müsst eure Antwort schnell abgeben! ⏰ In 15 Sekunden ist das Spiel vorbei und ihr verliert es! 😥🆘",
-                        "🔴 Achtung! Ihr müsst eure Antwort nun abgeben! In 15 Sekunden ist das Spiel sonst vorbei und ihr verliert es! 🆘"]
-            text=random.choice(warning_msg)
-            await self.telegram_bot_send_message('text', str(group_id_opponent), text)
+                dispatcher.utter_message(response = "utter_waiting_msg_after_15_sec")
+            
+            # nach der Hälfte
+            if not evaluated and waiting_countdown['countdown'] == (int(get_credentials("WAITING_COUNTDOWN"))/2):
+                dispatcher.utter_message(response = "utter_waiting_msg_after_30_sec")
+    
+            # 15 Sekunden vor schluss 
+            if not evaluated and waiting_countdown['countdown'] == ((int(get_credentials("WAITING_COUNTDOWN"))*0.25) - 1):
+                warning_msg = ["⏰🔴 Achtung! ⏳💬 Ihr müsst eure Antwort nun abgeben! 🕒 In 15 Sekunden ist das Spiel sonst vorbei und ihr verliert es! 😱🆘",
+                            "🔴 Achtung! 📝💨 Ihr müsst eure Antwort jetzt abgeben! 🕐 In 15 Sekunden ist das Spiel vorbei und ihr verliert es! 😓🆘",
+                            "🚨🔴 Achtung! 🗣️🏃‍♂️ Ihr müsst eure Antwort schnell abgeben! ⏰ In 15 Sekunden ist das Spiel vorbei und ihr verliert es! 😥🆘",
+                            "🔴 Achtung! Ihr müsst eure Antwort nun abgeben! In 15 Sekunden ist das Spiel sonst vorbei und ihr verliert es! 🆘"]
+                text=random.choice(warning_msg)
+                await self.telegram_bot_send_message('text', str(group_id_opponent), text)
 
-            dispatcher.utter_message(response="utter_waiting_msg_less_15_sec")
-        waiting_countdown['countdown']= waiting_countdown['countdown'] - int(get_credentials("COMPETITION_REMINDER"))
-        return evaluated, waiting_countdown, exceeded
+                dispatcher.utter_message(response="utter_waiting_msg_less_15_sec")
+            waiting_countdown['countdown']= waiting_countdown['countdown'] - int(get_credentials("COMPETITION_REMINDER"))
+            return evaluated, waiting_countdown, exceeded
+        except Exception as e: 
+            logger = logging.getLogger(__name__)
+            logger.exception("\033[91m Method: waiting_of_opponent, Error occurred:\033[0m %s", e)
+           
 
     async def msg_check_evaluation_status_of_opponent(self, group_id_opponent, name_of_slot, sender_id, loop, is_user):
         '''

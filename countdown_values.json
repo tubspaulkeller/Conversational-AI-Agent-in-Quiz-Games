@@ -1,43 +1,43 @@
 {
-    "OKK": {
-        "introduction": 10,
-        "frage_01_s": 30,
-        "frage_02_s": 30,
-        "frage_03_m": 40,
-        "frage_04_m": 40,
-        "frage_05_o":40,
-        "frage_06_o":40
-    }, 
-    "KL": {
-        "introduction": 20, 
-        "team_name": 60,
-        "non_competive_goal":100,
-        "frage_01_s": 60,
-        "frage_02_s": 60,
-        "frage_03_m": 90,
-        "frage_04_m": 90,
-        "frage_05_o":100,
-        "frage_06_o":100
-    }, 
-    "KLMK": {
-        "introduction": 20,
-        "team_name": 60,
-        "competive_goal":100,
-        "frage_01_s": 60,
-        "frage_02_s": 60,
-        "frage_03_m": 90,
-        "frage_04_m": 90,
-        "frage_05_o":100,
-        "frage_06_o":100
-    },
-    "KLOK": {
-        "introduction": 20,
-        "frage_01_s": 30,
-        "frage_02_s": 30,
-        "frage_03_m": 40,
-        "frage_04_m": 40,
-        "frage_05_o":40,
-        "frage_06_o":40
-    }
-    
-    }
+"OKK": {
+    "introduction": 10,
+    "frage_01_s": 30,
+    "frage_02_s": 30,
+    "frage_03_m": 40,
+    "frage_04_m": 40,
+    "frage_05_o": 40,
+    "frage_06_o": 40
+}, 
+"KL": {
+    "introduction": 20, 
+    "team_name": 60,
+    "non_competive_goal":100,
+    "frage_01_s": 60,
+    "frage_02_s": 60,
+    "frage_03_m": 100,
+    "frage_04_m": 100,
+    "frage_05_o":100,
+    "frage_06_o":100
+}, 
+"KLMK": {
+    "introduction": 20,
+    "team_name": 60,
+    "competive_goal":100,
+    "frage_01_s": 60,
+    "frage_02_s": 60,
+    "frage_03_m": 100,
+    "frage_04_m": 100,
+    "frage_05_o":100,
+    "frage_06_o":100
+},
+"KLOK": {
+    "introduction": 20,
+    "frage_01_s": 30,
+    "frage_02_s": 30,
+    "frage_03_m": 40,
+    "frage_04_m": 40,
+    "frage_05_o": 40,
+    "frage_06_o": 40
+}
+
+}

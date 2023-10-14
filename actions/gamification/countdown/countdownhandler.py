@@ -178,7 +178,7 @@ class CountdownHandler(BaseHandler):
         try:
             # a group exitsts if there were allready a discussion for a question 
             existing_group = await self.collab_collection.find_one({"group_id": int(sender_id)})
-            
+            print("existing_group", existing_group)
             if existing_group: 
                 person_with_lowest_counter = min(existing_group['users'], key=lambda x: x['counter'])
                 # if the person who had said least but had more than three interaction in a discussion for one quesion, the team gets a badge for good communication
@@ -200,7 +200,7 @@ class CountdownHandler(BaseHandler):
                         await asyncio.sleep(1.25)
                         dispatcher.utter_message(json_message=get_json_msg(sender_id, text))
                 # if user_group has more than two members, bot says to one person that he should ask about the opinion of another user
-                else:
+                elif len(existing_group['users']) > 2:
                     # get two users with the lowest counter value, there are the person who said least
                     lowest_counters = sorted(existing_group['users'], key=lambda x: x['counter'])[:2] 
                     if lowest_counters[0]['counter'] < 2: 
@@ -210,10 +210,11 @@ class CountdownHandler(BaseHandler):
             
             # if nobody has said something in a discussion for a question, bot will chose a random perosn
             elif not existing_group and countdown_old_val == get_countdown_value(multiple_response_quest.quest_id,active_loop)/2:
-                random_users = random.sample(group['users'], 2)
-                text = "*%s* frage *%s* nach seiner Meinung zu diesem Thema\. 🤓" %(random_users[0]['username'], random_users[1]['username'])
-                await asyncio.sleep(1.25)
-                dispatcher.utter_message(json_message=get_json_msg(sender_id, text))
+                if len(group['users']) > 1:
+                    random_users = random.sample(group['users'], 2)
+                    text = "*%s* frage *%s* nach seiner Meinung zu diesem Thema\. 🤓" %(random_users[0]['username'], random_users[1]['username'])
+                    await asyncio.sleep(1.25)
+                    dispatcher.utter_message(json_message=get_json_msg(sender_id, text))
             
 
         except Exception as e:

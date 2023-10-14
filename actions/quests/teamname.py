@@ -56,7 +56,7 @@ async def set_team_name(slot_value, tracker, dispatcher, competition_mode_handle
             filter = session_handler.get_session_filter(tracker)
             await competition_mode_handler.set_status('evaluated', 'team_name', filter, session_handler.session_collection, True)
             await ben_is_typing(tracker.get_slot('countdown'), game_mode_handler)
-            return {'team_name': team_name, "random_person": None, "flag": None,  "countdown": None}
+            return {'team_name': team_name,"teamname_value": team_name,"random_person": None, "flag": None,  "countdown": None}
         elif now < timestamp + countdown:
             print("Before Submitting: team_name")
             return{'team_name': None}

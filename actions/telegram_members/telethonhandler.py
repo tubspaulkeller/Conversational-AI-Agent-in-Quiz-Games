@@ -30,26 +30,21 @@ class TelethonHandler:
 
             try:
                 print("SENDER", sender_id)
+                telethon_object = None
                 if sender_id.startswith("-"):
                     # ID is a Group_ID we want the credentials for each group member, therefore we use the invite_link
-                    telethon_object = await client.get_entity(get_credentials(sender_id + '_' +'TELEGRAM_INVITE_LINK')) #await client.get_entity(int(sender_id))
-                else: 
-                    # we want the user in single play mode
-                    telethon_object = await client.get_entity(int(sender_id)) #await client.get_entity(int(sender_id))
-
+                    telethon_object = await client.get_entity(get_credentials(sender_id + '_' +'TELEGRAM_INVITE_LINK')) #await client.get_entity(int(sender_id)) 
                 print("TELETHONOBJECT", telethon_object)
                 if isinstance(telethon_object, telethon.tl.types.Channel):
                     # get users for a group
                     users = await client.get_participants(telethon_object)
                 else:
-                    # here we are checking the user for single play mode
-                    # check if user exists otherewise create a new user 
-                    existing_user = await user_handler.user_collection.find_one({"user_id": int(telethon_object.id)})
+                    # in single mode we are not interessted in user credentials so we define a fake user
+                    existing_user = await user_handler.user_collection.find_one({"user_id": sender_id})
                     if not existing_user:
-                        new_user = User(username=telethon_object.first_name, lastname=telethon_object.last_name, user_id=telethon_object.id)
+                        new_user = User(username="John", lastname="Doe", user_id=sender_id)
                         await user_handler.inserted_user(new_user)
                         existing_user = new_user.to_dict()
-                    # return usercredentials and true for that we are playing in a single play mode 
                     return existing_user, True
                 # otherwise we creeate a user lists for the group
                 users_list = []

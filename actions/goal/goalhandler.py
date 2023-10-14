@@ -52,14 +52,12 @@ class GoalHandler:
                 if await achievement_handler.insert_achievement(filter, achievement):
                     badges = get_dp_inmemory_db("./badges.json")
                     await competition_mode_handler.telegram_bot_send_message('photo', tracker.sender_id, badges[achievement])
-                await competition_mode_handler.set_goal_and_status('competive_goal', tracker.get_slot('goal'), 'evaluated',filter,  False)
-                '''
-                check if opponent group has answered
-                '''
-                dispatcher.utter_message(response="utter_waiting_of_opponent")
-                # cancel form
-                return{"answered": True,"competive_goal": slot_value, "requested_slot": None}
-            
+                    '''
+                    check if opponent group has answered
+                    '''
+                    dispatcher.utter_message(response="utter_waiting_of_opponent")
+                    # cancel form
+                    return{"answered": True,"competive_goal": slot_value, "requested_slot": None}
             elif now < timestamp + countdown:
                 print("Before Submitting: competive_goal")
                 return{'competive_goal': None}

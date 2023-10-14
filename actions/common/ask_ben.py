@@ -31,7 +31,11 @@ class ActionAskBen(Action):
                             message = event['metadata']['ask_ben']
                             print("MSG", message)
                             break
-                           
+        
+            if 'STOPCOUNTDOWN' in message: 
+                return[FollowupAction("action_stop_countdown")]
+
+
             # talk to Ben 
             session_handler = SessionHandler()
             opponent_id = session_handler.get_opponent(tracker)
@@ -59,8 +63,8 @@ class ActionAskBen(Action):
             badges_opponent = len(session_obj_opponent['achievements']) if session_obj_opponent else 0
             level_opponent = session_obj_opponent['level'] if session_obj_opponent else 0
             game_modus = '_'.join(loop.split('_')[2:]) if loop else None
-            team_name = tracker.get_slot("team_name") if team_name else None
-            goal = tracker.get_slot("goal") if goal else None
+            team_name = tracker.get_slot("teamname_value") if tracker.get_slot("teamname_value") is not None else None
+            goal = tracker.get_slot("goal") if tracker.get_slot("goal") is not None else None
             game_information = "Bislang hat die Gruppe von Spieler oder der Spieler keinen Spielmodus ausgewählt."
             # role for Ben 
             role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik.\
@@ -77,21 +81,21 @@ class ActionAskBen(Action):
                 Aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand.\
                 Punktestand der Gruppe: %s, Punktestand des Gegners/anderen Gruppe: %s,\
                 Abzeichenstand der Gruppe: %s, Abzeichenstand des Gegners/anderen Gruppe: %s und Levelstand der Gruppe/Studenten: %s sowie Levelstand des Gegners/anderen Gruppe: %s"%(my_points, points_opponent, my_badges, badges_opponent, my_level, level_opponent)
-            ask_group_play_score = "Fragt dich die Gruppe nach ihrem Punkte-, Sterne- oder Abzeichenstand, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand"%(my_points, my_badges, my_level)
-            ask_single_play_score = "Fragt dich der Student nach seinem Punkte-, Sterne- oder Abzeichenstand, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand"%(my_points, my_badges, my_level)
+            ask_group_play_score = "Fragt dich die Gruppe nach ihrem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand"%(my_points, my_badges, my_level)
+            ask_single_play_score = "Fragt dich der Student nach seinem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand"%(my_points, my_badges, my_level)
             
             print("GAME_MODUS", game_modus)
             if game_modus == "KLOK": 
                 KLOK_modus = "In diesem Spielmodus spielen die Studierenden in Teams, haben jedoch keine Möglichkeit, sich abzustimmen, während sie gleichzeitig gegen ein anderes Team antreten. Ihre Punkte werden auf ein Gemeinschaftspunktekonto gelegt und mit dem gegnerischen Punktekonto verglichen, wordurch der Wettbewerb entsteht."
-                game_information = ask_group_achievements_score_competition + KLOK_modus + "Der Teamname des Teams ist: %s"%team_name 
+                game_information = ask_group_achievements_score_competition + KLOK_modus + "Falls die Gruppe dich nach ihrem Teamnamen fragen: Der Teamname des Teams ist: %s"%team_name 
             
             elif game_modus == "KLMK":
                 KLMK_modus = "In diesem Modus treten die Studierenden gegen ein anderes Team an und haben die Möglichkeit, sich innerhalb ihres eigenen Teams abzustimmen, bevor sie die Quizfrage beantworten."
-                game_information = ask_group_achievements_score_competition + KLMK_modus + "Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"%(team_name, goal)
+                game_information = ask_group_achievements_score_competition + KLMK_modus + "Falls die Gruppe dich nach ihrem Teamnamen oder Ziel fragen: Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"%(team_name, goal)
             
             elif game_modus == "KL": 
                 KL_modus = "Die Studierende spielen nicht gegen ein anderes Team, sondern lösen die Quizfragen gemeinsam."
-                game_information = ask_group_play_score + KL_modus + + "Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"%(team_name, goal)
+                game_information = ask_group_play_score + KL_modus + "Falls die Gruppe dich nach ihrem Teamnamen oder Ziel fragen: Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"%(team_name, goal)
             elif game_modus == "OKK":
                 OKK_modus = "Jeder Spieler spielt das Quiz individuell und alleine, ohne ein Team oder ein anderes Team als Gegner zu haben."
                 game_information = ask_single_play_score + game_modus

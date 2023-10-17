@@ -1,8 +1,11 @@
 import json
 import threading
-import logging
 from collections import OrderedDict
-logger = logging.getLogger(__name__)
+from actions.common.common import setup_logging
+import logging
+logger = setup_logging()
+
+
 
 class KlokAnswersHandler:
     def __init__(self):
@@ -40,7 +43,7 @@ class KlokAnswersHandler:
             with open(self.file_path, "w") as file:
                 json.dump(list(self.KLOK_ANSWERS.items()), file)
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" % e)
+            logger.exception(e)
 
     def load_klok_answers_from_file(self):
         try:
@@ -50,4 +53,4 @@ class KlokAnswersHandler:
         except FileNotFoundError as e:
             # If the file doesn't exist, create an empty OrderedDict
             self.KLOK_ANSWERS = OrderedDict()
-            logger.exception("\033[91Exception: %s\033[0m" % e)
+            logger.exception(e)

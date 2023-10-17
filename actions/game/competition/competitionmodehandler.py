@@ -11,12 +11,11 @@ from actions.gamification.countdown.countdownhandler import CountdownHandler
 from actions.game.gamemodehandler import GameModeHandler
 from actions.achievements.achievementshandler import AchievementHandler
 from actions.image_gen.text_on_image_gen import add_table_on_leaderboard
-from actions.common.common import get_credentials, async_connect_to_db, get_dp_inmemory_db, ben_is_typing, delete_folder, create_folder_if_not_exists
+from actions.common.common import get_credentials, async_connect_to_db, get_dp_inmemory_db, ben_is_typing, delete_folder, create_folder_if_not_exists, setup_logging
 from rasa_sdk.events import UserUtteranceReverted, FollowupAction, AllSlotsReset, Restarted
-
-
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
+
 class CompetitionModeHandler(GameModeHandler):
     '''
     Specific Handler for Modi like GroupCompeition: KLOK, KLMK
@@ -121,8 +120,7 @@ class CompetitionModeHandler(GameModeHandler):
             waiting_countdown['countdown']= waiting_countdown['countdown'] - int(get_credentials("COMPETITION_REMINDER"))
             return evaluated, waiting_countdown, exceeded
         except Exception as e: 
-            logger = logging.getLogger(__name__)
-            logger.exception("\033[91m Method: waiting_of_opponent, Error occurred:\033[0m %s", e)
+            logger.exception(e)
            
 
     async def msg_check_evaluation_status_of_opponent(self, group_id_opponent, name_of_slot, sender_id, loop, is_user):
@@ -145,7 +143,7 @@ class CompetitionModeHandler(GameModeHandler):
             #waiting_countdown.text = "warten wir auf die andere Gruppe."
             return waiting_countdown, utter_message
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return None
 
 
@@ -165,7 +163,7 @@ class CompetitionModeHandler(GameModeHandler):
         try:
             earned_points = 0
             if name_of_slot[-1] == "o":
-                points, evaluation, solution = self.rate_open_question(answer=answer['answer'], quest=quest)
+                points, evaluation, solution = await self.rate_open_question(answer=answer['answer'], quest=quest)
                 print("PUNKTE: ", points)
                 print()
                 print("EVALUATION: ", evaluation)
@@ -212,7 +210,7 @@ class CompetitionModeHandler(GameModeHandler):
             # if KLOK bewerte einzelne Antworten hier !
             return earned_points, solution
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
 
     
     async def calculate_points_competition(self, filter, name_of_slot,  id, points, answer, evaluation, game_modus):
@@ -229,7 +227,7 @@ class CompetitionModeHandler(GameModeHandler):
                 points_to_get = await self.calc_points_for_in_time_answering_competition(result, 15,points,2,name_of_slot,filter, evaluation, game_modus, username)
             return points_to_get
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
 
     
 
@@ -274,7 +272,7 @@ class CompetitionModeHandler(GameModeHandler):
             return points_to_get
         
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
      
 
@@ -320,7 +318,7 @@ class CompetitionModeHandler(GameModeHandler):
 
 
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
     def get_winner_option_KLOK(self,my_group_points, other_group_points):
         try:
@@ -358,7 +356,7 @@ class CompetitionModeHandler(GameModeHandler):
             return winner_options
          
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return []
 
 
@@ -420,7 +418,7 @@ class CompetitionModeHandler(GameModeHandler):
             return winner_options
         
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return None
 
     async def get_winner(self, group_id, group_id_opponent, dispatcher):
@@ -457,7 +455,7 @@ class CompetitionModeHandler(GameModeHandler):
             return text
         
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return None
 
 
@@ -478,7 +476,7 @@ class CompetitionModeHandler(GameModeHandler):
             await self.print_leaderboard(entry, dispatcher, loop, sender_id)
 
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
 
 
     def find_group_place(self, sorted_list, group):
@@ -539,4 +537,4 @@ class CompetitionModeHandler(GameModeHandler):
             await self.telegram_bot_send_message('photo', sender_id, image_path)
 
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)

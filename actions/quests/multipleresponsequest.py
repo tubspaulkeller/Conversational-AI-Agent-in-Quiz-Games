@@ -11,7 +11,7 @@ from rasa_sdk.events import (
 )
 import datetime
 import asyncio
-from actions.common.common import get_credentials, async_connect_to_db
+from actions.common.common import get_credentials, async_connect_to_db, setup_logging
 from actions.gamification.countdown.countdownhandler import CountdownHandler
 from actions.gamification.countdown.countdown import Countdown
 from actions.timestamps.timestamphandler import TimestampHandler
@@ -21,7 +21,7 @@ from actions.game.competition.competitionmodehandler import CompetitionModeHandl
 from actions.session.sessionhandler import SessionHandler
 from actions.quests.question import Question
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 
 class MultipleResponseQuest:
     def __init__(self, quest_id):
@@ -49,7 +49,7 @@ class MultipleResponseQuest:
                 btn_lst.append(btn)
             return btn_lst
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
 
     
     def create_btns_for_multiple_choice(self, question_object):
@@ -67,7 +67,7 @@ class MultipleResponseQuest:
                 btn_lst.append(btn)
             return btn_lst
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
     
 
     def create_text_for_question(self, question_object,display):
@@ -143,4 +143,4 @@ class MultipleResponseQuest:
                # print("Slot question %s: None" %self.quest_id)
                 return []
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 

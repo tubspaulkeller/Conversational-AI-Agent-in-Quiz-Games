@@ -3,7 +3,7 @@ from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import UserUtteranceReverted, FollowupAction, AllSlotsReset, Restarted
 from actions.game.gamemodehandler import GameModeHandler
-from actions.common.common import get_requested_slot, async_connect_to_db,get_dp_inmemory_db, get_random_person
+from actions.common.common import get_requested_slot, async_connect_to_db,get_dp_inmemory_db, get_random_person, setup_logging
 from actions.common.reset import reset_points
 from actions.game.competition.competitionmodehandler import CompetitionModeHandler
 from actions.timestamps.timestamphandler import TimestampHandler
@@ -19,7 +19,7 @@ from rasa_sdk.events import (
     EventType,
 )
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 class ActionLeaderboard(Action):
     def name(self) -> Text:
         return "action_winner"
@@ -79,4 +79,4 @@ class ActionLeaderboard(Action):
                 return
         except Exception as e: 
             
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)

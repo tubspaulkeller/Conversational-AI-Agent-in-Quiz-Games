@@ -1,9 +1,9 @@
 import json
 import datetime
 from collections import OrderedDict
+from actions.common.common import setup_logging
 import logging
-
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 
 class TimestampHandler:
     def __init__(self):
@@ -32,7 +32,7 @@ class TimestampHandler:
                 }
             self.save_timestamps_to_file(timestamp_type)
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
     
     def get_timestamp(self, group_id, timestamp_type):
         try:
@@ -55,7 +55,7 @@ class TimestampHandler:
             
             return timestamp, loop, quest_id, opponent_id
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
     
     def delete_timestamps_for_group(self, group_id, timestamp_type):
         try:
@@ -68,7 +68,7 @@ class TimestampHandler:
                 del timestamps[str(group_id)]
                 self.save_timestamps_to_file(timestamp_type)
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
     
     def save_timestamps_to_file(self, timestamp_type):
         try:
@@ -82,7 +82,7 @@ class TimestampHandler:
             with open(file_path, "w") as file:
                 json.dump(list(timestamps.items()), file)
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
     
     def load_timestamps_from_file(self, timestamp_type):
         try:
@@ -103,4 +103,4 @@ class TimestampHandler:
                 self.timestamps_answer = OrderedDict()
             elif timestamp_type == "waiting":
                 self.timestamps_waiting = OrderedDict()
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)

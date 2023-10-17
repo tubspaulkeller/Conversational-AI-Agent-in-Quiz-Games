@@ -2,10 +2,13 @@ import asyncio
 import httpx
 import pymongo
 import aiofiles
-from actions.common.common import async_connect_to_db, get_credentials
+from actions.common.common import async_connect_to_db, get_credentials, setup_logging
 from telegram import Bot
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
+
+
+
 class BaseHandler:
     def __init__(self):
         self.db = get_credentials("DB_NAME")
@@ -31,7 +34,9 @@ class BaseHandler:
                                     await asyncio.sleep(1.25)
                                     return int(msg_id)
                                 else:
-                                    logger.error(f"Error sending message: {result}")
+                                    logger.error(f"Error in process_message_queue: sending message: {result}")
+
+                                    
                             elif type == 'photo':
                                 if msg.startswith('http'):  # Check if msg is a URL
                                     data = {"chat_id": sender_id, "photo": msg, "disable_notification": disable_notification}
@@ -52,7 +57,7 @@ class BaseHandler:
                                     await asyncio.sleep(1.25)
                                     return int(msg_id)
                                 else:
-                                    logger.error(f"Error sending message: {result}")
+                                    logger.error(f"Error in process_message_queue: sending message: {result}")
                                 #print(f"Sent photo message with ID: {msg_id}")
                             elif type == 'edit':
                                 await client.post(f"https://api.telegram.org/bot{self.bot.token}/editMessageText", json={"chat_id": sender_id, "message_id": message_id, "text": msg, "parse_mode": parse_mode})
@@ -66,4 +71,4 @@ class BaseHandler:
                     
                     except Exception as e:
                         # Hier können Sie andere Ausnahmen behandeln
-                        logger.error(f"Error while processing message: {e}")
+                        logger.error(f"Error in process_message_queue: while processing message: {e}")

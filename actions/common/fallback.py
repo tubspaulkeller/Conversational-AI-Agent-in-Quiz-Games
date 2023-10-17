@@ -3,9 +3,9 @@ from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import UserUtteranceReverted, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
-from actions.common.common import ask_openai, async_connect_to_db, get_requested_slot, get_credentials, get_dp_inmemory_db
+from actions.common.common import ask_openai, async_connect_to_db, get_requested_slot, get_credentials, get_dp_inmemory_db, setup_logging
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 
 class ActionFallback(Action):
     """Executes the fallback action and goes back to the previous state
@@ -48,5 +48,5 @@ class ActionFallback(Action):
             dispatcher.utter_message(text = ben_answer)
             return [UserUtteranceReverted()]
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return [UserUtteranceReverted()]

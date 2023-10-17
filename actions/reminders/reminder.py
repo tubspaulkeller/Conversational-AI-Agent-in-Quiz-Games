@@ -5,7 +5,7 @@ from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 import asyncio
-from actions.common.common import print_current_tracker_state, get_requested_slot, get_credentials, ben_is_typing, get_dp_inmemory_db
+from actions.common.common import print_current_tracker_state, get_requested_slot, get_credentials, ben_is_typing, get_dp_inmemory_db, setup_logging
 from actions.gamification.countdown.countdownhandler import CountdownHandler
 from actions.gamification.countdown.countdown import Countdown
 from actions.quests.multipleresponsequest import MultipleResponseQuest
@@ -15,7 +15,7 @@ from actions.session.sessionhandler import SessionHandler
 from actions.timestamps.timestamphandler import TimestampHandler
 from actions.timestamps.timestamp import Timestamp
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 
 ######## Reminder for Countdown during non quiz and quiz slots ##########
 
@@ -74,8 +74,8 @@ class ReactToReminderCountdownMsgQuestions(Action):
                 return await countdownhandler.update_countdown_question(countdown, dispatcher, 'action_set_reminder_countdown_msg', multiple_response_quest, competition_mode_handler,active_loop, tracker.get_slot("my_group"), tracker.sender_id, filter, tracker.get_slot("opponent_id"))
             
         except Exception as e:
-            logger = logging.getLogger(__name__)
-            logger.exception("\033[91m Reminder, Method: react reminder, Error occurred:\033[0m %s", e)
+            logger.exception(e)
+
             error_message = "Oops! Something went wrong. Please restart the game with @Ben restart"
             dispatcher.utter_message(text=error_message)
             return[]
@@ -156,8 +156,7 @@ class ReactToReminderCompetition(Action):
                 #dispatcher.utter_message(response=utter_message)
                 return [SlotSet("waiting_countdown", waiting_countdown.to_dict()), FollowupAction('action_set_reminder_competition')] 
         except Exception as e:
-            logger = logging.getLogger(__name__)
-            logger.exception("\033[91m Method: handle_non_quest_slots, Error occurred:\033[0m %s", e)
+            logger.exception(e)
     
     async def handle_quest_slots(self, last_requested_slot, quest_id, active_loop, filter, session_handler, tracker, dispatcher):
         try:
@@ -191,8 +190,7 @@ class ReactToReminderCompetition(Action):
                 num_of_my_group = len(tracker.get_slot("my_group")['users'])
                 return await competition_mode_handler.handle_validation_of_group_answer(last_requested_slot, filter, dispatcher, active_loop, sender_id, group_answer, quest, num_of_my_group)
         except Exception as e:
-            logger = logging.getLogger(__name__)
-            logger.exception("\033[91m Method: handle_quest_slots, Error occurred:\033[0m %s", e)
+            logger.exception(e)
     async def run(
         self,
         dispatcher: CollectingDispatcher,
@@ -222,8 +220,8 @@ class ReactToReminderCompetition(Action):
                 # quiz game
                 return await self.handle_quest_slots(last_requested_slot, quest_id, active_loop, filter, session_handler, tracker, dispatcher)
         except Exception as e:
-            logger = logging.getLogger(__name__)
-            logger.exception("\033[91m Competition Reminder, Method: react reminder competition, Error occurred:\033[0m %s", e)
+            logger.exception(e)
+
             error_message = "Oops! Something went wrong. 🚨🔴 Please restart the game with '# neues Spiel'"
             dispatcher.utter_message(text=error_message)
             return[]

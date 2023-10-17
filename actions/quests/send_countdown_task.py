@@ -15,8 +15,9 @@ from actions.timestamps.timestamp import Timestamp
 from actions.quests.question import Question
 from actions.game.competition.competitionmodehandler import CompetitionModeHandler
 from actions.session.sessionhandler import SessionHandler
+from actions.common.common import setup_logging
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 
 async def send_countdown_task(object, tracker):
     try:
@@ -67,7 +68,7 @@ async def send_countdown_task(object, tracker):
                 #print("None")
                 return []
     except Exception as e:
-        logger.exception("\033[91Exception: %s\033[0m" %e) 
+        logger.exception(e) 
 
 
 

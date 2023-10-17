@@ -1,8 +1,9 @@
 
 from actions.session.session import Session
-from actions.common.common import async_connect_to_db, get_credentials
+from actions.common.common import async_connect_to_db, get_credentials, setup_logging
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
+
 class SessionHandler:
     def __init__(self):
         self.db = get_credentials("DB_NAME")
@@ -24,7 +25,7 @@ class SessionHandler:
                     return True
             return True
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return False
 
 
@@ -64,5 +65,5 @@ class SessionHandler:
             '''
             return int(get_credentials("MAX_POINTS"))
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return 0

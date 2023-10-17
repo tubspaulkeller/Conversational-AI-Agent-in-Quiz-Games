@@ -2,9 +2,9 @@ from actions.game.gamemodehandler import GameModeHandler
 import os 
 import asyncio
 import json
+from actions.common.common import get_dp_inmemory_db, get_credentials, get_requested_slot, async_connect_to_db, setup_logging
 import logging
-logger = logging.getLogger(__name__)
-from actions.common.common import get_dp_inmemory_db, get_credentials, get_requested_slot, async_connect_to_db
+logger = setup_logging()
 '''
 Farbenprint
 
@@ -49,7 +49,7 @@ class AchievementHandler():
                         counter += 1
             return counter
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return 0
         
     async def insert_achievement(self,filter, earned_achievement):
@@ -75,8 +75,7 @@ class AchievementHandler():
                 #print("\033[91m  ACHIEVMENT EXISTIERT  \033[0m ")
                 return False
         except Exception as e: 
-            
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return False
 
     async def get_total_points_of_group(self, filter):
@@ -87,7 +86,7 @@ class AchievementHandler():
             else: 
                 return 0
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return 0
     
     async def get_level(self, filter):
@@ -98,14 +97,14 @@ class AchievementHandler():
             else: 
                 return 0
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return 0
 
     async def max_points(self):
         try:
             return int(get_credentials("MAX_POINTS"))
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return 0
 
     async def earn_achievement(self, filter, slots, sender_id):
@@ -158,5 +157,5 @@ class AchievementHandler():
                         await game_mode_handler.telegram_bot_send_message('photo', sender_id, badges[achievement])
 
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
 

@@ -1,0 +1,10 @@
+17.10.23 13:15:33 ERROR 26: division by zero
+Traceback (most recent call last):
+  File "/Users/pkeller/repositories/Master-Thesis/Implementation/bot/actions/common/restart.py", line 24, in run
+    session_handler = SessionHandler()
+ZeroDivisionError: division by zero
+17.10.23 13:15:53 ERROR 26: division by zero
+Traceback (most recent call last):
+  File "/Users/pkeller/repositories/Master-Thesis/Implementation/bot/actions/common/restart.py", line 24, in run
+    session_handler = SessionHandler()
+ZeroDivisionError: division by zero

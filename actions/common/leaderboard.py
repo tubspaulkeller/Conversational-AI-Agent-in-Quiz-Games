@@ -3,7 +3,7 @@ from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import UserUtteranceReverted, FollowupAction, AllSlotsReset, Restarted
 from actions.game.gamemodehandler import GameModeHandler
-from actions.common.common import get_requested_slot, async_connect_to_db, delete_folder, create_folder_if_not_exists, get_credentials
+from actions.common.common import get_requested_slot, async_connect_to_db, delete_folder, create_folder_if_not_exists, get_credentials, setup_logging
 from actions.common.reset import reset_points
 from actions.game.competition.competitionmodehandler import CompetitionModeHandler
 from actions.timestamps.timestamphandler import TimestampHandler
@@ -13,7 +13,10 @@ from actions.achievements.achievementshandler import AchievementHandler
 from actions.common.common import ask_openai
 import os
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
+
+
+
 class ActionLeaderboard(Action):
     def name(self) -> Text:
         return "action_leaderboard"
@@ -93,4 +96,4 @@ class ActionLeaderboard(Action):
             delete_folder(path)
             return []
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)

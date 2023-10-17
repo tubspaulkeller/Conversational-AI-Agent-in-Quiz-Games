@@ -16,12 +16,12 @@ from actions.quests.multipleresponsequest import MultipleResponseQuest
 from actions.quests.send_countdown_task import send_countdown_task
 from actions.quests.introduction import Introduction
 from actions.quests.teamname import TeamName
-from actions.common.common import print_current_tracker_state,get_requested_slot
+from actions.common.common import print_current_tracker_state,get_requested_slot, setup_logging
 from actions.goal.goal import Goal
 from actions.game.gamemodehandler import GameModeHandler
 from actions.session.sessionhandler import SessionHandler
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 
 
 class GiveIntroduction(Action):
@@ -37,7 +37,7 @@ class GiveIntroduction(Action):
                 introduction = Introduction(modus = modus)
                 return await send_countdown_task(introduction.to_dict(), tracker)
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
 
 
 class GiveTeamName(Action):
@@ -57,7 +57,7 @@ class GiveTeamName(Action):
                 team_name = TeamName(is_group,slot_id)
                 return await send_countdown_task(team_name.to_dict(), tracker)
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
 
 
 class CompetiveGoal(Action):
@@ -73,7 +73,7 @@ class CompetiveGoal(Action):
                 goal = Goal(is_group, slot_id)
                 return await send_countdown_task(goal.to_dict(), tracker)
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
 
 class NonCompetiveGoal(Action):
     def name(self) -> Text:
@@ -92,7 +92,7 @@ class NonCompetiveGoal(Action):
                 goal = Goal(is_group, slot_id)
                 return await send_countdown_task(goal.to_dict(), tracker)
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
 
 class Quest01(Action):
     def name(self) -> Text:

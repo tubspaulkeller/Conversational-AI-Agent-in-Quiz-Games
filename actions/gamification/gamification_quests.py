@@ -5,7 +5,9 @@ from rasa_sdk.events import UserUtteranceReverted, FollowupAction, AllSlotsReset
 
 from actions.achievements.achievementshandler import AchievementHandler
 from actions.session.sessionhandler import SessionHandler
-
+from actions.common.common import setup_logging
+import logging
+logger = setup_logging()
 class ActionScore(Action):
     def name(self) -> Text:
         return "action_give_score"
@@ -137,4 +139,4 @@ class ActionWhyPointsBadgesStars(Action):
                     dispatcher.utter_message(text="Die Sterne zeigen den Erfolg in einem bestimmten Bereich an. Sie werden für mittelfristige Erfolge vergeben.")
             return [UserUtteranceReverted()]
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  

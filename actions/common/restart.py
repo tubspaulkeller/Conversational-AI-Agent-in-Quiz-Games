@@ -3,12 +3,14 @@ from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import UserUtteranceReverted, FollowupAction, AllSlotsReset, Restarted
 from actions.game.gamemodehandler import GameModeHandler
-from actions.common.common import get_requested_slot, async_connect_to_db 
+from actions.common.common import get_requested_slot, async_connect_to_db, setup_logging
 from actions.common.reset import reset_points
 from actions.game.competition.competitionmodehandler import CompetitionModeHandler
 from actions.timestamps.timestamphandler import TimestampHandler
 from actions.session.sessionhandler import SessionHandler
 from actions.users.klokanswerhandler import KlokAnswersHandler
+import logging
+logger = setup_logging()
 
 class ActionRestart(Action):
     def name(self) -> Text:

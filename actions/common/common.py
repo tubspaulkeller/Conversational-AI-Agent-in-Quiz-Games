@@ -9,7 +9,28 @@ import random
 import openai
 load_dotenv()
 import logging
-logger = logging.getLogger(__name__)
+
+
+def setup_logging():
+    logger = logging.getLogger(__name__)
+    
+    # Prüfen, ob der Logger bereits Handler hat, um doppelte Initialisierung zu vermeiden
+    if not logger.handlers:
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(lineno)s: %(message)s', '%d.%m.%y %H:%M:%S')
+        
+        # Datei-Handler für die Datei 'actions/exceptions.log'
+        datei_handler = logging.FileHandler('actions/exceptions.log', 'a')
+        datei_handler.setFormatter(formatter)
+        logger.addHandler(datei_handler)
+
+        # Konsole-Handler für die Konsolenausgabe
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.ERROR)
+        logger.addHandler(console_handler)
+
+    return logger
+    
+logger = setup_logging()
 
 def get_dp_inmemory_db(json_file):
     """ load the inmemory db from json file """
@@ -26,8 +47,7 @@ def async_connect_to_db(database, collection):
         collections = db[collection]
         return collections
     except Exception as e: 
-        logger.exception("\033[91Exception: %s\033[0m" %e)  
-
+        logger.exception(e)
 
 def print_current_tracker_state(tracker):
     '''
@@ -59,7 +79,7 @@ def get_groupuser_id_and_answer(tracker):
                         else: 
                             return None, None, None
     except Exception as e: 
-        logger.exception("\033[91Exception: %s\033[0m" %e) 
+        logger.exception(e)
 
 def get_random_person(group):
     return random.choice(group['users'])
@@ -92,6 +112,7 @@ def ask_openai(role, question):
     ],
     temperature=1,
     max_tokens=256,
+    request_timeout=30,
     n =1
     )
     return completion.choices[0].message.content
@@ -128,3 +149,7 @@ def delete_folder(folder_path):
         shutil.rmtree(folder_path)
     except OSError as e:
         print(f"Fehler beim rekursiven Löschen des Ordners: {e}")
+
+
+
+

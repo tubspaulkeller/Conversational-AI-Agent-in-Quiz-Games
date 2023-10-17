@@ -1,7 +1,7 @@
 import asyncio
 import pymongo
 import os
-from actions.common.common import async_connect_to_db, get_credentials, get_json_msg, get_random_person, get_countdown_value, delete_folder, create_folder_if_not_exists
+from actions.common.common import async_connect_to_db, get_credentials, get_json_msg, get_random_person, get_countdown_value, delete_folder, create_folder_if_not_exists, setup_logging
 from rasa_sdk.events import ReminderScheduled, ReminderCancelled, FollowupAction, SlotSet
 from telegram import Bot, Message, Chat
 from actions.common.basehandler import BaseHandler
@@ -10,7 +10,7 @@ from actions.timestamps.timestamp import Timestamp
 import random
 from actions.image_gen.text_on_image_gen import add_text_to_image, draw_progress_bar
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 class CountdownHandler(BaseHandler):
 
     def __init__(self):
@@ -29,7 +29,7 @@ class CountdownHandler(BaseHandler):
             countdown_msg_id = await self.telegram_bot_send_message('text', countdown.sender_id, "⏳ %s Sek.\n\n%s" % (countdown.countdown, countdown.text))
             return countdown_msg_id
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return None
 
     async def send_countdown_mesage(self, countdown, display_question, loop, session_object, quest_id, sender_id, mates_number=None):
@@ -59,7 +59,7 @@ class CountdownHandler(BaseHandler):
             delete_folder(path)
             return countdown_msg_id
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return None
 
     async def pin_countdown_message(self, countdown):
@@ -97,7 +97,7 @@ class CountdownHandler(BaseHandler):
                     dispatcher.utter_message(text=countdown['question']%random_user_username, buttons = countdown['buttons'])
                 return [FollowupAction("action_forget_reminders")]
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
 
     
     async def update_countdown_question(self, countdown, dispatcher, follow_reminder, multiple_response_quest, competition_mode_handler, active_loop, group, sender_id, filter, opponent_id):
@@ -165,7 +165,7 @@ class CountdownHandler(BaseHandler):
                 else:
                     return [set_random_user,  FollowupAction("action_forget_reminders")]
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
 
 
     async def boost_collaboration(self,countdown, dispatcher, follow_reminder, multiple_response_quest, competition_mode_handler, countdown_old_val, active_loop, sender_id, group, filter):
@@ -218,5 +218,5 @@ class CountdownHandler(BaseHandler):
             
 
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
 

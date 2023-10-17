@@ -1,8 +1,10 @@
 
-from actions.common.common import async_connect_to_db, get_credentials
+from actions.common.common import async_connect_to_db, get_credentials, setup_logging
 from actions.users.useranswer import UserAnswer
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
+
+
 class UserHandler:
     def __init__(self):
         self.db = get_credentials("DB_NAME")
@@ -23,7 +25,7 @@ class UserHandler:
                 return True
         except Exception as e:
             
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return False
 
     async def get_user(self, sender_id):
@@ -35,8 +37,7 @@ class UserHandler:
             else:
                 return None 
         except Exception as e: 
-            
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
     async def inserted_user(self, user):
         '''
@@ -58,7 +59,7 @@ class UserHandler:
             else:
                 return False
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
 
     def created_user_answer(self, channel_id, question_id, user_id, username, answer):
@@ -79,6 +80,6 @@ class UserHandler:
             else: 
                 return None
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
 

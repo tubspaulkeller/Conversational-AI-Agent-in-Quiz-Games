@@ -6,14 +6,16 @@ import datetime
 from actions.timestamps.timestamphandler import TimestampHandler
 from actions.gamification.countdown.countdown import Countdown
 from actions.gamification.countdown.countdownhandler import CountdownHandler
-from actions.common.common import get_credentials, async_connect_to_db, ask_openai, ben_is_typing_2, get_countdown_value
+from actions.common.common import get_credentials, async_connect_to_db, ask_openai, ben_is_typing_2, get_countdown_value, setup_logging
 from actions.session.sessionhandler import SessionHandler
 from actions.common.basehandler import BaseHandler
 import time
 import random
-import logging
 import re
-logger = logging.getLogger(__name__)
+import logging
+logger = setup_logging()
+
+
 class GameModeHandler(BaseHandler):
     '''
     GameModeHandler with basic functions
@@ -48,8 +50,7 @@ class GameModeHandler(BaseHandler):
                     return question[status]
             return False
         except Exception as e: 
-            
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return False
             
     async def set_status(self, status, name_of_slot, filter, collection, boolean):
@@ -71,7 +72,7 @@ class GameModeHandler(BaseHandler):
                     await collection.update_one(filter, update_status) 
                     return True
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return False
 
     async def set_goal_and_status(self, name_of_slot, goal, status, filter, boolean):
@@ -92,7 +93,7 @@ class GameModeHandler(BaseHandler):
             await self.session_collection.update_one(filter, update_quest_object)
             return True
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return False
 
     async def number_of_team_mates(self, channel_id):
@@ -104,7 +105,7 @@ class GameModeHandler(BaseHandler):
             existing_group = await self.group_collection.find_one(filter)
             return len(existing_group['users']), existing_group['users']
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return 0, None
     
     def number_of_team_mates_slot(self, tracker, slotname):
@@ -126,9 +127,9 @@ class GameModeHandler(BaseHandler):
             solution =  await self.solution_collection.find_one(filter_solution)
             return solution         
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
-    def rate_open_question(self, answer, quest, retries=5):
+    async def rate_open_question(self, answer, quest, retries=10):
         '''
         a call to open ai to evaluate open questions
         '''
@@ -159,18 +160,19 @@ class GameModeHandler(BaseHandler):
             except IndexError:
                 print("IN IndexError")
                 if retries > 0:
-                    return self.rate_open_question(answer, quest, retries - 1)
+                    return await self.rate_open_question(answer, quest, retries - 1)
                 else:
                     return 0, "Es konnte keine Bewertung stattfinden", "Keine Lösung"
             except Exception:
                 print("IN Exception")
                 if retries > 0:
-                    return self.rate_open_question(answer, quest, retries - 1)
+                    await asyncio.sleep(2)
+                    return await self.rate_open_question(answer, quest, retries - 1)
                 else: 
                     return 0, "Es konnte keine Bewertung stattfinden", "Keine Lösung"
             return int(points), evaluation, solution
         except Exception as e:   
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
 
     async def calc_earned_points(self, filter, answer, name_of_slot, group_id, countdown):
         '''
@@ -183,7 +185,7 @@ class GameModeHandler(BaseHandler):
                 # Open Questions
                 await ben_is_typing_2(countdown , self)
 
-                points, evaluation, solution = self.rate_open_question(answer=answer['answer'], quest=countdown['question']['display_question'])
+                points, evaluation, solution = await self.rate_open_question(answer=answer['answer'], quest=countdown['question']['display_question'])
                 # Debug
                 print("PUNKTE: %s\nEVALUATION: %s\nSOLUTION: %s\n" %(points, evaluation, solution))
                 # if points more than ten, the attribute correct is setted to true, for calc badges
@@ -214,7 +216,7 @@ class GameModeHandler(BaseHandler):
             # if KLOK bewerte einzelne Antworten hier !
             return earned_points, solution, solution_points
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
         
     def get_needed_time_for_answering(self, answer, id):
         '''
@@ -270,7 +272,7 @@ class GameModeHandler(BaseHandler):
                 points_to_get = await self.calc_points_for_in_time_answering(result, int(get_credentials("BUTTON_QUEST_TIME")),points,int(get_credentials("BUTTON_QUEST_PENALTY")),name_of_slot,filter, evaluation)
             return points_to_get
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
 
     async def update_session(self, filter, name_of_slot, earned_points, group_answer, loop=None, mates_number = None):
         '''
@@ -300,7 +302,8 @@ class GameModeHandler(BaseHandler):
                 if level > curr_level:
                     level_up = True
                     curr_level = level
-    
+            
+            update_quest_object = {}
             for index, question in enumerate(session_object['questions']):
                 if question['id'] == name_of_slot:
                     update_quest_object = {
@@ -315,7 +318,7 @@ class GameModeHandler(BaseHandler):
             await self.session_collection.update_one(filter, update_quest_object)
             return old_total_points + earned_points, level_up
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return 0, False
     
 
@@ -348,7 +351,7 @@ class GameModeHandler(BaseHandler):
                 else:
                     return random.choice(["Oh, schade! Die Antwort ist leider falsch. 😔 %s %s\nBleibt weiter dran 💫📚","Das ist nicht die richtige Antwort. 😔 %s %s\nKeine Sorge, jeder macht mal Fehler! 🤷‍♂️💡", "Leider falsch! 😔 %s %s\nFehler sind Chancen zum Lernen. 🌱", "Schade die Antwort ist leider falsch. 😔 %s %s\nNicht schlimm! Wir lernen draus und werden stärker! 💪🌟"])%(solution_text,solution) 
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
 
     def get_text_for_evaluation_of_points(self, is_user, level_up, kind_of_points, points_to_get):
@@ -376,7 +379,7 @@ class GameModeHandler(BaseHandler):
                 elif kind_of_points == 'less':
                     return random.choice(["Leider habt ihr zu lange gebraucht ⏳, um eure Antwort abzugeben, weshalb ihr 0 Punkte erhaltet.", "Eure Antwort kam leider zu spät ⏳, wodurch ihr keine Punkte erhaltet.","Da ihr zu viel Zeit benötigt habt ⏳, um zu antworten, bekommt ihr 0 Punkte.","Aufgrund der Verzögerung ⏳ bei eurer Antwort erhaltet ihr keine Punkte.","Allerdings habt ihr zu lange gebraucht ⏳, um eure Antwort abzugeben. Ihr bekommt deshalb 0 Punkte."])
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
 
     async def utter_points(self, solution, answer, points_to_get, level_up, recipient_id, is_user, name_of_slot, solution_points):
@@ -405,7 +408,7 @@ class GameModeHandler(BaseHandler):
             await self.telegram_bot_send_message('text', recipient_id, text)
 
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
 
 
@@ -425,7 +428,7 @@ class GameModeHandler(BaseHandler):
                 await self.session_collection.update_one(filter, update_stars)
             return 
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
     
 
                         

@@ -1,9 +1,9 @@
 from PIL import Image, ImageDraw, ImageFont
 import random
-from actions.common.common import get_dp_inmemory_db, get_credentials
+from actions.common.common import get_dp_inmemory_db, get_credentials, setup_logging
 from actions.session.sessionhandler import SessionHandler
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 
 def get_image_config(get_basic_image):
     image_configs = {
@@ -116,9 +116,8 @@ def set_configs_for_image(image_path, text, font_size, text_color, max_width, co
         draw.text((x, y), text, font=font, fill=text_color, stroke_width=stroke_width,
             stroke_fill="black")
         return image
-    except Exception as e: 
-        
-        logger.exception("\033[91Exception: %s\033[0m" %e)  
+    except Exception as e:  
+        logger.exception(e)  
 
 def get_texts_and_positions(get_basic_image, width, height, curr_level, points_of_group, stars, achievements, quest_points):
     image_configs = {
@@ -213,7 +212,7 @@ async def add_text_to_image(text, image_path, output_path, session_object, quest
         # Save the image
         image_with_progress.save(output_path)
     except Exception as e: 
-        logger.exception("\033[91Exception: %s\033[0m" %e)  
+        logger.exception(e)  
 
 def draw_progress_bar_and_badges(image, percent, texts_and_positions, bar_x, bar_y, bar_width, color, badges_and_positions, achievements):
     # Draw progress bar
@@ -266,7 +265,7 @@ def draw_progress_bar(image, percent, texts_and_positions, bar_x, bar_y, bar_wid
         return image
 
     except Exception as e: 
-        logger.exception("\033[91Exception: %s\033[0m" %e) 
+        logger.exception(e) 
         return None
 
 def get_font(font_size): 
@@ -276,7 +275,7 @@ def get_font(font_size):
     except OSError as e:
         font_size = 100
         font = ImageFont.load_default() 
-        logger.exception("\033[91Exception: %s\033[0m" %e) 
+        logger.exception(e) 
     return font, font_size
 
 def add_text_to_achievements_image(image_path, output_path, session_object):
@@ -316,7 +315,7 @@ def add_text_to_achievements_image(image_path, output_path, session_object):
         # Save the image
         image.save(output_path)
     except Exception as e: 
-        logger.exception("\033[91Exception: %s\033[0m" %e)  
+        logger.exception(e)  
 
 def add_table_on_leaderboard(tab_data, output_path):
     '''
@@ -363,4 +362,4 @@ def add_table_on_leaderboard(tab_data, output_path):
         # Save the image
         image.save(output_path)
     except Exception as e: 
-        logger.exception("\033[91Exception: %s\033[0m" %e) 
+        logger.exception(e) 

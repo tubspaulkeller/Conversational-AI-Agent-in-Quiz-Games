@@ -1,10 +1,10 @@
 
 
-from actions.common.common import async_connect_to_db, get_credentials
+from actions.common.common import async_connect_to_db, get_credentials, setup_logging
 from actions.groups.group import Group
 from actions.groups.groupanswer import GroupAnswer
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 class GroupHandler:
     def __init__(self):
         self.db = get_credentials("DB_NAME")
@@ -34,7 +34,7 @@ class GroupHandler:
             else:
                 return None 
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
     def get_group_slot(self, tracker):
         '''
@@ -43,7 +43,7 @@ class GroupHandler:
         try:
             return tracker.get_slot("my_group")
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             
     async def check_user_list_changes(self, existing_users, new_users, group_id, group_title):
         '''
@@ -64,7 +64,7 @@ class GroupHandler:
                 return None
             return await self.create_group(new_users, group_id, group_title)
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
 
     async def check_user_same_name(self, group, user):
         '''
@@ -88,7 +88,7 @@ class GroupHandler:
                     return True
                 return False
         except Exception as e: 
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return False
 
     async def checked_and_updated_group(self, new_users, channel_id, group_title):
@@ -119,7 +119,7 @@ class GroupHandler:
             await self.group_collection.insert_one(new_group)
             return new_group
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e)  
+            logger.exception(e)  
             return False
 
     def created_group_answer(self, channel_id, question_id, answer):

@@ -19,9 +19,9 @@ from actions.telegram_members.telethonhandler import TelethonHandler
 from actions.users.userhandler import UserHandler
 from actions.users.user import User
 from actions.groups.grouphandler import GroupHandler
-from actions.common.common import get_credentials
+from actions.common.common import get_credentials, setup_logging
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 
 class ActionGetChannelMembers(Action):
 
@@ -47,5 +47,5 @@ class ActionGetChannelMembers(Action):
             
             print("is_user", is_user)
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e)
+            logger.exception(e)
             return[SlotSet('is_user', is_user), SlotSet('my_group',team_mates), FollowupAction("action_start")]

@@ -5,10 +5,12 @@ from actions.game.gamemodehandler import GameModeHandler
 from actions.game.competition.competitionmodehandler import CompetitionModeHandler
 from actions.session.sessionhandler import SessionHandler
 from actions.timestamps.timestamphandler import TimestampHandler
-from actions.common.common import get_credentials, get_requested_slot, get_random_person, get_dp_inmemory_db, ben_is_typing, ask_openai, get_countdown_value,ben_is_typing_2
+from actions.common.common import get_credentials, get_requested_slot, get_random_person, get_dp_inmemory_db, ben_is_typing, ask_openai, get_countdown_value,ben_is_typing_2, setup_logging
 from actions.achievements.achievementshandler import AchievementHandler
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
+
+
 class GoalHandler:
     '''
     Goalhandler to set goal
@@ -64,7 +66,7 @@ class GoalHandler:
             else: 
                 return{'competive_goal': slot_value}
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 
         
     async def set_non_competive_goal(self, slot_value, tracker, dispatcher):
         try:
@@ -112,4 +114,4 @@ class GoalHandler:
             else:
                 return{'non_competive_goal': None}
         except Exception as e:
-            logger.exception("\033[91Exception: %s\033[0m" %e) 
+            logger.exception(e) 

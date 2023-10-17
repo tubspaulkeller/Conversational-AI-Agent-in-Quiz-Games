@@ -36,12 +36,13 @@ from actions.quests.question import Question
 from actions.goal.goalhandler import GoalHandler
 from actions.session.session import Session
 from actions.achievements.achievementshandler import AchievementHandler
-from actions.common.common import ask_openai, ben_is_typing
+from actions.common.common import ask_openai, ben_is_typing, setup_logging
 from actions.quests.introduction import set_introduction
 from actions.quests.teamname import set_team_name
 from actions.users.klokanswerhandler import KlokAnswersHandler
 import logging
-logger = logging.getLogger(__name__)
+logger = setup_logging()
+
 '''
 Gruppen:
 A: KLMK 
@@ -352,7 +353,7 @@ class ValidateQuizFormKL(FormValidationAction):
                 await ben_is_typing(tracker.get_slot('countdown') , game_mode_handler)
                 return {name_of_slot: "answered", "random_person": None, "flag": None,  "countdown": None}
             except Exception as e: 
-                logger.exception("\033[91Exception: %s\033[0m" %e)
+                logger.exception(e)
             return {name_of_slot: None}
         return validate_slot
     

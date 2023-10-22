@@ -112,7 +112,7 @@ def ask_openai(role, question):
     ],
     temperature=1,
     max_tokens=256,
-    request_timeout=30,
+    request_timeout=40,
     n =1
     )
     return completion.choices[0].message.content

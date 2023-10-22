@@ -1,3 +1,4 @@
+import asyncio
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
@@ -12,6 +13,7 @@ from actions.users.klokanswerhandler import KlokAnswersHandler
 import logging
 logger = setup_logging()
 
+
 class ActionRestart(Action):
     def name(self) -> Text:
         return "action_restart"
@@ -22,20 +24,20 @@ class ActionRestart(Action):
         delete entry in session table
         '''
         session_handler = SessionHandler()
-        game_modus = tracker.get_slot("game_modus") 
-        
-        #if not game_modus is None: 
+        game_modus = tracker.get_slot("game_modus")
+
+        # if not game_modus is None:
         session_filter = session_handler.get_session_filter(tracker)
-        await session_handler.session_collection.delete_one(session_filter)   
+        await session_handler.session_collection.delete_one(session_filter)
 
         ''' 
         delete timestamps for specifc group
         '''
         timestamp_hanlder = TimestampHandler()
-        timestamp_hanlder.delete_timestamps_for_group(tracker.sender_id, 'answer')
-        timestamp_hanlder.delete_timestamps_for_group(tracker.sender_id, 'waiting')
+        await timestamp_hanlder.delete_timestamps_for_group(tracker.sender_id, 'answer')
+        await timestamp_hanlder.delete_timestamps_for_group(tracker.sender_id, 'waiting')
 
-        # delete KLOK ARRAY 
+        # delete KLOK ARRAY
 
         if game_modus == 'quiz_form_KLOK':
             klok_handler = KlokAnswersHandler()
@@ -44,4 +46,16 @@ class ActionRestart(Action):
         return [AllSlotsReset(), Restarted(), FollowupAction("action_send_greet")]
 
 
-        
+class ActionNewGame(Action):
+    def name(self) -> Text:
+        return "action_new_game"
+
+    async def run(self, dispatcher, tracker, domain):
+        btn_lst = [
+            {"title": "Let's go, neues Spiel 🎮✨",
+                "payload": "/i_restart_conversation"}
+        ]
+        text = "Neues Spiel starten 🕹️?"
+        print("neues spiel, warten 15 Sekunden.")
+        await asyncio.sleep(15)
+        dispatcher.utter_message(text=text, buttons=btn_lst)

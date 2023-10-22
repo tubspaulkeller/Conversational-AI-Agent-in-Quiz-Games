@@ -8,6 +8,7 @@ from actions.session.sessionhandler import SessionHandler
 import logging
 logger = setup_logging()
 
+
 class ActionAskBen(Action):
     """Executes the fallback action and goes back to the previous state
     of the dialogue"""
@@ -22,51 +23,54 @@ class ActionAskBen(Action):
         domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
         try:
-            # Get Message from User with Question to Ben 
+            # Get Message from User with Question to Ben
             message = " "
             for event in reversed(tracker.events):
-                    if event['event'] == 'user':
-                        #print("EVENT",event )
-                        if 'ask_ben' in event['metadata']:
-                            message = event['metadata']['ask_ben']
-                            print("MSG", message)
-                            break
-        
-            if 'STOPCOUNTDOWN' in message: 
-                return[FollowupAction("action_stop_countdown")]
+                if event['event'] == 'user':
+                    #print("EVENT",event )
+                    if 'ask_ben' in event['metadata']:
+                        message = event['metadata']['ask_ben']
+                        print("MSG", message)
+                        logger.info(message)
+                        break
 
+            if 'STOPCOUNTDOWN' in message:
+                return [FollowupAction("action_stop_countdown")]
 
-            # talk to Ben 
+            # talk to Ben
             session_handler = SessionHandler()
             opponent_id = session_handler.get_opponent(tracker)
             # mygroup
             filter = {
-                    "channel_id": tracker.sender_id,     
-                    "other_group": opponent_id
+                "channel_id": tracker.sender_id,
+                "other_group": opponent_id
             }
 
             session_obj = await session_handler.session_collection.find_one(filter)
             my_points = session_obj['total_points'] if session_obj else 0
             my_badges = len(session_obj['achievements']) if session_obj else 0
             my_level = session_obj['level'] if session_obj else 0
-            
-            # opponent 
+
+            # opponent
             filter_opponent = {
                 "channel_id": str(opponent_id),
                 "other_group": int(tracker.sender_id)
 
             }
-            # get achievements 
-            loop = tracker.active_loop.get('name') 
+            # get achievements
+            loop = tracker.active_loop.get('name')
             session_obj_opponent = await session_handler.session_collection.find_one(filter_opponent)
             points_opponent = session_obj_opponent['total_points'] if session_obj_opponent else 0
-            badges_opponent = len(session_obj_opponent['achievements']) if session_obj_opponent else 0
+            badges_opponent = len(
+                session_obj_opponent['achievements']) if session_obj_opponent else 0
             level_opponent = session_obj_opponent['level'] if session_obj_opponent else 0
             game_modus = '_'.join(loop.split('_')[2:]) if loop else None
-            team_name = tracker.get_slot("teamname_value") if tracker.get_slot("teamname_value") is not None else None
-            goal = tracker.get_slot("goal") if tracker.get_slot("goal") is not None else None
+            team_name = tracker.get_slot("teamname_value") if tracker.get_slot(
+                "teamname_value") is not None else None
+            goal = tracker.get_slot("goal") if tracker.get_slot(
+                "goal") is not None else None
             game_information = "Bislang hat die Gruppe von Spieler oder der Spieler keinen Spielmodus ausgewählt."
-            # role for Ben 
+            # role for Ben
             role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik.\
             Du befindest dich mitten in einem Quiz-Spiel wobei Studierende der Wirtschaftsinformatik versuchen Quizfragen zu lösen.\
             Das Quiz-Spiel besteht aus sechs Fragen (2x Single-Choice, 2x Multiple-Choice und 2x Offene Fragen).\
@@ -76,30 +80,36 @@ class ActionAskBen(Action):
             Du gibst aber nicht die Lösung preis, sondern versuchst eher die Studierenden zur Lösung hinzuführen.\
             Bei Beleidungen, kannst du gerne daraufhinweisen, dass dieses Verhalten während des Quizes nicht gestattet ist und zu Bestrafungen führen kann.\
             Verwende bei deinen Antworten motivierende Emojis."
-        
+
             ask_group_achievements_score_competition = "Fragt dich die Gruppe nach deren Punkte-, Sterne- oder Abzeichenstand sowie deren Stände des Gegners beantworte dies!\
                 Aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand.\
                 Punktestand der Gruppe: %s, Punktestand des Gegners/anderen Gruppe: %s,\
-                Abzeichenstand der Gruppe: %s, Abzeichenstand des Gegners/anderen Gruppe: %s und Levelstand der Gruppe/Studenten: %s sowie Levelstand des Gegners/anderen Gruppe: %s"%(my_points, points_opponent, my_badges, badges_opponent, my_level, level_opponent)
-            ask_group_play_score = "Fragt dich die Gruppe nach ihrem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand"%(my_points, my_badges, my_level)
-            ask_single_play_score = "Fragt dich der Student nach seinem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand"%(my_points, my_badges, my_level)
-            
+                Abzeichenstand der Gruppe: %s, Abzeichenstand des Gegners/anderen Gruppe: %s und Levelstand der Gruppe/Studenten: %s sowie Levelstand des Gegners/anderen Gruppe: %s" % (my_points, points_opponent, my_badges, badges_opponent, my_level, level_opponent)
+            ask_group_play_score = "Fragt dich die Gruppe nach ihrem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand" % (
+                my_points, my_badges, my_level)
+            ask_single_play_score = "Fragt dich der Student nach seinem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand" % (
+                my_points, my_badges, my_level)
+
             print("GAME_MODUS", game_modus)
-            if game_modus == "KLOK": 
+            if game_modus == "KLOK":
                 KLOK_modus = "In diesem Spielmodus spielen die Studierenden in Teams, haben jedoch keine Möglichkeit, sich abzustimmen, während sie gleichzeitig gegen ein anderes Team antreten. Ihre Punkte werden auf ein Gemeinschaftspunktekonto gelegt und mit dem gegnerischen Punktekonto verglichen, wordurch der Wettbewerb entsteht."
-                game_information = ask_group_achievements_score_competition + KLOK_modus + "Falls die Gruppe dich nach ihrem Teamnamen fragen: Der Teamname des Teams ist: %s"%team_name 
-            
+                game_information = ask_group_achievements_score_competition + KLOK_modus + \
+                    "Falls die Gruppe dich nach ihrem Teamnamen fragen: Der Teamname des Teams ist: %s" % team_name
+
             elif game_modus == "KLMK":
                 KLMK_modus = "In diesem Modus treten die Studierenden gegen ein anderes Team an und haben die Möglichkeit, sich innerhalb ihres eigenen Teams abzustimmen, bevor sie die Quizfrage beantworten."
-                game_information = ask_group_achievements_score_competition + KLMK_modus + "Falls die Gruppe dich nach ihrem Teamnamen oder Ziel fragen: Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"%(team_name, goal)
-            
-            elif game_modus == "KL": 
+                game_information = ask_group_achievements_score_competition + KLMK_modus + \
+                    "Falls die Gruppe dich nach ihrem Teamnamen oder Ziel fragen: Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s" % (
+                        team_name, goal)
+
+            elif game_modus == "KL":
                 KL_modus = "Die Studierende spielen nicht gegen ein anderes Team, sondern lösen die Quizfragen gemeinsam."
-                game_information = ask_group_play_score + KL_modus + "Falls die Gruppe dich nach ihrem Teamnamen oder Ziel fragen: Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s"%(team_name, goal)
+                game_information = ask_group_play_score + KL_modus + \
+                    "Falls die Gruppe dich nach ihrem Teamnamen oder Ziel fragen: Der Teamname des Teams ist: %s. Das Ziel des Teams ist: %s" % (
+                        team_name, goal)
             elif game_modus == "OKK":
                 OKK_modus = "Jeder Spieler spielt das Quiz individuell und alleine, ohne ein Team oder ein anderes Team als Gegner zu haben."
                 game_information = ask_single_play_score + game_modus
-            
 
             db = get_credentials("DB_NAME")
             collection = async_connect_to_db(db, 'Questions')
@@ -108,12 +118,12 @@ class ActionAskBen(Action):
             question = await collection.find_one(filter)
             # get current question of game
             if question:
-                curr_question = "Die aktuelle Quizfrage ist %s" %question['display_question']
+                curr_question = "Die aktuelle Quizfrage ist %s" % question['display_question']
                 role = role + game_information + curr_question
-            
+
             # ask openai with role and question from the use
             ben_answer = ask_openai(role, message)
-            dispatcher.utter_message(text = ben_answer)
+            dispatcher.utter_message(text=ben_answer)
             return [UserUtteranceReverted()]
         except Exception as e:
             logger.exception(e)

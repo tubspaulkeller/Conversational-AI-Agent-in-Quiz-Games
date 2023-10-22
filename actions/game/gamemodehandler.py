@@ -360,9 +360,9 @@ class GameModeHandler(BaseHandler):
                                       "Hervorragend! Das ist korrekt! "])
             else:
                 if is_user:
-                    return random.choice(["Oh, schade! Die Antwort ist leider falsch. 😔 %s %s\nBleib weiter dran 💫📚", "Das ist nicht die richtige Antwort. 😔 %s %s\nKeine Sorge, jeder macht mal Fehler! 🤷‍♂️💡 Mit jedem Versuch wirst du besser! 🚀🎯", "Leider falsch! 😔 %s %s\nFehler sind Chancen zum Lernen. 🌱", "Schade die Antwort ist leider falsch. 😔 %s %s\nNicht schlimm! Du lernst draus und wirst stärker! 💪🌟",  "Schade die Antwort ist leider falsch. 😔 %s %s\nGib nicht auf! 🚀"]) % (solution_text, solution)
+                    return random.choice(["Oh, schade! Die Antwort ist leider falsch. 😔 %s %s\nBleib weiter dran 💫📚", "Das ist nicht die richtige Antwort. 😔 %s %s\nKeine Sorge, jeder macht mal Fehler! 🤷‍♂️💡 Mit jedem Versuch wirst du besser! 🚀🎯", "Leider falsch! 😔 %s %s\nFehler sind Chancen zum Lernen. 🌱", "Schade, die Antwort ist leider falsch. 😔 %s %s\nNicht schlimm! Du lernst draus und wirst stärker! 💪🌟",  "Schade die Antwort ist leider falsch. 😔 %s %s\nGib nicht auf! 🚀"]) % (solution_text, solution)
                 else:
-                    return random.choice(["Oh, schade! Die Antwort ist leider falsch. 😔 %s %s\nBleibt weiter dran 💫📚", "Das ist nicht die richtige Antwort. 😔 %s %s\nKeine Sorge, jeder macht mal Fehler! 🤷‍♂️💡", "Leider falsch! 😔 %s %s\nFehler sind Chancen zum Lernen. 🌱", "Schade die Antwort ist leider falsch. 😔 %s %s\nNicht schlimm! Wir lernen draus und werden stärker! 💪🌟"]) % (solution_text, solution)
+                    return random.choice(["Oh, schade! Die Antwort ist leider falsch. 😔 %s %s\nBleibt weiter dran 💫📚", "Das ist nicht die richtige Antwort. 😔 %s %s\nKeine Sorge, jeder macht mal Fehler! 🤷‍♂️💡", "Leider falsch! 😔 %s %s\nFehler sind Chancen zum Lernen. 🌱", "Schade, die Antwort ist leider falsch. 😔 %s %s\nNicht schlimm! Wir lernen draus und werden stärker! 💪🌟"]) % (solution_text, solution)
         except Exception as e:
             logger.exception(e)
 

@@ -120,8 +120,10 @@ class CompetitionModeHandler(GameModeHandler):
                 text = random.choice(warning_msg)
                 await self.telegram_bot_send_message('text', str(group_id_opponent), text)
 
-                dispatcher.utter_message(response="utter_waiting_msg_less_15_sec")
-            waiting_countdown['countdown'] = waiting_countdown['countdown'] - int(get_credentials("COMPETITION_REMINDER"))
+                dispatcher.utter_message(
+                    response="utter_waiting_msg_less_15_sec")
+            waiting_countdown['countdown'] = waiting_countdown['countdown'] - \
+                int(get_credentials("COMPETITION_REMINDER"))
             return evaluated, waiting_countdown, exceeded
         except Exception as e:
             logger.exception(e)

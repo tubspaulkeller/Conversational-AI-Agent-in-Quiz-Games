@@ -125,7 +125,6 @@ class CompetitionModeHandler(GameModeHandler):
             return evaluated, waiting_countdown, exceeded
         except Exception as e:
             logger.exception(e)
-            return false, waiting_countdown, exceeded
 
     async def msg_check_evaluation_status_of_opponent(self, group_id_opponent, name_of_slot, sender_id, loop, is_user):
         '''

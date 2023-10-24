@@ -103,20 +103,29 @@ def get_credentials(keyname):
         return os.getenv(keyname)
 
 
-def ask_openai(role, question):
-    openai.api_key = get_credentials("OPEN_AI")
-    completion = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "assistant", "content": "%s %s"%(role,question)}
-    ],
-    temperature=1,
-    max_tokens=256,
-    request_timeout=40,
-    n =1
-    )
-    return completion.choices[0].message.content
-    
+def ask_openai(role, question, retries=10):
+    try: 
+        openai.api_key = get_credentials("OPEN_AI")
+        completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "assistant", "content": "%s %s"%(role,question)}
+        ],
+        temperature=1,
+        max_tokens=256,
+        request_timeout=40,
+        n =1
+        )
+        return completion.choices[0].message.content
+    except Exception as e:
+        logger.exception(e)
+        logger.info("OpenAI Read Timed Out!")
+        if retries > 0:
+            return ask_openai(role, question, retries - 1)
+        else: 
+            return "🤯 Meine Gedanken sind wie Popcorn, ständig platzen neue Fragen auf - ich kann gerade nicht 🙊 antworten! 😂🍿"
+
+
 def get_json_msg(recipient_id, text):
     return {
             "chat_id": recipient_id, 

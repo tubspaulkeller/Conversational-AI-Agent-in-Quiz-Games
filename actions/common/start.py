@@ -42,6 +42,6 @@ class ActionIGreet(Action):
                     "confidence": 1.0,
                 }
             }
-        dispatcher.utter_message(text="Hey 🤘\nIch bin Ben, der Lern-Moderator von Quizmania und ich freue mich auf einen weiteren spannenden Spieltag voller gemeinsamer Quiz-Abenteuer. 🧠💡\nViel Glück 🎰🍀")
+        dispatcher.utter_message(text="Hey, 🤘\nich bin Ben, der Lern-Moderator von Quizmania und ich freue mich auf einen weiteren spannenden Spieltag voller gemeinsamer Quiz-Abenteuer. 🧠💡\nViel Glück 🎰🍀")
         # 
         return [UserUttered(text="/greet", parse_data=data), FollowupAction("action_get_channel_members")]

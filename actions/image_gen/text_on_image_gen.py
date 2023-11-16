@@ -207,6 +207,7 @@ async def add_text_to_image(text, image_path, output_path, session_object, quest
         texts_and_positions = get_texts_and_positions(get_basic_image, width, height, curr_level, points_of_group, stars, achievements, quest_points)
         
         # Draw progress bar and badges
+
         image_with_progress = draw_progress_bar_and_badges(image, percent, texts_and_positions, bar_x, bar_y, bar_width, color, image_config['badges_and_positions'], achievements)
 
         # Save the image
@@ -215,20 +216,22 @@ async def add_text_to_image(text, image_path, output_path, session_object, quest
         logger.exception(e)  
 
 def draw_progress_bar_and_badges(image, percent, texts_and_positions, bar_x, bar_y, bar_width, color, badges_and_positions, achievements):
-    # Draw progress bar
-    image_with_progress = draw_progress_bar(image, percent, texts_and_positions, bar_x, bar_y, bar_width, color)
+    try:
+        # Draw progress bar
+        image_with_progress = draw_progress_bar(image, percent, texts_and_positions, bar_x, bar_y, bar_width, color)
 
-    for index, badge_name in enumerate(achievements):
-        badge_image = Image.open(f'actions/image_gen/input/icons/{badge_name}.png')
-        position = badges_and_positions[index][1]
+        for index, badge_name in enumerate(achievements):
+            badge_image = Image.open(f'actions/image_gen/input/icons/{badge_name}.png')
+            position = badges_and_positions[index][1]
+            # ohne Mask (Rand der Icons)
+            if badge_name == 'SINGLE_CHOICE' or badge_name == 'MULTIPLE_CHOICE':
+                image_with_progress.paste(badge_image, position)
+            else:
+                image_with_progress.paste(badge_image, position, mask=badge_image)
 
-        # ohne Mask (Rand der Icons)
-        if badge_name == 'SINGLE_CHOICE' or badge_name == 'MULTIPLE_CHOICE':
-            image_with_progress.paste(badge_image, position)
-        else:
-            image_with_progress.paste(badge_image, position, mask=badge_image)
-
-    return image_with_progress
+        return image_with_progress
+    except Exception as e: 
+        logger.exception(e) 
 
 def draw_progress_bar(image, percent, texts_and_positions, bar_x, bar_y, bar_width, color):
     '''
@@ -236,14 +239,16 @@ def draw_progress_bar(image, percent, texts_and_positions, bar_x, bar_y, bar_wid
     '''
     try:
         width, height = image.size
-
         # Bestimme die Abmessungen des Ladebalkens
         bar_height = 40
      
         # Zeichne den leeren Ladebalken
         draw = ImageDraw.Draw(image)
+
         draw.rectangle((bar_x, bar_y, bar_x + bar_width, bar_y + bar_height), outline='black')
 
+        if percent < 0: 
+            percent = 0
         # Berechne die Breite des gefüllten Ladebalkens
         fill_width = int(bar_width * (percent / 100))
 
@@ -266,7 +271,7 @@ def draw_progress_bar(image, percent, texts_and_positions, bar_x, bar_y, bar_wid
 
     except Exception as e: 
         logger.exception(e) 
-        return None
+        return image
 
 def get_font(font_size): 
     try:

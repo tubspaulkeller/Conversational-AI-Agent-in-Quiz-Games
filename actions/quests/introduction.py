@@ -9,7 +9,7 @@ class Introduction:
         self.exceeded = False
         self.evaluated = False
         self.task = "🔴 Achtung!\nEs ist Zeit, den Button zu drücken, um den Spielmodus zu starten.\nViel Spaß und Erfolg! 🎮🌟\n\n👋 %s bitte drücke den Button."
-        self.buttons = [{"title": "Ready! ✅ ", "payload": '/introduction{"e_introduction":"set_introduction"}'}]
+        self.buttons = [{"title": "Ready! ✅ ", "payload": '/introduction_%s{"e_introduction_%s":"set_introduction"}'%(self.modus, self.modus)}]
         if self.modus == "KLOK":
             self.text = "In diesem interessanten Spielmodus spielt ihr in Teams, aber ihr habt keine Möglichkeit zur Absprache, während ihr gleichzeitig gegen ein anderes Team antritt. Jedes Teammitglied gibt seine eigene Antwort auf die Fragen ab, die individuell bewertet wird, und die Punkte werden dann zusammengezählt. Zeigt euren Ehrgeiz und handelt im Teamgeist! 👥🧠\n\n❗SPIELHINWEIS❗\nIhr trefft auf Single-Choice und Multiple-Choice Fragen, bei denen ihr Buttons für die Antworten erhaltet. Bei offenen Fragen fügt ihr einfach ein '#' zur Antwort hinzu.\nZudem könnt ihr Nachrichten an die andere Gruppe senden, indem ihr am Anfang eurer Nachricht '@Gegner' verwendet."
         elif self.modus == "KLMK":
@@ -32,7 +32,7 @@ class Introduction:
 
 async def set_introduction(slot_value, tracker, dispatcher, competition_mode_handler, session_handler):
     requested_slot = get_requested_slot(tracker)
-    if requested_slot == 'introduction' and "set_introduction" in slot_value:
+    if requested_slot and  'introduction' in requested_slot and "set_introduction" in slot_value:
         active_loop = tracker.active_loop.get('name') 
         modus = '_'.join(active_loop.split('_')[2:])
         
@@ -41,7 +41,7 @@ async def set_introduction(slot_value, tracker, dispatcher, competition_mode_han
         '''
         if modus == 'KLMK':
             dispatcher.utter_message(response="utter_waiting_of_opponent")
-            return{"answered": True,"introduction": "answered", "requested_slot": None}
+            return {requested_slot: 'answered', "random_person": None, "flag": None,  "countdown": None}
 
         filter = session_handler.get_session_filter(tracker)
         await competition_mode_handler.set_status('evaluated', 'modus', filter, session_handler.session_collection, True)
@@ -53,13 +53,15 @@ async def set_introduction(slot_value, tracker, dispatcher, competition_mode_han
             game_mode_handler = GameModeHandler()
             await game_mode_handler.telegram_bot_send_message('text', tracker.sender_id, text)
             await ben_is_typing(tracker.get_slot('countdown'), competition_mode_handler)
-            return {'introduction': 'answered',"teamname_value": team_name,  "random_person": None, "flag": None,  "countdown": None}
+            dispatcher.utter_message(response="utter_waiting_of_opponent")
+            return { requested_slot: 'answered',"teamname_value": team_name,  "random_person": None, "flag": None,  "countdown": None}
         else:
             await ben_is_typing(tracker.get_slot('countdown'), competition_mode_handler)
-            return {'introduction': 'answered', "random_person": None, "flag": None,  "countdown": None}
+
+            return {requested_slot: 'answered', "random_person": None, "flag": None,  "countdown": None, "activated_reminder_comp": None}
     else:
         print("DEBUG: VALIDATE  INTRODUCTION")
-        return{'introduction': "answered"}
+        return{requested_slot: "answered"}
 
 
 def generate_unique_team_id(length=3):

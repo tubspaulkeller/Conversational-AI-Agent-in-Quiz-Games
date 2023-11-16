@@ -116,6 +116,13 @@ nlu:
     - Spieltag 
     - analyse
 
+#- intent: start
+ # examples: |
+  #  - los 
+   # - fange an
+    #- auf gehts
+    #- lets go
+
 - intent: ask_score
   examples: |
     - Ben, wieiviele Punkte habe ich?

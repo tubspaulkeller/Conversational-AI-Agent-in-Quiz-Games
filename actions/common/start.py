@@ -35,13 +35,18 @@ class ActionIGreet(Action):
     def name(self) -> Text:
         return "action_send_greet"
 
-    def run(self, dispatcher, tracker, domain):
-        data = {
-                "intent": {
-                    "name": "/greet",
-                    "confidence": 1.0,
-                }
-            }
-        dispatcher.utter_message(text="Hey, 🤘\nich bin Ben, der Lern-Moderator von Quizmania und ich freue mich auf einen weiteren spannenden Spieltag voller gemeinsamer Quiz-Abenteuer. 🧠💡\nViel Glück 🎰🍀")
-        # 
-        return [UserUttered(text="/greet", parse_data=data), FollowupAction("action_get_channel_members")]
+    async def run(self, dispatcher, tracker, domain):
+        # data = {
+        #         "intent": {
+        #             "name": "/greet",
+        #             "confidence": 1.0,
+        #         }
+        #     }
+            
+       # await delete_session_in_db(tracker)
+        btn_lst = [
+                {"title": "Hi Ben! Lass uns loslegen. 😊", "payload": "/greet"},
+                ]
+        dispatcher.utter_message(text="Hey, 🤘\nich bin Ben, der Lern-Moderator von Quizmania und ich freue mich auf einen weiteren spannenden Spieltag voller gemeinsamer Quiz-Abenteuer. 🧠💡\nViel Glück 🎰🍀", buttons=btn_lst)
+        # BUTTON und dann mit INTENT follow up get_channel_members callen!
+        #return [UserUttered(text="/greet", parse_data=data), FollowupAction("action_get_channel_members")]

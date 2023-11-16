@@ -58,7 +58,6 @@ class GroupHandler:
             removed_users = [user for user in existing_users if user['user_id'] not in new_user_ids]
             if removed_users:
                 for removed_user in removed_users:
-                    print(removed_user)
                     existing_users.remove(removed_user)
             if existing_user_ids == new_user_ids and len(removed_users) == 0:
                 return None

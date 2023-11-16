@@ -19,7 +19,7 @@
       "1"
     ],
     [
-      "E) lockeren Datenschutz",
+      "E) lockerer Datenschutz",
       "0"
     ]
   ],
@@ -52,7 +52,7 @@
       "0"
     ]
   ],
-  "display_question": "🛑Multiple Choice:\nVorteile des Customer Relationship Managements (sCRM)\nsind ... (Achtung Mehrfachnennung!)"
+  "display_question": "🛑Multiple Choice:\nVorteile des Customer Relationship Managements (sCRM)\nsind ... (Wähle 2 von 5!)"
 },
 {
   "_id": "05",
@@ -155,5 +155,5 @@
       "1"
     ]
   ],
-  "display_question": "🛑Multiple Choice:\nWie hat sich die Rolle des Kunden verändert und\nwelche neuen Potenziale ergeben sich durch die Digitalisierung?\n(Achtung Mehrfachnennung!)"
+  "display_question": "🛑Multiple Choice:\nWie hat sich die Rolle des Kunden verändert und\nwelche neuen Potenziale ergeben sich durch die Digitalisierung?\n(Wähle 3 von 5!)"
 }]

@@ -34,31 +34,35 @@ class MultipleResponseQuest:
             question = await collection.find_one(filter)
             return question
 
-    def create_btns_for_single_choice(self, question_object):
+    def create_btns_for_single_choice(self, question_object, game_mode):
         """Returns an array of Buttons for all the answers of the selected question
         """
         try:
+            #print("QUEST", question_object)
+            quest_id =  question_object['question_id'][6:]
             btn_lst = []
             abc = ["A", "B", "C", "D", "E", "F"]
-            btn_action = '/multiple_response_quest{"multiple_response_quest":'
+            btn_action = '/mrq_%s_%s{"e_mrq_%s_%s":'%(game_mode, quest_id, game_mode, quest_id)
+
             wrong_correct = ['"wrong"', '"correct"']
             for v in range(len(question_object["answer"])):
-                btn_actionv = btn_action + (wrong_correct[0] if int(question_object['answer'][v][1]) == 0 else wrong_correct[1]) + '}'
-                btn = {"title": abc[v],
-                        "payload": btn_actionv}
+                btn_actionv = btn_action + (wrong_correct[0] if int(question_object['answer'][v][1]) == 0 else wrong_correct[1]) + '}'                
+                btn = {"title": abc[v],"payload": btn_actionv}
                 btn_lst.append(btn)
             return btn_lst
         except Exception as e:
             logger.exception(e) 
 
     
-    def create_btns_for_multiple_choice(self, question_object):
+    def create_btns_for_multiple_choice(self, question_object, game_mode):
         """Returns an array of Buttons for all the answers of the selected question
         """
         try:
+           # print("QUEST", question_object)
+            quest_id =  question_object['question_id'][6:]
             btn_lst = []
             abc = ["A", "B", "C", "D", "E", "F"]
-            btn_action = '/multiple_response_quest{"multiple_response_quest":'
+            btn_action = '/mrq_%s_%s{"e_mrq_%s_%s":'%(game_mode, quest_id, game_mode, quest_id)
             wrong_correct = ['"wrong"', '"correct"']
             for combination in range(len(question_object["button_combination"])):
                 btn_actionv = btn_action + (wrong_correct[0] if int(question_object['button_combination'][combination][-1]) == 0 else wrong_correct[1]) + '}'
@@ -73,7 +77,6 @@ class MultipleResponseQuest:
     def create_text_for_question(self, question_object,display):
         """Returns a string with the question and all the answers correctly formatted"""
         text_lst = [display]
-
         for v in question_object["answer"]:
             text_lst.append(v[0])
         return "\n".join(text_lst)
@@ -133,7 +136,7 @@ class MultipleResponseQuest:
                     new_timestamp = Timestamp(tracker.sender_id, self.quest_id, active_loop, filter['other_group']).to_dict()
                     timestamp_handler.insert_new_timestamp(new_timestamp, 'waiting')
                     return [SlotSet("flag", True), SlotSet("game_modus", active_loop), SlotSet("countdown",countdown.to_dict()), SlotSet("opponent_id", filter['other_group']), FollowupAction("action_set_reminder_countdown_msg")]
-
+                    # SlotSet("activated_reminder_comp", None)
                 else:
                     print("\033[94mSESSION OBJECT DOES NOT EXIST\033[0m")
 

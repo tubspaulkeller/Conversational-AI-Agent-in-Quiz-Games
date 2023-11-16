@@ -104,8 +104,9 @@ class CountdownHandler(BaseHandler):
         '''
         countdown for questions
         '''
-        countdown_old_val, message_id, countdown_intervall = countdown['countdown'], countdown['message_id'], countdown['intervall']
+        
         try:
+            countdown_old_val, message_id, countdown_intervall = countdown['countdown'], countdown['message_id'], countdown['intervall']
             # check if countdown still active
             if countdown_old_val > countdown_intervall:
                 countdown_old_val -= countdown_intervall
@@ -120,10 +121,11 @@ class CountdownHandler(BaseHandler):
             else: 
                 ''' create question with buttons so the user can answer the question after countdown stopped'''
                 btns = []
+                modus = '_'.join(active_loop.split('_')[2:])
                 if countdown['quest_id'][-1] == 's':
-                    btns = multiple_response_quest.create_btns_for_single_choice(countdown['question'])
+                    btns = multiple_response_quest.create_btns_for_single_choice(countdown['question'], modus)
                 elif countdown['quest_id'][-1] == 'm':
-                    btns = multiple_response_quest.create_btns_for_multiple_choice(countdown['question'])
+                    btns = multiple_response_quest.create_btns_for_multiple_choice(countdown['question'], modus)
                 
                 set_random_user = None
                 beep_text ="🚨 Beep! Beep!! TIME'S UP!!!"
@@ -143,12 +145,12 @@ class CountdownHandler(BaseHandler):
                     random_user = get_random_person(group)
                     set_random_user = SlotSet('random_person', random_user['user_id'])
                     if countdown['quest_id'][-1] == 'o':
-                        quest_for_answering = beep_text + "\n\n✨%s✨ gebe bitte nun die Antwort in ein bis zwei Sätzen für euch ab. 🧠💭\n markiere es mit einem #-Zeichen (#Antwort)" %random_user['username']
+                        quest_for_answering = beep_text + "\n\n✨%s✨ gebe bitte nun die Antwort in ein bis zwei Sätzen für euch ab. 🧠💭\nMarkiere sie mit einem #-Zeichen (#Antwort)" %random_user['username']
                     else: 
                         quest_for_answering =beep_text + "\n\n✨%s✨ gebe bitte nun die Antwort für euch ab."%random_user['username'] +multiple_response_quest.create_text_for_question(countdown['question'], "")                          
                 else:
                     if countdown['quest_id'][-1] == 'o':
-                        quest_for_answering = beep_text + "\n\nGib bitte nun deine Antwort in ein bis zwei Sätzen ab. 🧠💭\n markiere es mit einem #-Zeichen (#Antwort)" 
+                        quest_for_answering = beep_text + "\n\nGib bitte nun deine Antwort in ein bis zwei Sätzen ab. 🧠💭\nMarkiere sie mit einem #-Zeichen (#Antwort)" 
                     else: 
                         quest_for_answering = beep_text + "\n\nGib bitte nun deine Antwort ab. 🧠💭{}".format(multiple_response_quest.create_text_for_question(countdown['question'], ""))
 
@@ -166,7 +168,7 @@ class CountdownHandler(BaseHandler):
                     return [set_random_user,  FollowupAction("action_forget_reminders")]
         except Exception as e:
             logger.exception(e) 
-
+            return [FollowupAction("action_forget_reminders")]
 
     async def boost_collaboration(self,countdown, dispatcher, follow_reminder, multiple_response_quest, competition_mode_handler, countdown_old_val, active_loop, sender_id, group, filter):
         '''
@@ -178,7 +180,6 @@ class CountdownHandler(BaseHandler):
         try:
             # a group exitsts if there were allready a discussion for a question 
             existing_group = await self.collab_collection.find_one({"group_id": int(sender_id)})
-            print("existing_group", existing_group)
             if existing_group: 
                 person_with_lowest_counter = min(existing_group['users'], key=lambda x: x['counter'])
                 # if the person who had said least but had more than three interaction in a discussion for one quesion, the team gets a badge for good communication

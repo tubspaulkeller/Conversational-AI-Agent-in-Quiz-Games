@@ -18,6 +18,11 @@ rules:
   - intent: ask_ben
   - action: action_ask_ben
 
+#- rule: start modi selection
+ # steps: 
+ # - intent: start
+ # - action: action_start
+
 - rule: reminder for countdown msg
   steps:
   - intent: EXTERNAL_reminder_countdown_msg
@@ -28,32 +33,42 @@ rules:
   - intent: EXTERNAL_reminder_competition
   - action: action_react_to_reminder_competition
 
-- rule: Activate Reminder for Competition Mode KLMK
+- rule: get winner @From - KLMK 
   condition:
-  # Condition that form is active.
-  - active_loop: quiz_form_KLMK
-  steps:
-  # Form is deactivated
+  - slot_was_set:
+    - KLMK_frage_01_s: true
+    - KLMK_frage_02_s: true
+    - KLMK_frage_03_m: true
+    - KLMK_frage_04_m: true
+    - KLMK_frage_05_o: true
+    - KLMK_frage_06_o: true
+  steps: 
   - action: quiz_form_KLMK
+  - active_loop: quiz_form_KLMK
   - active_loop: null
-  - slot_was_set:
-    - answered: true
-  # The actions we want to run when the form is deactivated.
-  - action: action_set_reminder_competition
+  - action: action_winner
+  - intent: leaderboard
+  - action: action_leaderboard
+  - action: action_new_game
 
-- rule: Activate Reminder for Competition Mode KLOK
+
+- rule: get winner @From - KLOK 
   condition:
-  # Condition that form is active.
-  - active_loop: quiz_form_KLOK
-  steps:
-  # Form is deactivated
-  - action: quiz_form_KLOK
-  - active_loop: null
   - slot_was_set:
-    - answered: true
-  # The actions we want to run when the form is deactivated.
-  - action: action_set_reminder_competition
-
+    - KLOK_frage_01_s: true
+    - KLOK_frage_02_s: true
+    - KLOK_frage_03_m: true
+    - KLOK_frage_04_m: true
+    - KLOK_frage_05_o: true
+    - KLOK_frage_06_o: true
+  steps: 
+  - action: quiz_form_KLOK
+  - active_loop: quiz_form_KLOK
+  - active_loop: null
+  - action: action_winner
+  - intent: leaderboard
+  - action: action_leaderboard
+  - action: action_new_game
 
 - rule: Ask the user to rephrase whenever they send a message with low NLU confidence
   steps:
@@ -68,41 +83,42 @@ rules:
   - intent: greet
   - action: action_get_channel_members
   - action: action_start
+  
 - rule: get winner @From - KL 
   condition:
   - slot_was_set:
-    - frage_01_s: true
-    - frage_02_s: true
-    - frage_03_m: true
-    - frage_04_m: true
-    - frage_05_o: true
-    - frage_06_o: true
+    - KL_frage_01_s: true
+    - KL_frage_02_s: true
+    - KL_frage_03_m: true
+    - KL_frage_04_m: true
+    - KL_frage_05_o: true
+    - KL_frage_06_o: true
   steps: 
   - action: quiz_form_KL
   - active_loop: quiz_form_KL
   - active_loop: null
   - action: action_winner
+  - intent: leaderboard
+  - action: action_leaderboard
+  - action: action_new_game
 
 - rule: get winner @From - OKK
   condition:
   - slot_was_set:
-    - frage_01_s: true
-    - frage_02_s: true
-    - frage_03_m: true
-    - frage_04_m: true
-    - frage_05_o: true
-    - frage_06_o: true
+    - OKK_frage_01_s: true
+    - OKK_frage_02_s: true
+    - OKK_frage_03_m: true
+    - OKK_frage_04_m: true
+    - OKK_frage_05_o: true
+    - OKK_frage_06_o: true
   steps: 
   - action: quiz_form_OKK
   - active_loop: quiz_form_OKK
   - active_loop: null
   - action: action_winner
-
-- rule: Leaderboard 
-  steps:
-  - action: action_winner
   - intent: leaderboard
   - action: action_leaderboard
+  - action: action_new_game
 
 
 - rule: give user score
@@ -132,3 +148,9 @@ rules:
   - action: action_why_points_badges_stars
   
 
+- rule: Leaderboard 
+  steps:
+  - action: action_winner
+  - intent: leaderboard
+  - action: action_leaderboard
+  - action: action_new_game

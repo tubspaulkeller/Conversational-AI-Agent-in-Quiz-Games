@@ -88,10 +88,14 @@ def get_requested_slot(tracker):
     '''
     get current requested slot of form
     '''
-    current_state = tracker.current_state() 
-    for state in reversed(current_state):
-        if state == "slots":
-            return current_state[state]['requested_slot']
+    try: 
+        current_state = tracker.current_state() 
+        for state in reversed(current_state):
+            if state == "slots":
+                return current_state[state]['requested_slot']
+    except Exception as e:
+        logger.exception(e)
+        return None
 
 def get_credentials(keyname):
     '''
@@ -107,13 +111,13 @@ def ask_openai(role, question, retries=10):
     try: 
         openai.api_key = get_credentials("OPEN_AI")
         completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model= get_credentials("OPEN_AI_MODEL"),
         messages=[
             {"role": "assistant", "content": "%s %s"%(role,question)}
         ],
         temperature=1,
         max_tokens=256,
-        request_timeout=40,
+        request_timeout=30,
         n =1
         )
         return completion.choices[0].message.content
@@ -135,20 +139,46 @@ def get_json_msg(recipient_id, text):
 
 
 async def ben_is_typing(countdown, game_mode_handler):
-    await game_mode_handler.telegram_bot_send_message('edit', countdown['sender_id'],"Ben tippt ...", message_id=countdown['message_id'] )
-    await game_mode_handler.telegram_bot_send_message('pin', countdown['sender_id'], " ", message_id=countdown['message_id'])
+    try:
+        await game_mode_handler.telegram_bot_send_message('edit', countdown['sender_id'],"Ben tippt ...", message_id=countdown['message_id'] )
+        await game_mode_handler.telegram_bot_send_message('pin', countdown['sender_id'], " ", message_id=countdown['message_id'])
+    except Exception as e:
+        logger.exception(e)
+
 
 async def ben_is_typing_2(countdown, game_mode_handler):
-    await game_mode_handler.telegram_bot_send_message('edit', countdown['sender_id'],"Ben tippt ....", message_id=countdown['message_id'] )
-    await game_mode_handler.telegram_bot_send_message('pin', countdown['sender_id'], " ", message_id=countdown['message_id'])
-
+    try:
+        await game_mode_handler.telegram_bot_send_message('edit', countdown['sender_id'],"Ben tippt ....", message_id=countdown['message_id'] )
+        await game_mode_handler.telegram_bot_send_message('pin', countdown['sender_id'], " ", message_id=countdown['message_id'])
+    except Exception as e:
+        logger.exception(e)
 
 def get_countdown_value(quest_id, loop):
-    mode = '_'.join(loop.split('_')[2:]) if loop else None
-    values = get_dp_inmemory_db("./countdown_values.json")
-    return values[mode][quest_id]
+    try: 
+        mode = '_'.join(loop.split('_')[2:]) if loop else None
+        values = get_dp_inmemory_db("./countdown_values.json")
 
+        # Check if mode and quest_id are valid keys in the dictionaries
+        if mode is not None and quest_id is not None and mode in values and quest_id in values.get(mode, {}):
+            return values[mode][quest_id]
+        else: 
+            return 0
+    except Exception as e:
+        logger.exception(e)
+        logger.info("ACTIVE_LOOP: " + loop)
+        return 0
 
+def remove_prefix(input_string, prefix):
+    try:
+        if input_string.startswith(prefix):
+            return input_string[len(prefix+"_"):]
+        else:
+            return input_string
+    except Exception as e:
+        logger.exception(e)
+        return input_string
+
+        
 def create_folder_if_not_exists(folder_path):
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)

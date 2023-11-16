@@ -11,7 +11,7 @@ from actions.gamification.countdown.countdownhandler import CountdownHandler
 from actions.game.gamemodehandler import GameModeHandler
 from actions.achievements.achievementshandler import AchievementHandler
 from actions.image_gen.text_on_image_gen import add_table_on_leaderboard
-from actions.common.common import get_credentials, async_connect_to_db, get_dp_inmemory_db, ben_is_typing, delete_folder, create_folder_if_not_exists, setup_logging
+from actions.common.common import get_credentials, async_connect_to_db, get_dp_inmemory_db, ben_is_typing, delete_folder, create_folder_if_not_exists, setup_logging, get_random_person
 from rasa_sdk.events import UserUtteranceReverted, FollowupAction, AllSlotsReset, Restarted
 import logging
 logger = setup_logging()
@@ -37,7 +37,6 @@ class CompetitionModeHandler(GameModeHandler):
         # if there more people in the other group I earn the average of my points
         num_of_opponent, _ = await self.number_of_team_mates(get_credentials(str(sender_id)))
         if num_of_opponent > num_of_my_group:
-            print("UNGERADE ZAHL")
             difference_of_people = num_of_opponent - num_of_my_group
             average_points_of_my_group = earned_points / num_of_my_group
             earned_points += (int(average_points_of_my_group)
@@ -53,29 +52,46 @@ class CompetitionModeHandler(GameModeHandler):
         _, level_up = await self.update_session(filter, name_of_slot, earned_points, group_answer['answer'])
         return earned_points, solution, level_up
 
-    async def handle_validation_of_group_answer(self, name_of_slot, filter, dispatcher, active_loop, sender_id, group_answer, quest, num_of_my_group):
+    async def handle_validation_of_group_answer(self, name_of_slot, filter, dispatcher, active_loop, sender_id, group_answer, quest, num_of_my_group, tracker):
         if active_loop == "quiz_form_KLOK":
             earned_points, solution, level_up = await self.handle_validation_of_group_answers_KLOK(name_of_slot, filter, active_loop, sender_id, group_answer, quest, num_of_my_group)
         else:
             earned_points, solution, level_up = await self.handle_validation_of_group_answers_KLMK(name_of_slot, filter, active_loop, sender_id, group_answer, quest, num_of_my_group)
         await self.set_status("evaluated", name_of_slot, filter, self.session_collection, True)
-        waiting_countdown, utter_message = await self.msg_check_evaluation_status_of_opponent(filter['other_group'], name_of_slot, sender_id, active_loop, False)
-        dispatcher.utter_message(response=utter_message)
-        return [SlotSet("earned_points", earned_points), SlotSet("solution", solution), SlotSet("level_up", level_up), SlotSet("waiting_countdown", waiting_countdown.to_dict()), FollowupAction('action_set_reminder_competition')]
+        
+        # prüfe ob Gegner geantwortet hat, sonst erstelle waiting countdown 
+        opponent_filter = {
+                "channel_id": str(filter['other_group']),
+                "other_group": int(filter['channel_id'])
+            }
+        evaluated = await self.check_status('evaluated', name_of_slot, opponent_filter, self.session_collection)
+        if evaluated:
+            return await self.get_winner_of_round(name_of_slot, earned_points, solution, tracker.get_slot("group_answer"), level_up,  sender_id, tracker.get_slot('my_group'), tracker.slots.keys(), filter, active_loop, dispatcher)
+        else:
+            waiting_countdown, utter_message = await self.msg_check_evaluation_status_of_opponent(filter['other_group'], name_of_slot, sender_id, active_loop, False)
+            dispatcher.utter_message(response=utter_message)
+            return [SlotSet("earned_points", earned_points), SlotSet("solution", solution), SlotSet("level_up", level_up), SlotSet("waiting_countdown", waiting_countdown.to_dict()), FollowupAction('action_set_reminder_competition')]
 
-    async def get_winner_of_round(self, name_of_slot, earned_points, solution, group_answer, level_up, sender_id, countdown, slots, filter, game_modus):
+    async def get_winner_of_round(self, name_of_slot, earned_points, solution, group_answer, level_up, sender_id, group, slots, filter, active_loop, dispatcher):
         '''
         announce winner or looser of the question round
         '''
         group_id_opponent = filter['other_group']
-        await self.evaluate_answer(sender_id, group_id_opponent, name_of_slot, earned_points, solution, group_answer, level_up, game_modus)
+        game_modus = '_'.join(active_loop.split('_')[2:])
+        await self.evaluate_answer(sender_id, group_id_opponent, name_of_slot, earned_points, solution, group_answer, level_up, active_loop)
         # get achievements
         achievements_handler = AchievementHandler()
-        await achievements_handler.earn_achievement(filter, slots, sender_id)
-        await ben_is_typing(countdown, self)
-
-        return [SlotSet(name_of_slot, "answered"), SlotSet("random_person", None), SlotSet("flag", None), SlotSet("countdown", None), SlotSet("answered", None), SlotSet("waiting_countdown", None), FollowupAction("action_forget_reminders_competition")]
-
+        await achievements_handler.earn_achievement(filter, slots, sender_id, game_modus)
+        #await ben_is_typing(countdown, self)
+        random_user = get_random_person(group)
+        random_user_name = random_user['username']
+        slot = name_of_slot + "_comp_" + game_modus
+        btn_lst = [
+        {"title": "Weiter geht's! 💥🔥 ", 'payload': '/i_%s{\"e_%s\":\"done\"}'%(slot, slot)}
+        ]
+        dispatcher.utter_message(text="✨%s✨ bitte drücke den Button!"%random_user_name, buttons=btn_lst)
+        #await ben_is_typing(tracker.get_slot('countdown'), competition_mode_handler)
+        return [SlotSet("waiting_countdown", None),SlotSet("countdown", None), FollowupAction("action_forget_reminders_competition")]
     async def waiting_of_opponent(self, name_of_slot, sender_id, group_id_opponent, waiting_countdown, loop, dispatcher):
         try:
             filter = {
@@ -84,6 +100,10 @@ class CompetitionModeHandler(GameModeHandler):
             }
             evaluated = await self.check_status('evaluated', name_of_slot, filter, self.session_collection)
             exceeded = False
+            if waiting_countdown is None: 
+                countdown = Countdown(sender_id, name_of_slot, loop)
+                countdown.countdown = int(get_credentials("WAITING_COUNTDOWN"))
+                waiting_countdown = countdown.to_dict()
             if not evaluated and waiting_countdown['countdown'] == 0:
                 await self.set_status('exceeded', name_of_slot, filter, self.session_collection, True)
                 exceeded = True
@@ -93,8 +113,8 @@ class CompetitionModeHandler(GameModeHandler):
 
                 return evaluated, None, exceeded
 
-            # nach 15 Sekunden warten
-            if not evaluated and waiting_countdown['countdown'] == (int(get_credentials("WAITING_COUNTDOWN"))-14):
+            # nach 20 Sekunden warten
+            if not evaluated and waiting_countdown['countdown'] == (int(get_credentials("WAITING_COUNTDOWN"))-20):
                 carry_on_message = ["Die andere Gruppe ist fertig und wartet schon 🕰️",
                                     "🙋‍♂️ die andere Gruppe ist schon bereit, seht zu 🚀",
                                     "👋 die andere Gruppe wartet schon geduldig 🤔",
@@ -104,24 +124,24 @@ class CompetitionModeHandler(GameModeHandler):
                 await self.telegram_bot_send_message('text', str(group_id_opponent), text)
 
                 dispatcher.utter_message(
-                    response="utter_waiting_msg_after_15_sec")
+                    response="utter_waiting_msg_after_20_sec")
 
-            # nach der Hälfte
-            if not evaluated and waiting_countdown['countdown'] == (int(get_credentials("WAITING_COUNTDOWN"))/2):
+            # nach der Hälfte warten
+            if not evaluated and waiting_countdown['countdown'] == (int(get_credentials("WAITING_COUNTDOWN"))*0.5):
                 dispatcher.utter_message(
-                    response="utter_waiting_msg_after_30_sec")
+                    response="utter_waiting_msg_half_time")
 
-            # 15 Sekunden vor schluss
-            if not evaluated and waiting_countdown['countdown'] == ((int(get_credentials("WAITING_COUNTDOWN"))*0.25) - 1):
-                warning_msg = ["⏰🔴 Achtung! ⏳💬 Ihr müsst eure Antwort nun abgeben! 🕒 In 15 Sekunden ist das Spiel sonst vorbei und ihr verliert es! 😱🆘",
-                               "🔴 Achtung! 📝💨 Ihr müsst eure Antwort jetzt abgeben! 🕐 In 15 Sekunden ist das Spiel vorbei und ihr verliert es! 😓🆘",
-                               "🚨🔴 Achtung! 🗣️🏃‍♂️ Ihr müsst eure Antwort schnell abgeben! ⏰ In 15 Sekunden ist das Spiel vorbei und ihr verliert es! 😥🆘",
-                               "🔴 Achtung! Ihr müsst eure Antwort nun abgeben! In 15 Sekunden ist das Spiel sonst vorbei und ihr verliert es! 🆘"]
+            # 30 Sekunden vor schluss
+            if not evaluated and waiting_countdown['countdown'] == 30:
+                warning_msg = ["⏰🔴 Achtung! ⏳💬 Ihr müsst eure Antwort nun abgeben! 🕒 In 30 Sekunden ist das Spiel sonst vorbei und ihr verliert es! 😱🆘",
+                               "🔴 Achtung! 📝💨 Ihr müsst eure Antwort jetzt abgeben! 🕐 In 30 Sekunden ist das Spiel vorbei und ihr verliert es! 😓🆘",
+                               "🚨🔴 Achtung! 🗣️🏃‍♂️ Ihr müsst eure Antwort schnell abgeben! ⏰ In 30 Sekunden ist das Spiel vorbei und ihr verliert es! 😥🆘",
+                               "🔴 Achtung! Ihr müsst eure Antwort nun abgeben! In 30 Sekunden ist das Spiel sonst vorbei und ihr verliert es! 🆘"]
                 text = random.choice(warning_msg)
                 await self.telegram_bot_send_message('text', str(group_id_opponent), text)
-
+                # waiting countdown immer um 5 Sekunden reduzieren 
                 dispatcher.utter_message(
-                    response="utter_waiting_msg_less_15_sec")
+                    response="utter_waiting_msg_less_30_sec")
             waiting_countdown['countdown'] = waiting_countdown['countdown'] - \
                 int(get_credentials("COMPETITION_REMINDER"))
             return evaluated, waiting_countdown, exceeded
@@ -465,19 +485,18 @@ class CompetitionModeHandler(GameModeHandler):
         try:
             opponent = await self.session_collection.find_one(filter_group_opponent)
             points_opponent = opponent['total_points']
-
+            text = ""
             my_group = await self.session_collection.find_one(filter_my_group)
             points_my_group = my_group['total_points']
             if points_my_group > points_opponent:
                 # send Badge und erhöhe badge
                 achievement_handler = AchievementHandler()
+                text = "mygroup"
                 achievement = "GESAMTSIEGER"
                 if await achievement_handler.insert_achievement(filter_my_group, achievement):
                     badges = get_dp_inmemory_db("./badges.json")
                     dispatcher.utter_message(image=badges[achievement])
-                    dispatcher.utter_message(text="Herzlichen Glückwunsch! 🎉🏆 Ihr habt mit einem beeindruckenden %s:%s Sieg gewonnen! 🎊🥇 Euer Team hat großartig gespielt und verdient den Erfolg! 👏😄" % (
-                        points_my_group, points_opponent))
-                    text = "mygroup"
+                    dispatcher.utter_message(text="Herzlichen Glückwunsch! 🎉🏆 Ihr habt mit einem beeindruckenden %s:%s Sieg gewonnen! 🎊🥇 Euer Team hat großartig gespielt und verdient den Erfolg! 👏😄" % (points_my_group, points_opponent))
             elif points_opponent > points_my_group:
                 text = "Gegner gewonnen"
                 dispatcher.utter_message(text="Leider habt ihr mit %s:%s verloren 😔💔, aber ihr habt großartig gekämpft und es war ein spannendes Spiel." % (
@@ -506,9 +525,8 @@ class CompetitionModeHandler(GameModeHandler):
 
             # insert entry
             await self.leaderboard_collection.insert_one(entry)
-
-            await self.print_leaderboard(entry, dispatcher, loop, sender_id)
-
+            return {'Gruppenname': group_title, 'Punkte': total_points,
+                     'Spieltag': unix_timestamp, 'Gamemode': loop}
         except Exception as e:
             logger.exception(e)
 
@@ -517,6 +535,16 @@ class CompetitionModeHandler(GameModeHandler):
             if entry['Gruppenname'] == group['Gruppenname'] and entry['Spieltag'] == group['Spieltag'] and entry['Gamemode'] == group['Gamemode']:
                 return i
         return None
+
+    def check_if_my_group_is_in_best_entries(self, best_entries, group):
+        try: 
+            for entry in best_entries:
+                if entry['Gruppenname'] == group['Gruppenname'] and entry['Spieltag'] == group['Spieltag'] and entry['Gamemode'] == group['Gamemode']:
+                    return True 
+            return False 
+        except Exception as e:
+            logger.exception(e)
+            return False
 
     def format_date(self, timestamp):
         datetime_obj = datetime.datetime.fromtimestamp(timestamp)
@@ -531,17 +559,16 @@ class CompetitionModeHandler(GameModeHandler):
                 filtered_list, key=lambda x: x['Punkte'], reverse=True)
 
             # give best x teams
-            max_number = min(
-                int(get_credentials('RANK_LIST')), len(sorted_list))
+            max_number = min(int(get_credentials('RANK_LIST')), len(sorted_list))
             best_entries = sorted_list[:max_number]
-
             # Tabelle vorbereiten
             tab_data = []
             # get place of group
-            if my_group not in best_entries:
+            if not self.check_if_my_group_is_in_best_entries(best_entries, my_group):
                 place = self.find_group_place(sorted_list, my_group)
                 # get Group before
                 place_before = sorted_list[place-2]
+                
                 tab_data.append([place-1, place_before['Gruppenname'],
                                 place_before['Punkte'], self.format_date(place_before['Spieltag'])])
 
@@ -570,7 +597,7 @@ class CompetitionModeHandler(GameModeHandler):
             image_name = "ranking.png"
             image_path = os.path.join(path, image_name)
             add_table_on_leaderboard(tab_data, image_path)
-
+            await asyncio.sleep(2)
             # send photo
             await self.telegram_bot_send_message('photo', sender_id, image_path)
 

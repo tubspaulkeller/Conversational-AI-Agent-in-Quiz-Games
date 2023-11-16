@@ -3,7 +3,7 @@ from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import UserUtteranceReverted, FollowupAction, AllSlotsReset, Restarted
 from actions.game.gamemodehandler import GameModeHandler
-from actions.common.common import get_requested_slot, async_connect_to_db, delete_folder, create_folder_if_not_exists, get_credentials, setup_logging
+from actions.common.common import async_connect_to_db, delete_folder, create_folder_if_not_exists, get_credentials, setup_logging
 from actions.common.reset import reset_points
 from actions.game.competition.competitionmodehandler import CompetitionModeHandler
 from actions.timestamps.timestamphandler import TimestampHandler
@@ -13,6 +13,7 @@ from actions.achievements.achievementshandler import AchievementHandler
 from actions.common.common import ask_openai
 import os
 import logging
+import asyncio
 logger = setup_logging()
 
 
@@ -41,7 +42,9 @@ class ActionLeaderboard(Action):
             input_path = 'actions/image_gen/input/result.png'
             add_text_to_achievements_image(input_path, output_path, session)
             await game_mode_handler.telegram_bot_send_message('photo', tracker.sender_id, output_path)
-
+            
+            await asyncio.sleep(2)
+            
             session = await session_handler.get_session_object(tracker)
             total_badges = session['achievements']
             level = session['level']
@@ -67,8 +70,7 @@ class ActionLeaderboard(Action):
             total_points = session['total_points']
             max_game_points = await session_handler.max_points()
             max_level = int(get_credentials("MAX_LEVEL"))
-            goal = tracker.get_slot("goal") if tracker.get_slot(
-                "goal") is not None else None
+            goal = tracker.get_slot("goal") if tracker.get_slot("goal") is not None else None
             team_name = tracker.get_slot("teamname_value") if tracker.get_slot(
                 "teamname_value") is not None else None
 
@@ -86,15 +88,17 @@ class ActionLeaderboard(Action):
                 ben_answer = ask_openai(role, msg)
                 dispatcher.utter_message(text=ben_answer)
             if loop == 'KLOK':
-                await competition_mode_handler.insert_leaderboard(session, loop, dispatcher, tracker.get_slot('teamname_value'), tracker.sender_id)
+                await competition_mode_handler.print_leaderboard(tracker.get_slot('leaderboard_entry'), dispatcher, loop, tracker.sender_id)
+                dispatcher.utter_message(text="Das Quiz ist geschafft! Ich hoffe, ihr hattet viel Spaß! 😄🤗 Bis zum nächsten Mal! 👋🚀")
             if loop == 'KLMK':
+                await competition_mode_handler.print_leaderboard(tracker.get_slot('leaderboard_entry'), dispatcher, loop, tracker.sender_id)
                 dispatcher.utter_message(
                     text="Ich hoffe, ihr hattet viel Spaß beim Quiz! 😄🤗 Macht weiter so und bis zum nächsten Mal! 👋👋🚀")
-                await competition_mode_handler.insert_leaderboard(session, loop, dispatcher, tracker.get_slot('teamname_value'), tracker.sender_id)
-
-            await competition_mode_handler.bot.unpin_all_chat_messages(tracker.sender_id)
+            if loop == 'OKK':
+                dispatcher.utter_message(text="Ich hoffe, du hattest viel Spaß beim Quiz! 😄🤗 Mach weiter so und bis zum nächsten Mal! 👋👋🚀")
+                
+            await asyncio.sleep(1)
             delete_folder(path)
             return [FollowupAction("action_new_game")]
-
         except Exception as e:
             logger.exception(e)

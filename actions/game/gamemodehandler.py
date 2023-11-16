@@ -6,7 +6,7 @@ import datetime
 from actions.timestamps.timestamphandler import TimestampHandler
 from actions.gamification.countdown.countdown import Countdown
 from actions.gamification.countdown.countdownhandler import CountdownHandler
-from actions.common.common import get_credentials, async_connect_to_db, ask_openai, ben_is_typing_2, get_countdown_value, setup_logging
+from actions.common.common import get_credentials, async_connect_to_db, ask_openai, ben_is_typing_2, setup_logging
 from actions.session.sessionhandler import SessionHandler
 from actions.common.basehandler import BaseHandler
 import time
@@ -84,17 +84,20 @@ class GameModeHandler(BaseHandler):
         '''
         try:
             session_object = await self.session_collection.find_one(filter)
-            for index, question in reversed(list(enumerate(session_object['questions']))):
-                if question['id'] == name_of_slot:
-                    update_quest_object = {
-                        "$set": {
-                            f"questions.{str(index)}.{str(status)}": boolean,
-                            "goal": goal
+            if session_object is not None:
+                for index, question in reversed(list(enumerate(session_object['questions']))):
+                    if question['id'] == name_of_slot:
+                        update_quest_object = {
+                            "$set": {
+                                f"questions.{str(index)}.{str(status)}": boolean,
+                                "goal": goal
+                            }
                         }
-                    }
-                    break
-            await self.session_collection.update_one(filter, update_quest_object)
-            return True
+                        break
+                await self.session_collection.update_one(filter, update_quest_object)
+                return True
+            else: 
+                return False
         except Exception as e:
             logger.exception(e)
             return False
@@ -139,9 +142,9 @@ class GameModeHandler(BaseHandler):
             role = "Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik'.\
             Bewerte die eingehende Antwort zu der Frage auf inhatliche Korrektheit: %s auf einer Skala 0 - 20 Punkten. \
             0 Punkte stellt dabei eine falsche/ nicht korrekte Antwort da, umso korrekter/besser die Antwort ist, desto mehr Punkte gibt es.\
-            Gib dabei nur die Punktzahl ohne weitere Wörter direkt am Satzanfang an (Bsp: 15). Sei nicht zu streng.\
-            Dann gib eine kurze motivierende Erläuterung (max. 1 Satz) zu deiner Bewertung für \
-            die eingegangene Antwort. Die Bewertung sollte ebenfalls einen Tipp für eine lösungsnahere Antwort enthalten.\
+            Gib dabei nur die Punktzahl ohne weitere Wörter direkt am Satzanfang an (Bsp: 15). Bewerte nicht zu großzügig!\
+            Dann gib eine kurze motivierende Erläuterung (halber Satz) zu deiner Bewertung für \
+            die eingegangene Antwort. Die Bewertung sollte ebenfalls einen kurzen Tipp für eine lösungsnahere Antwort enthalten.\
             Zuletzt gebe eine richtige kurze Lösung zusätzlich an. Ganz wichtig ist, dass dein Antwortformat wie folgt aussehen muss: Punktzahl doppelter Absatz Bewertung doppelter Absatz Lösung\
             Die zu bewertende Antwort ist:" % quest
 
@@ -230,15 +233,23 @@ class GameModeHandler(BaseHandler):
         '''
         get the time which the user needed to answer
         '''
-        timestamp_handler = TimestampHandler()
-        question_timestamp, loop, quest_id, _ = await timestamp_handler.get_timestamp(id, 'answer')
-        countdown = get_countdown_value(quest_id, loop)
-        delay = int(get_credentials('DELAY'))
-        if quest_id[-1] == "o":
-            delay += int(get_credentials('DELAY'))
-        question_timestamp += delay
-        answer_timestamp = answer['timestamp']
-        return answer_timestamp - question_timestamp
+        try:
+            timestamp_handler = TimestampHandler()
+            question_timestamp, loop, quest_id, _ = await timestamp_handler.get_timestamp(id, 'answer')
+            if quest_id is None:
+                session_handler = SessionHandler()
+                session = await session_handler.session_collection.find_one({"channel_id": id})
+                if session:
+                    quest_id = session['questions'][-1]['id']
+            delay = int(get_credentials('DELAY'))
+            if quest_id[-1] == "o":
+                delay += int(get_credentials('DELAY'))
+            question_timestamp += delay
+            answer_timestamp = answer['timestamp']
+            return answer_timestamp - question_timestamp
+        except Exception as e:
+            logger.exception(e)
+            return 0
 
     async def calc_points_for_in_time_answering(self, result, time_bound, max_points, penalty, name_of_slot, filter, evaluation):
         '''

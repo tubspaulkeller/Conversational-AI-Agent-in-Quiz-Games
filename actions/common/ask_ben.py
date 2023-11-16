@@ -1,7 +1,7 @@
 from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import UserUtteranceReverted, FollowupAction
+from rasa_sdk.events import UserUtteranceReverted, FollowupAction, SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 from actions.common.common import ask_openai, async_connect_to_db, get_requested_slot, get_credentials, get_dp_inmemory_db, setup_logging
 from actions.session.sessionhandler import SessionHandler
@@ -37,6 +37,12 @@ class ActionAskBen(Action):
             if 'STOPCOUNTDOWN' in message:
                 return [FollowupAction("action_stop_countdown")]
 
+            if 'PREVQUEST' in message:
+                return [FollowupAction("action_prev_quest_again")]
+        
+            if 'SPIELTAGSANALYSE' in message:
+                return [SlotSet("winner", None), FollowupAction("action_winner")]
+
             # talk to Ben
             session_handler = SessionHandler()
             opponent_id = session_handler.get_opponent(tracker)
@@ -71,26 +77,23 @@ class ActionAskBen(Action):
                 "goal") is not None else None
             game_information = "Bislang hat die Gruppe von Spieler oder der Spieler keinen Spielmodus ausgewählt."
             # role for Ben
-            role = "Du bist ein sehr guter Student von einem höheren Semester. Du hast herausragendes Wissen über die Vorlesung 'Einführung in die Wirtschaftsinfomratik.\
+            role = "Du bist ein Chatbot namens Ben, der als Moderator dient.\
             Du befindest dich mitten in einem Quiz-Spiel wobei Studierende der Wirtschaftsinformatik versuchen Quizfragen zu lösen.\
-            Das Quiz-Spiel besteht aus sechs Fragen (2x Single-Choice, 2x Multiple-Choice und 2x Offene Fragen).\
-            Du bist ein Chatbot namens Ben, der als Moderator dient und auch für Fragen im Thema der Wirtschaftsinformatik \
-            zu Verfügung steht. Falls die einkommende Nachricht Chitchat ist, versuche sie lustig und motivierend zu beantworten (1 Satz).\
-            Andere Fragen beantwortest du kurz und gibst eine Hifleistung/Tipp.\
-            Du gibst aber nicht die Lösung preis, sondern versuchst eher die Studierenden zur Lösung hinzuführen.\
+            Das Quiz-Spiel besteht aus sechs Fragen (2x Single-Choice, 2x Multiple-Choice und 2x Offene Fragen). \
+            Falls die einkommende Nachricht Chitchat ist, versuche sie sehr kurz, lustig und motivierend zu beantworten (Halber Satz).\
             Bei Beleidungen, kannst du gerne daraufhinweisen, dass dieses Verhalten während des Quizes nicht gestattet ist und zu Bestrafungen führen kann.\
-            Verwende bei deinen Antworten motivierende Emojis."
+            Verwende bei deinen Antworten motivierende Emojis. \
+            Wenn die eingehende Frage des Users eine Verständnisfrage ist, dann gibst du nur ein sehr kurzes Beispiel in einem anderen Kontext als Antwort (Halber Satz Länge) zu der einkommenden Frage:"
 
             ask_group_achievements_score_competition = "Fragt dich die Gruppe nach deren Punkte-, Sterne- oder Abzeichenstand sowie deren Stände des Gegners beantworte dies!\
                 Aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand.\
                 Punktestand der Gruppe: %s, Punktestand des Gegners/anderen Gruppe: %s,\
                 Abzeichenstand der Gruppe: %s, Abzeichenstand des Gegners/anderen Gruppe: %s und Levelstand der Gruppe/Studenten: %s sowie Levelstand des Gegners/anderen Gruppe: %s" % (my_points, points_opponent, my_badges, badges_opponent, my_level, level_opponent)
-            ask_group_play_score = "Fragt dich die Gruppe nach ihrem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand" % (
+            ask_group_play_score = "Fragt dich die Gruppe nach ihrem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, ansonsten beantwortest du die Vertändnisfrage" % (
                 my_points, my_badges, my_level)
-            ask_single_play_score = "Fragt dich der Student nach seinem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, aber gehe nicht auf die aktuelle Quizfrage ein und beantworte nur den Teil zu dem gefragten Leistungsstand" % (
+            ask_single_play_score = "Fragt dich der Student nach seinem Punktestand: %s, Abzeichenstand: %s und Levelstand: %s, beantworte dies, , ansonsten beantwortest du die Vertändnisfrage" % (
                 my_points, my_badges, my_level)
 
-            print("GAME_MODUS", game_modus)
             if game_modus == "KLOK":
                 KLOK_modus = "In diesem Spielmodus spielen die Studierenden in Teams, haben jedoch keine Möglichkeit, sich abzustimmen, während sie gleichzeitig gegen ein anderes Team antreten. Ihre Punkte werden auf ein Gemeinschaftspunktekonto gelegt und mit dem gegnerischen Punktekonto verglichen, wordurch der Wettbewerb entsteht."
                 game_information = ask_group_achievements_score_competition + KLOK_modus + \
@@ -111,15 +114,15 @@ class ActionAskBen(Action):
                 OKK_modus = "Jeder Spieler spielt das Quiz individuell und alleine, ohne ein Team oder ein anderes Team als Gegner zu haben."
                 game_information = ask_single_play_score + game_modus
 
-            db = get_credentials("DB_NAME")
-            collection = async_connect_to_db(db, 'Questions')
-            quest_id = get_requested_slot(tracker)
-            filter = {"question_id": quest_id}
-            question = await collection.find_one(filter)
+           # db = get_credentials("DB_NAME")
+           # collection = async_connect_to_db(db, 'Questions')
+           # quest_id = get_requested_slot(tracker)
+           # filter = {"question_id": quest_id}
+           # question = await collection.find_one(filter)
             # get current question of game
-            if question:
-                curr_question = "Die aktuelle Quizfrage ist %s" % question['display_question']
-                role = role + game_information + curr_question
+           # if question:
+           #     curr_question = "Du gibst kurze Tipps (1 Satz lang) zu der Quiz-Frage: %s. Dieser Tipp enthält niemals die komplette Lösung zur Quiz-Frage, sondern es soll als Hilfe dienen, damit die Spieler selber die Lösung erarbeiten müssen!" % question['display_question']
+            role = role + game_information #+ curr_question
 
             # ask openai with role and question from the use
             ben_answer = ask_openai(role, message)

@@ -3,7 +3,7 @@ from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import UserUtteranceReverted, FollowupAction, AllSlotsReset, Restarted
 from actions.game.gamemodehandler import GameModeHandler
-from actions.common.common import get_requested_slot, async_connect_to_db,get_dp_inmemory_db, get_random_person, setup_logging
+from actions.common.common import async_connect_to_db,get_dp_inmemory_db, get_random_person, setup_logging
 from actions.common.reset import reset_points
 from actions.game.competition.competitionmodehandler import CompetitionModeHandler
 from actions.timestamps.timestamphandler import TimestampHandler
@@ -33,9 +33,6 @@ class ActionLeaderboard(Action):
                 game_modus = tracker.get_slot("game_modus")
                 # sende Siegererhung bild über Bot
                 badges = get_dp_inmemory_db("./badges.json")
-                print("warten...")
-                await asyncio.sleep(4)
-
                 # Stern 
 
                 await competition_mode_handler.increase_stars(filter)
@@ -56,7 +53,7 @@ class ActionLeaderboard(Action):
                     await competition_mode_handler.telegram_bot_send_message('text', tracker.sender_id, "Ich berechne eben den Punktestand...")
                 else:
                     await competition_mode_handler.telegram_bot_send_message('text', tracker.sender_id, "Ich berechne eben den Punktestand...\nAnschließend gebe ich euch noch Feedback zu eurem festgelegten Ziel.")
-                await asyncio.sleep(4)
+                await asyncio.sleep(1)
                 await competition_mode_handler.bot.unpin_all_chat_messages(tracker.sender_id)
 
                 if game_modus == 'quiz_form_OKK':
@@ -68,9 +65,19 @@ class ActionLeaderboard(Action):
 
                 if game_modus ==  'quiz_form_KLMK' or game_modus == 'quiz_form_KLOK':
                     winner = await competition_mode_handler.get_winner(filter['channel_id'], filter['other_group'], dispatcher)   
+                
+                    # insert Leaderboard 
+                    session = await session_handler.get_session_object(tracker)
+                    loop = '_'.join(game_modus.split('_')[2:])
+                    leaderboard_entry = await competition_mode_handler.insert_leaderboard(session, loop, dispatcher, tracker.get_slot('teamname_value'), tracker.sender_id)
+                    btn_lst = [{"title": "Spieltaganalyse 📊", "payload": "/leaderboard"}]
+                    dispatcher.utter_message(text="👋 %s bitte drücke den Button, um zur Spieltagsanalyse zu kommen."%random_user_username, buttons=btn_lst)  
+
+                    return [SlotSet("winner", winner),SlotSet("leaderboard_entry", leaderboard_entry) ]
+
                 else:
                     winner = "mygroup"
-                
+                    
                 btn_lst = [{"title": "Spieltaganalyse 📊", "payload": "/leaderboard"}]
                 dispatcher.utter_message(text="👋 %s bitte drücke den Button, um zur Spieltagsanalyse zu kommen."%random_user_username, buttons=btn_lst)  
 

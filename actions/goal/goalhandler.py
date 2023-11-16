@@ -27,9 +27,10 @@ class GoalHandler:
             requested_slot = get_requested_slot(tracker)
 
             # group gives goal
-            if requested_slot == 'competive_goal' and "#" in slot_value and now >= timestamp + countdown:
-                await ben_is_typing_2(tracker.get_slot('countdown'), competition_mode_handler)
+            if requested_slot and 'competive_goal' in requested_slot and "#" in slot_value and now >= timestamp + countdown:
+                await competition_mode_handler.telegram_bot_send_message('text', tracker.sender_id, "Ich prüfe einmal eurer Ziel 🔍👀...")
 
+                await ben_is_typing_2(tracker.get_slot('countdown'), competition_mode_handler)
                 # openai evaluates and redefines the passed goal from user
                 role = "Du bist ein Experte, wenn es um Ziele geht. Du befolgst die Zielsetzung anhand der SMART-Regel.\
                 Das Szenario ist ein Quiz-Spiel über Inhalte der Einführung in die Wirtschaftsinformatik, wobei der Fokus auf der gemeinsamen Erarbeitung der Lösung geht.\
@@ -39,13 +40,14 @@ class GoalHandler:
                 Verbessere das kommende Ziel und begründe kurz warum du es so änderst. Antworte nur mit einem Satz."
                 goal = ask_openai(role, slot_value)
                 random_user = get_random_person(tracker.get_slot("my_group"))
+
                 btn_lst = [
                     {"title": "Ziel gesetzt🎯\nLass uns anfangen. 🚀",
                         "payload": '/set_goal{"goal":"set_goal"}'}
                 ]
-                dispatcher.utter_message(text="Ich habe mir erlaubt euer Ziel zu überprüfen. Mein Vorschlag ist:\n%s\n\n👋 %s bitte drücke den Button, um das Spiel zu starten." % (
-                    goal, random_user['username']), buttons=btn_lst)
-                return {'competive_goal': None, "goal": goal}
+
+                dispatcher.utter_message(text="Ich habe mir erlaubt euer Ziel zu verbessern. Mein Vorschlag ist:\n%s\n\n👋 %s bitte drücke den Button, um das Spiel zu starten." % (goal, random_user['username']), buttons=btn_lst)
+                return {'KLMK_competive_goal': None, "goal": goal}
 
             # group aggree with the redefined goal from openai
             elif "set_goal" in slot_value:
@@ -56,18 +58,14 @@ class GoalHandler:
                 if await achievement_handler.insert_achievement(filter, achievement):
                     badges = get_dp_inmemory_db("./badges.json")
                     await competition_mode_handler.telegram_bot_send_message('photo', tracker.sender_id, badges[achievement])
-                    '''
-                    check if opponent group has answered
-                    '''
-                    dispatcher.utter_message(
-                        response="utter_waiting_of_opponent")
-                    # cancel form
-                    return {"answered": True, "competive_goal": slot_value, "requested_slot": None}
+                dispatcher.utter_message(response="utter_waiting_of_opponent")
+                return {"KLMK_competive_goal": slot_value, "random_person": None, "flag": None,  "countdown": None, "activated_reminder_comp": None}
+
             elif now < timestamp + countdown:
-                print("Before Submitting: competive_goal")
-                return {'competive_goal': None}
+                print("Before Submitting: KLMK_competive_goal")
+                return {'KLMK_competive_goal': None}
             else:
-                return {'competive_goal': slot_value}
+                return {'KLMK_competive_goal': slot_value}
         except Exception as e:
             logger.exception(e)
 
@@ -83,7 +81,8 @@ class GoalHandler:
             requested_slot = get_requested_slot(tracker)
 
             # user/group gives goal
-            if now >= timestamp + countdown and requested_slot == 'non_competive_goal' and "#" in slot_value:
+            if requested_slot and now >= timestamp + countdown and 'non_competive_goal' in requested_slot and "#" in slot_value:
+                await game_mode_handler.telegram_bot_send_message('text', tracker.sender_id, "Ich prüfe einmal eurer Ziel 🔍👀...")
                 await ben_is_typing(tracker.get_slot('countdown'), game_mode_handler)
 
                 # openai evaluates and redefines the passed goal from user
@@ -96,14 +95,14 @@ class GoalHandler:
                 if loop == "quiz_form_OKK":
                     # just user mode
                     dispatcher.utter_message(
-                        text="Ich habe mir erlaubt dein Ziel zu überprüfen. Mein Vorschlag ist:\n%s\n👋 bitte drücke den Button, um das Spiel zu starten" % (goal), buttons=btn_lst)
+                        text="Ich habe mir erlaubt dein Ziel zu verbessern. Mein Vorschlag ist:\n%s\n👋 bitte drücke den Button, um das Spiel zu starten" % (goal), buttons=btn_lst)
                 else:
                     # group mode
                     random_user = get_random_person(
                         tracker.get_slot("my_group"))
-                    dispatcher.utter_message(text="Ich habe mir erlaubt euer Ziel zu überprüfen. Mein Vorschlag ist:\n%s\n\n👋 %s bitte drücke den Button, um das Spiel zu starten." % (
+                    dispatcher.utter_message(text="Ich habe mir erlaubt euer Ziel zu verbessern. Mein Vorschlag ist:\n%s\n\n👋 %s bitte drücke den Button, um das Spiel zu starten." % (
                         goal, random_user['username']), buttons=btn_lst)
-                return {'non_competive_goal': None, "goal": goal}
+                return {'KL_non_competive_goal': None, "goal": goal}
             elif "set_goal" in slot_value:
                 # user/ group affirm redefined goal
                 filter = session_handler.get_session_filter(tracker)
@@ -114,11 +113,10 @@ class GoalHandler:
                 if await achievement_handler.insert_achievement(filter, achievement):
                     badges = get_dp_inmemory_db("./badges.json")
                     await game_mode_handler.telegram_bot_send_message('photo', tracker.sender_id, badges[achievement])
-
-                await ben_is_typing_2(tracker.get_slot('countdown'), game_mode_handler)
-                # cancel form
-                return {'non_competive_goal': 'set_goal', "random_person": None, "flag": None,  "countdown": None}
+                if tracker.get_slot('countdown'):
+                    await ben_is_typing_2(tracker.get_slot('countdown'), game_mode_handler)
+                return {'KL_non_competive_goal': 'set_goal', "random_person": None, "flag": None,  "countdown": None}
             else:
-                return {'non_competive_goal': None}
+                return {'KL_non_competive_goal': None}
         except Exception as e:
             logger.exception(e)

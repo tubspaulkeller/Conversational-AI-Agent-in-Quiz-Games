@@ -43,7 +43,7 @@ async def set_team_name(slot_value, tracker, dispatcher, competition_mode_handle
     now = datetime.datetime.now().timestamp()
     requested_slot = get_requested_slot(tracker)
 
-    if now >= timestamp + countdown and requested_slot == 'team_name' and "#" in slot_value:
+    if requested_slot and now >= timestamp + countdown and 'team_name' in requested_slot and "#" in slot_value:
         team_name = slot_value.strip("#")
         text = f"Cool! Euer Teamname ist: {team_name} 🚀💥"
         await competition_mode_handler.telegram_bot_send_message('text', tracker.sender_id, text)
@@ -55,13 +55,13 @@ async def set_team_name(slot_value, tracker, dispatcher, competition_mode_handle
         modus = '_'.join(active_loop.split('_')[2:])
         if modus == 'KLOK' or modus == 'KLMK':
             dispatcher.utter_message(response="utter_waiting_of_opponent")
-            return {"answered": True, "team_name": team_name, "teamname_value": team_name, "requested_slot": None}
         filter = session_handler.get_session_filter(tracker)
         await competition_mode_handler.set_status('evaluated', 'team_name', filter, session_handler.session_collection, True)
         await ben_is_typing(tracker.get_slot('countdown'), game_mode_handler)
-        return {'team_name': team_name, "teamname_value": team_name, "random_person": None, "flag": None,  "countdown": None}
+        return {requested_slot: team_name, "teamname_value": team_name, "random_person": None, "flag": None,  "countdown": None, "activated_reminder_comp": None}
     elif now < timestamp + countdown:
         print("Before Submitting: team_name")
-        return {'team_name': None}
+        return {requested_slot: None}
     else:
-        return {'team_name': slot_value}
+        print("DEBUG: VALIDATE  TEAMNAME")
+        return {requested_slot: slot_value}

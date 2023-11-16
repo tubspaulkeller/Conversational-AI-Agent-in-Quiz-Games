@@ -6,7 +6,6 @@ intents:
   - goodbye
   - affirm
   - deny
-  - multiple_response_quest
   - i_restart_conversation
   - EXTERNAL_reminder_countdown_msg
   - EXTERNAL_reminder_competition
@@ -23,15 +22,123 @@ intents:
   - ask_why_points_badges_stars
   - ask_ben
 
-  - introduction:
-      use_entities: e_introduction
+
+  - mrq_OKK_01_s:
+      use_entities: e_mrq_OKK_01_s
+  - mrq_OKK_02_s:
+      use_entities: e_mrq_OKK_02_s
+  - mrq_OKK_03_m:
+      use_entities: e_mrq_OKK_03_m
+  - mrq_OKK_04_m:
+      use_entities: e_mrq_OKK_04_m
+  - mrq_KL_01_s:
+      use_entities: e_mrq_KL_01_s
+  - mrq_KL_02_s:
+      use_entities: e_mrq_KL_02_s
+  - mrq_KL_03_m:
+      use_entities: e_mrq_KL_03_m
+  - mrq_KL_04_m:
+      use_entities: e_mrq_KL_04_m
+  - mrq_KLOK_01_s:
+      use_entities: e_mrq_KLOK_01_s
+  - mrq_KLOK_02_s:
+      use_entities: e_mrq_KLOK_02_s
+  - mrq_KLOK_03_m:
+      use_entities: e_mrq_KLOK_03_m
+  - mrq_KLOK_04_m:
+      use_entities: e_mrq_KLOK_04_m
+  - mrq_KLMK_01_s:
+      use_entities: e_mrq_KLMK_01_s
+  - mrq_KLMK_02_s:
+      use_entities: e_mrq_KLMK_02_s
+  - mrq_KLMK_03_m:
+      use_entities: e_mrq_KLMK_03_m
+  - mrq_KLMK_04_m:
+      use_entities: e_mrq_KLMK_04_m
+  - introduction_KL:
+      use_entities: e_introduction_KL
+  - introduction_OKK:
+      use_entities: e_introduction_OKK
+  - introduction_KLMK:
+      use_entities: e_introduction_KLMK
+  - introduction_KLOK:
+      use_entities: e_introduction_KLOK
+  - i_introduction_comp_KLMK: 
+      use_entities: e_introduction_comp_KLMK
+  - i_competive_goal_comp_KLMK:
+      use_entities: e_competive_goal_comp_KLMK
+  - i_team_name_comp_KLMK:
+      use_entities: e_team_name_comp_KLMK
+  - i_frage_01_s_comp_KLMK:
+      use_entities: e_frage_01_s_comp_KLMK
+  - i_frage_02_s_comp_KLMK:
+      use_entities: e_frage_02_s_comp_KLMK
+  - i_frage_03_m_comp_KLMK:
+      use_entities: e_frage_03_m_comp_KLMK
+  - i_frage_04_m_comp_KLMK:
+      use_entities: e_frage_04_m_comp_KLMK
+  - i_frage_05_o_comp_KLMK:
+      use_entities: e_frage_05_o_comp_KLMK
+  - i_frage_06_o_comp_KLMK:
+      use_entities: e_frage_06_o_comp_KLMK
+  - i_introduction_comp_KLOK: 
+      use_entities: e_introduction_comp_KLOK
+  - i_frage_01_s_comp_KLOK:
+      use_entities: e_frage_01_s_comp_KLOK
+  - i_frage_02_s_comp_KLOK:
+      use_entities: e_frage_02_s_comp_KLOK
+  - i_frage_03_m_comp_KLOK:
+      use_entities: e_frage_03_m_comp_KLOK
+  - i_frage_04_m_comp_KLOK:
+      use_entities: e_frage_04_m_comp_KLOK
+  - i_frage_05_o_comp_KLOK:
+      use_entities: e_frage_05_o_comp_KLOK
+  - i_frage_06_o_comp_KLOK:
+      use_entities: e_frage_06_o_comp_KLOK
+
+
 
 entities:
-  - multiple_response_quest
+  - e_mrq_OKK_01_s
+  - e_mrq_OKK_02_s
+  - e_mrq_OKK_03_m
+  - e_mrq_OKK_04_m
+  - e_mrq_KL_01_s
+  - e_mrq_KL_02_s
+  - e_mrq_KL_03_m
+  - e_mrq_KL_04_m
+  - e_mrq_KLOK_01_s
+  - e_mrq_KLOK_02_s
+  - e_mrq_KLOK_03_m
+  - e_mrq_KLOK_04_m
+  - e_mrq_KLMK_01_s
+  - e_mrq_KLMK_02_s
+  - e_mrq_KLMK_03_m
+  - e_mrq_KLMK_04_m
   - start
   - goal
-  - e_introduction
+  - e_introduction_KL
+  - e_introduction_OKK
+  - e_introduction_KLMK
+  - e_introduction_KLOK
   - e_why_points_badges_stars
+  - e_introduction_comp_KLMK
+  - e_introduction_comp_KLOK
+  - e_competive_goal_comp_KLMK
+  - e_team_name_comp_KLMK
+  - e_frage_01_s_comp_KLOK
+  - e_frage_02_s_comp_KLOK
+  - e_frage_03_m_comp_KLOK
+  - e_frage_04_m_comp_KLOK
+  - e_frage_05_o_comp_KLOK
+  - e_frage_06_o_comp_KLOK
+  - e_frage_01_s_comp_KLMK
+  - e_frage_02_s_comp_KLMK
+  - e_frage_03_m_comp_KLMK
+  - e_frage_04_m_comp_KLMK
+  - e_frage_05_o_comp_KLMK
+  - e_frage_06_o_comp_KLMK
+
 
 responses:
   utter_goodbye:
@@ -66,7 +173,7 @@ responses:
   - text: "Lasst uns eine kurze Pause einlegen, bis die Gegner reagieren.. 🕒⏸️ Ich halte euch informiert! 🚀📲"
   - text: "Wir machen eine kurze Verschnaufpause, bis die Gegner ihre Züge ziehen.. 🕒💭 Ich stehe bereit mit den neuesten Infos! 📡🚀📲"
 
-  utter_waiting_msg_after_15_sec:
+  utter_waiting_msg_after_20_sec:
   - text: "🕒 Noch einen Moment. Ich habe die andere Gruppe bereits informiert, dass schon wartet... 📲🗣️"
   - text: "⏳ Bitte etwas Geduld, lass uns noch einen Augenblick warten. 👀🕒 Die andere Gruppe wurde benachrichtigt, dass ihr schon wartet 📩👥"
   - text: "🚏 Nur einen kurzen Moment, wir sind gleich zurück. 👥⌛ Die andere Gruppe ist darüber informiert, dass ihr wartet... 📱🗒️"
@@ -77,17 +184,17 @@ responses:
   - text: "⏳ Einen kurzen Moment noch, bitte wartet etwas. 👥🕒 Die andere Gruppe wurde darüber informiert, dass ihr auf eine Antwort wartet... 📲🗒️"
   - text:  "⌛️ Bitte gewährt noch einen Augenblick. 👥🔄 Die andere Gruppe ist informiert, dass ihr noch auf eine Antwort wartet... 📲🗣️"
 
-  utter_waiting_msg_after_30_sec:
-  - text:  "⏳ Bitte habt noch etwas Geduld, nur 30 Sekunden. 👥⌛️"
-  - text:  "🔜 In nur 30 Sekunden machen wir weiter! 👥⏳"
-  - text:  "⌛️ Nur noch 30 Sekunden warten, gleich machen wir weiter. 👥🕒"
-  - text:  "🕒 Gebt den anderen noch maximal 30 Sekunden, dann geht's weiter! ⏳📈"
-  - text:  "⏰ Noch 30 Sekunden, und wir sind zurück! 👥🔄"
-  - text: "🚀 Nur noch 30 Sekunden, bis ich die nächste Frage präsentiere! ⏳👥"
-  - text: "⏳ Gleich geht's weiter, nur noch 30 Sekunden! 👥🔄"
-  - text: "🔜 In 30 Sekunden sind wir zurück für die nächste Frage! 👥⌛️"
+  utter_waiting_msg_half_time:
+  - text:  "⏳ Bitte habt noch etwas Geduld, nur 90 Sekunden. 👥⌛️"
+  - text:  "🔜 In nur 90 Sekunden machen wir weiter! 👥⏳"
+  - text:  "⌛️ Nur noch 90 Sekunden warten, gleich machen wir weiter. 👥🕒"
+  - text:  "🕒 Gebt den anderen noch maximal 90 Sekunden, dann geht's weiter! ⏳📈"
+  - text:  "⏰ Noch 90 Sekunden, und wir sind zurück! 👥🔄"
+  - text: "🚀 Nur noch 90 Sekunden, bis ich die nächste Frage präsentiere! ⏳👥"
+  - text: "⏳ Gleich geht's weiter, nur noch 90 Sekunden! 👥🔄"
+  - text: "🔜 In 90 Sekunden sind wir zurück für die nächste Frage! 👥⌛️"
 
-  utter_waiting_msg_less_15_sec:
+  utter_waiting_msg_less_30_sec:
   - text: ⌛️ Nur noch einen winzigen Moment warten... Ich habe bei der anderen Gruppe noch einmal richtig Druck gemacht! 👥💪"
   - text: "⏳ Gleich geht's weiter, nur noch eine ganz kurze Wartezeit! Ich habe die andere Gruppe in die Mangel genommen! 👥🔄💨"
   - text: "🚀 Ganz kurz noch, wir sind fast fertig... Ich habe bei der anderen Gruppe nachgehakt und Druck gemacht! 👥💼💢"
@@ -147,16 +254,55 @@ actions:
   - action_forget_reminders_competition
   - action_start
   - action_restart
-  - action_ask_introduction
-  - action_ask_competive_goal
-  - action_ask_non_competive_goal
-  - action_ask_team_name
-  - action_ask_frage_01_s
-  - action_ask_frage_02_s
-  - action_ask_frage_03_m
-  - action_ask_frage_04_m
-  - action_ask_frage_05_o
-  - action_ask_frage_06_o
+  - action_ask_OKK_introduction
+  - action_ask_OKK_frage_01_s
+  - action_ask_OKK_frage_02_s
+  - action_ask_OKK_frage_03_m
+  - action_ask_OKK_frage_04_m
+  - action_ask_OKK_frage_05_o
+  - action_ask_OKK_frage_06_o
+  - action_ask_KL_introduction
+  - action_ask_KL_team_name
+  - action_ask_KL_non_competive_goal
+  - action_ask_KL_frage_01_s
+  - action_ask_KL_frage_02_s
+  - action_ask_KL_frage_03_m
+  - action_ask_KL_frage_04_m
+  - action_ask_KL_frage_05_o
+  - action_ask_KL_frage_06_o
+  - action_ask_KLMK_introduction
+  - action_ask_KLMK_introduction_competition
+  - action_ask_KLMK_team_name_competition
+  - action_ask_KLMK_competive_goal_competition
+  - action_ask_KLMK_frage_01_s_competition
+  - action_ask_KLMK_frage_02_s_competition
+  - action_ask_KLMK_frage_03_m_competition
+  - action_ask_KLMK_frage_04_m_competition
+  - action_ask_KLMK_frage_05_o_competition
+  - action_ask_KLMK_frage_06_o_competition
+  - action_ask_KLMK_team_name
+  - action_ask_KLMK_competive_goal
+  - action_ask_KLMK_frage_01_s
+  - action_ask_KLMK_frage_02_s
+  - action_ask_KLMK_frage_03_m
+  - action_ask_KLMK_frage_04_m
+  - action_ask_KLMK_frage_05_o
+  - action_ask_KLMK_frage_06_o
+  - action_ask_KLOK_introduction
+  - action_ask_KLOK_introduction_competition
+  - action_ask_KLOK_frage_01_s_competition
+  - action_ask_KLOK_frage_02_s_competition
+  - action_ask_KLOK_frage_03_m_competition
+  - action_ask_KLOK_frage_04_m_competition
+  - action_ask_KLOK_frage_05_o_competition
+  - action_ask_KLOK_frage_06_o_competition
+  - action_ask_KLOK_frage_01_s
+  - action_ask_KLOK_frage_02_s
+  - action_ask_KLOK_frage_03_m
+  - action_ask_KLOK_frage_04_m
+  - action_ask_KLOK_frage_05_o
+  - action_ask_KLOK_frage_06_o
+  - action_ask_get_winner
   - action_forget_reminders
   - action_fallback
   - action_set_goal
@@ -171,6 +317,11 @@ actions:
   - action_why_points_badges_stars
   - action_ask_ben
   - action_stop_countdown
+  - action_new_game
+  - action_delete_session
+  - action_prev_quest_again
+  
+
 
 slots:
 
@@ -200,6 +351,16 @@ slots:
     mappings:
       - type: custom
   
+  activated_reminder_comp: 
+    type: bool
+    mappings:
+      - type: custom
+
+  get_winner: 
+    type: bool
+    mappings:
+      - type: custom
+
   earned_points:
     type: any
     mappings:
@@ -250,144 +411,413 @@ slots:
     mappings:
     - type: custom
 
+  leaderboard_entry:
+    type: bool
+    mappings:
+    - type: custom
+      
   game_modus:
     type: any
     mappings:
     - type: custom
 
-  non_competive_goal:
+  KL_non_competive_goal:
     type: text
     mappings:
     - type: from_text
       not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
       conditions:
         - active_loop: quiz_form_KL
-          requested_slot: non_competive_goal
+          requested_slot: KL_non_competive_goal
 
-  competive_goal:
+  KLMK_competive_goal:
     type: text
     mappings:
     - type: from_text
       not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
       conditions:
         - active_loop: quiz_form_KLMK
-          requested_slot: competive_goal
+          requested_slot: KLMK_competive_goal
   
-  team_name:
+  KLMK_competive_goal_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_competive_goal_comp_KLMK
+
+  KL_team_name:
     type: text
     mappings:
     - type: from_text
       not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
       conditions:
         - active_loop: quiz_form_KL
-          requested_slot: team_name
+          requested_slot: KL_team_name
+
+  KLMK_team_name:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
         - active_loop: quiz_form_KLMK
-          requested_slot: team_name
+          requested_slot: KLMK_team_name
 
-  introduction: 
-    type: text
-    mappings:
-    - type: from_entity
-      entity: e_introduction
 
-  frage_01_s:
+  KLMK_team_name_competition:
     type: text
     mappings:
     - type: from_entity
-      entity: multiple_response_quest
+      entity: e_team_name_comp_KLMK
 
-  frage_02_s:
+ 
+  KLOK_introduction: 
     type: text
     mappings:
     - type: from_entity
-      entity: multiple_response_quest
-  
-  frage_03_m:
+      entity: e_introduction_KLOK
+
+  KLMK_introduction: 
     type: text
     mappings:
     - type: from_entity
-      entity: multiple_response_quest
-  
-  frage_04_m:
+      entity: e_introduction_KLMK
+
+  OKK_introduction: 
     type: text
     mappings:
     - type: from_entity
-      entity: multiple_response_quest
+      entity: e_introduction_OKK
   
-  frage_05_o:
+  KL_introduction: 
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_introduction_KL
+
+  KLOK_introduction_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_introduction_comp_KLOK
+  
+  KLMK_introduction_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_introduction_comp_KLMK
+
+  KLOK_frage_01_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KLOK_01_s
+  
+  KLMK_frage_01_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KLMK_01_s
+
+  KL_frage_01_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KL_01_s
+  
+  OKK_frage_01_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_OKK_01_s
+
+  KLOK_frage_01_s_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_01_s_comp_KLOK
+
+  KLMK_frage_01_s_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_01_s_comp_KLMK
+
+  KLOK_frage_02_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KLOK_02_s
+
+  KLMK_frage_02_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KLMK_02_s
+
+  OKK_frage_02_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_OKK_02_s
+
+  KL_frage_02_s:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KL_02_s
+  
+  
+  KLOK_frage_02_s_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_02_s_comp_KLOK
+
+
+  KLMK_frage_02_s_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_02_s_comp_KLMK
+
+
+  KLOK_frage_03_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KLOK_03_m
+
+  
+  KLMK_frage_03_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KLMK_03_m
+
+  
+  OKK_frage_03_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_OKK_03_m
+
+  
+  KL_frage_03_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KL_03_m
+  
+  KLOK_frage_03_m_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_03_m_comp_KLOK
+
+  KLMK_frage_03_m_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_03_m_comp_KLMK
+  
+  KLOK_frage_04_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KLOK_04_m
+
+  KLMK_frage_04_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KLMK_04_m
+
+  OKK_frage_04_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_OKK_04_m
+
+  KL_frage_04_m:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_mrq_KL_04_m
+
+
+  KLMK_frage_04_m_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_04_m_comp_KLMK
+
+  KLOK_frage_04_m_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_04_m_comp_KLOK
+
+
+
+  KLOK_frage_05_o:
     type: text
     mappings:
     - type: from_text
       not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
       conditions:
-        - active_loop: quiz_form_KL
-          requested_slot: frage_05_o
-        - active_loop: quiz_form_OKK
-          requested_slot: frage_05_o
         - active_loop: quiz_form_KLOK
-          requested_slot: frage_05_o
+          requested_slot: KLOK_frage_05_o
+     
+
+  KLMK_frage_05_o:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
         - active_loop: quiz_form_KLMK
-          requested_slot: frage_05_o
+          requested_slot: KLMK_frage_05_o
   
-  frage_06_o:
+  KL_frage_05_o:
     type: text
     mappings:
     - type: from_text
       not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
       conditions:
         - active_loop: quiz_form_KL
-          requested_slot: frage_06_o
+          requested_slot: KL_frage_05_o
+  
+  OKK_frage_05_o:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
         - active_loop: quiz_form_OKK
-          requested_slot: frage_06_o
-        - active_loop: quiz_form_KLOK
-          requested_slot: frage_06_o
+          requested_slot: OKK_frage_05_o
+
+
+  KLMK_frage_05_o_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_05_o_comp_KLMK
+
+  KLOK_frage_05_o_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_05_o_comp_KLOK
+
+  KLMK_frage_06_o:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
         - active_loop: quiz_form_KLMK
-          requested_slot: frage_06_o
+          requested_slot: KLMK_frage_06_o
+
+  KLOK_frage_06_o:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
+        - active_loop: quiz_form_KLOK
+          requested_slot: KLOK_frage_06_o
+  
+  KL_frage_06_o:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
+        - active_loop: quiz_form_KL
+          requested_slot: KL_frage_06_o
+
+  OKK_frage_06_o:
+    type: text
+    mappings:
+    - type: from_text
+      not_intent: [EXTERNAL_reminder_countdown_msg, EXTERNAL_reminder_competition,i_restart_conversation, ask_ben]
+      conditions:
+        - active_loop: quiz_form_OKK
+          requested_slot: OKK_frage_06_o
+      
+  KLOK_frage_06_o_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_06_o_comp_KLOK
+
+  KLMK_frage_06_o_competition:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: e_frage_06_o_comp_KLMK
 
 forms:
   quiz_form_KLOK:
     required_slots:
-    - introduction
-    - frage_01_s
-    - frage_02_s
-    - frage_03_m
-    - frage_04_m
-    - frage_05_o
-    - frage_06_o
+    - KLOK_introduction
+    - KLOK_introduction_competition 
+    - KLOK_frage_01_s
+    - KLOK_frage_01_s_competition
+    - KLOK_frage_02_s
+    - KLOK_frage_02_s_competition
+    - KLOK_frage_03_m
+    - KLOK_frage_03_m_competition
+    - KLOK_frage_04_m
+    - KLOK_frage_04_m_competition
+    - KLOK_frage_05_o
+    - KLOK_frage_05_o_competition
+    - KLOK_frage_06_o
+    - KLOK_frage_06_o_competition
 
   quiz_form_KLMK:
     required_slots:
-    - introduction
-    - team_name
-    - competive_goal
-    - frage_01_s
-    - frage_02_s
-    - frage_03_m
-    - frage_04_m
-    - frage_05_o
-    - frage_06_o
+    - KLMK_introduction
+    - KLMK_introduction_competition
+    - KLMK_team_name
+    - KLMK_team_name_competition
+    - KLMK_competive_goal
+    - KLMK_competive_goal_competition
+    - KLMK_frage_01_s
+    - KLMK_frage_01_s_competition
+    - KLMK_frage_02_s
+    - KLMK_frage_02_s_competition
+    - KLMK_frage_03_m
+    - KLMK_frage_03_m_competition
+    - KLMK_frage_04_m
+    - KLMK_frage_04_m_competition
+    - KLMK_frage_05_o
+    - KLMK_frage_05_o_competition
+    - KLMK_frage_06_o
+    - KLMK_frage_06_o_competition
 
   quiz_form_KL:
     required_slots: 
-    - introduction
-    - team_name
-    - non_competive_goal
-    - frage_01_s
-    - frage_02_s
-    - frage_03_m
-    - frage_04_m
-    - frage_05_o
-    - frage_06_o
+    - KL_introduction
+    - KL_team_name
+    - KL_non_competive_goal
+    - KL_frage_01_s
+    - KL_frage_02_s
+    - KL_frage_03_m
+    - KL_frage_04_m
+    - KL_frage_05_o
+    - KL_frage_06_o
 
   quiz_form_OKK:
     required_slots:
-    - introduction
-    - frage_01_s
-    - frage_02_s
-    - frage_03_m
-    - frage_04_m
-    - frage_05_o
-    - frage_06_o
+    - OKK_introduction
+    - OKK_frage_01_s
+    - OKK_frage_02_s
+    - OKK_frage_03_m
+    - OKK_frage_04_m
+    - OKK_frage_05_o
+    - OKK_frage_06_o
 
 
 session_config:

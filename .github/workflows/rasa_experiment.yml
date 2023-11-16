@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - okk-short
+      - main
    # todo on filechange or something for trigger
 jobs:
   build-container:

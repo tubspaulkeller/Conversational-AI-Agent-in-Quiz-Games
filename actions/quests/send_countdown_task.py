@@ -60,12 +60,11 @@ async def send_countdown_task(object, tracker):
                 new_timestamp = Timestamp(tracker.sender_id, object['id'], active_loop, filter['other_group']).to_dict()
                 timestamp_handler.insert_new_timestamp(new_timestamp, 'waiting')
                 return [SlotSet("flag", True), SlotSet("game_modus", active_loop), SlotSet("countdown",countdown.to_dict()), SlotSet("opponent_id", filter['other_group']), FollowupAction("action_set_reminder_countdown_msg")]
-
+                # SlotSet("activated_reminder_comp", None)
             else:
                 print("\033[94mSESSION OBJECT DOES NOT EXIST\033[0m")
                 return [FollowupAction("action_restart")]
         else:
-                #print("None")
                 return []
     except Exception as e:
         logger.exception(e) 

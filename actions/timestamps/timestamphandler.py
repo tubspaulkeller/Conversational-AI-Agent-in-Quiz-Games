@@ -1,6 +1,7 @@
 import datetime
 from collections import OrderedDict
 from actions.common.common import async_connect_to_db, get_credentials, setup_logging
+from actions.session.sessionhandler import SessionHandler
 import pymongo
 import asyncio
 logger = setup_logging()
@@ -44,15 +45,34 @@ class TimestampHandler:
                 loop = timestamp_info.get("loop", None)
                 quest_id = timestamp_info.get("quest_id", None)
                 opponent_id = timestamp_info.get("opponent_id", 0)
+                return timestamp, loop, quest_id, opponent_id
             else:
-                timestamp = 0
-                loop = None
-                quest_id = None
-                opponent_id = 0
-            return timestamp, loop, quest_id, opponent_id
+                return await self.get_timestamp_infos_through_session_obj(group_id)
         except Exception as e:
             logger.exception(e)
-            return 0, None, None, 0
+            return await self.get_timestamp_infos_through_session_obj(group_id)
+
+
+    async def get_timestamp_infos_through_session_obj(self, group_id):
+        try: 
+            session_handler = SessionHandler()
+            session = await session_handler.session_collection.find_one({"channel_id":group_id})
+            if session:
+                mode = session['questions'][0]['modus']
+                last_quest = session['questions'][-1]['id']
+                opponent_id = session.get('other_group')  
+            else:
+                mode = last_quest = opponent_id = None
+
+            loop = "quiz_form_" + mode if mode else None
+            timestamp = 0
+            quest_id = last_quest
+
+            return timestamp, loop, quest_id, opponent_id
+
+        except Exception as e:
+            logger.exception(e)
+            return 0, None, None, None
 
     async def delete_timestamps_for_group(self, group_id, timestamp_type):
         try:

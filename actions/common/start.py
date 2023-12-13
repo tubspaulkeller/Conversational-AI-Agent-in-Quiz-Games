@@ -22,9 +22,9 @@ class Start(Action):
                 btn_lst = [
                 {"title": "A (KLMK)", "payload": "/KLMK"},
                 {"title": "B (KLOK)", "payload": "/KLOK"},
-                {"title": "C (KL) ", "payload": "/KL"}
+                {"title": "C (KL)", "payload": "/KL"} 
                 ]
-                text="❗ALLGEMEINE SPIELHINWEISE❗\n\nIhr habt eine begrenzte Zeitspanne (Countdown), um euch Gedanken über die Antwort auf die Fragen zu machen. Wenn dann der Hinweis kommt, zu antworten, müsst ihr schnell handeln, sonst verliert ihr Punkte! Außerdem könnt ihr Abzeichen und Sterne verdienen sowie Level aufsteigen, wenn ihr erfolgreich seid!\n\nWährend des Quiz könnt ihr jederzeit Fragen zur aktuellen Quiz-Frage stellen oder Informationen zu euren Punkten, Abzeichen, Sternen und eurem Levelstand, sowie ggf. zu denen eures Gegners, erfragen. Dazu setzt ihr einfach '@Ben' vor eure Frage.\nMit '# restart' kannst du das Spiel neustarten.\n\nSeid ihr bereit für diese Herausforderung?!\nDu wurdest einer Gruppe (A, B oder C) zugewiesen. Bitte wähle jetzt deine Gruppe aus, indem du auf den entsprechenden Button klickst. 😎"  
+                text="❗ALLGEMEINE SPIELHINWEISE❗\n\nIhr habt eine begrenzte Zeitspanne (Countdown), um euch Gedanken über die Antwort auf die Fragen zu machen. Wenn dann der Hinweis kommt, zu antworten, müsst ihr schnell handeln, sonst verliert ihr Punkte! Außerdem könnt ihr Abzeichen und Sterne verdienen sowie Level aufsteigen, wenn ihr erfolgreich seid!\n\nWährend des Quiz könnt ihr jederzeit Fragen zur aktuellen Quiz-Frage stellen oder Informationen zu euren Punkten, Abzeichen, Sternen und eurem Levelstand, sowie ggf. zu denen eures Gegners, erfragen. Dazu setzt ihr einfach '@Ben' vor eure Frage.\nMit '# restart' kannst du das Spiel neustarten.\n\nSeid ihr bereit für diese Herausforderung?!\nBitte wählt einen Spielmodus (KLMK = Wettbebwerb + Kollaboration, KLOK = Wettbewerb ohne Kollaboration, KL = Kollaboration) aus, indem einer von euch auf den entsprechenden Button klickt. 😎"  
             dispatcher.utter_message(text=text, buttons=btn_lst)
             return
         else:

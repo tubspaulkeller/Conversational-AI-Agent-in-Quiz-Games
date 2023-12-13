@@ -54,7 +54,8 @@ class TelethonHandler:
                     for user in users:
                         # if user is me, or John, or bot: 
                         # set ADMIN_ID to -1 so, I can play with others in the group, if my person has to be ignored set ADMIN_ID to my ID, same for JOHN_ID, which is the second Account, which I used for testing 
-                        if not (str(user.id) == get_credentials('ADMIN_ID') or str(user.id) == get_credentials('JOHN_ID') or str(user.id) == get_credentials('LOTTA_ID') or str(user.id) == get_credentials('TOM_ID') or user.bot):
+                        # or str(user.id) == get_credentials('JOHN_ID') or str(user.id) == get_credentials('LOTTA_ID') or str(user.id) == get_credentials('TOM_ID')
+                        if not (str(user.id) == get_credentials('ADMIN_ID') or user.bot):
                             # check if user exists otherwise create a new user
                             existing_user = await user_handler.user_collection.find_one({"user_id": int(user.id)})
                             if not existing_user and str(user.id) != str(sender_id):

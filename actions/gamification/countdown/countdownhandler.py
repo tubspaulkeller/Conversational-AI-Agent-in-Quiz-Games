@@ -205,7 +205,7 @@ class CountdownHandler(BaseHandler):
                     # get two users with the lowest counter value, there are the person who said least
                     lowest_counters = sorted(existing_group['users'], key=lambda x: x['counter'])[:2] 
                     if lowest_counters[0]['counter'] < 2: 
-                        text = "*%s* frage *%s* nach seiner Meinung zu diesem Thema\. 🤓" %(lowest_counters[1]['username'], lowest_counters[0]['username'])
+                        text = "*%s* frage *%s* nach der Meinung zu diesem Thema\. 🤓" %(lowest_counters[1]['username'], lowest_counters[0]['username'])
                         await asyncio.sleep(1.25)
                         dispatcher.utter_message(json_message=get_json_msg(sender_id, text))
             
@@ -213,7 +213,7 @@ class CountdownHandler(BaseHandler):
             elif not existing_group and countdown_old_val == get_countdown_value(multiple_response_quest.quest_id,active_loop)/2:
                 if len(group['users']) > 1:
                     random_users = random.sample(group['users'], 2)
-                    text = "*%s* frage *%s* nach seiner Meinung zu diesem Thema\. 🤓" %(random_users[0]['username'], random_users[1]['username'])
+                    text = "*%s* frage *%s* nach der Meinung zu diesem Thema\. 🤓" %(random_users[0]['username'], random_users[1]['username'])
                     await asyncio.sleep(1.25)
                     dispatcher.utter_message(json_message=get_json_msg(sender_id, text))
             

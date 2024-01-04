@@ -100,7 +100,7 @@ Create a .env file with the following variables:
 First, populate the database with quiz questions and answers.
 1. Open a terminal.
 2. Navigate to the directory `/Master-Thesis/MongoDB-Dump` in the repository.
-3. Run the command: `mongoimport –db rasa_ben`.
+3. Run the command: `mongoimport --db rasa_ben`.
 4. Update the connection string under `/Master-Thesis/Implementation/bot/.env` for the variable `MONGO_DB_LOCAL`.
 
 ### NGROK:

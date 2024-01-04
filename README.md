@@ -125,7 +125,7 @@ Afterward, execute the following commands:
 ### Terminal 2:
 
 ```bash
-rasa run –connectoraddons.custom_channel.MyIO –debug
+rasa run –connector addons.custom_channel.MyIO –debug
  ```
 ### Terminal 3:
   ```bash

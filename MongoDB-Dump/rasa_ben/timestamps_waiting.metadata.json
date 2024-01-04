@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"4b0cca9ff1db4b95ae058ac55997833d","collectionName":"timestamps_waiting","type":"collection"}

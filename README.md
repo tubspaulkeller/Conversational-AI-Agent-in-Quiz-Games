@@ -3,7 +3,7 @@
 ## Stack:
 - Python
 - Rasa
-- OpenAI
+- LLM (OpenAI)
 - MongoDB
 - Docker
 

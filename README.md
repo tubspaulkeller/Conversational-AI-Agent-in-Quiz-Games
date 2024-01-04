@@ -91,7 +91,7 @@ Create a .env file with the following variables:
 ## Installation 
 
 - Install Rasa: Follow the steps at [Rasa Documentation](https://rasa.com/docs/rasa/2.x/installation/).
-- Install dependent packages using: `pip install -r /Master-Thesis/Implementation/bot/actions/requirements.txt`.
+- Install dependent packages using: `pip install -r /Conversational-AI-Agent-in-Quiz-Games/actions/requirements.txt`.
 - Install MongoDB and MongoDBCompass (GUI).
 - Install NGROK from: [NGROK Download](https://ngrok.com/download).
   
@@ -101,7 +101,7 @@ First, populate the database with quiz questions and answers.
 1. Open a terminal.
 2. Navigate to the directory `/Master-Thesis/MongoDB-Dump` in the repository.
 3. Run the command: `mongoimport --db rasa_ben`.
-4. Update the connection string under `/Master-Thesis/Implementation/bot/.env` for the variable `MONGO_DB_LOCAL`.
+4. Update the connection string under `/Conversational-AI-Agent-in-Quiz-Games/.env` for the variable `MONGO_DB_LOCAL`.
 
 ### NGROK:
 
@@ -111,14 +111,14 @@ For HTTPS connection between Telegram and Rasa, use NGROK.
 Under Forwarding, note the URL ending with ngrok-free.app for further steps.
 
 ### RASA:
-Next, open two additional terminal windows. Activate the Rasa environment in both terminals from installation. After that, in both terminals, navigate to the directory containing the source code: `/Master-Thesis/Implementation/bot`.
+Next, open two additional terminal windows. Activate the Rasa environment in both terminals from installation. After that, in both terminals, navigate to the directory containing the source code: `/Conversational-AI-Agent-in-Quiz-Games`.
 
 1. If no model exists, run the following command in one terminal: 
     ```bash
     rasa train
     ```
 
-2. Next, insert the NGROK URL into the file `/Master-Thesis/Implementation/bot/credentials.yml` in the format: `"NGROK-URL/webhooks/telegram/webhook"` for the `webhook_url`.
+2. Next, insert the NGROK URL into the file `/Conversational-AI-Agent-in-Quiz-Games/credentials.yml` in the format: `"NGROK-URL/webhooks/telegram/webhook"` for the `webhook_url`.
 
 Afterward, execute the following commands:
 

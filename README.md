@@ -28,3 +28,111 @@ Paul Keller
 ## Course 
 Master-Thesis submitted on 12/15/2023
 
+## Prerequisites
+- Rasa 
+- MongoDB 
+- MongoDB-GUI 
+- NGROK
+- Telethon-Account 
+- Telegram-Account 
+- OpenAI-Account
+- Bot in Telegram (Botfather)
+
+## Requirements
+- rasa==3.1
+- telethon==1.28.5
+- pyTelegramBotAPI==4.12.
+- python-telegram-bot==20.3
+- motor==3.1.2
+- python-dotenv==1.0.0
+- pymongo==4.4.0 
+- asyncio==3.4.3
+- pillow==10.0.0
+- openai==0.27.8
+- sqlalchemy<2.0
+
+## Environments 
+Create a .env file with the following variables: 
+- DB_NAME = <DB_NAME>
+- API_ID = <API_ID_TELETHON>
+- API_HASH = <API_HASH_TELETHON>
+- PHONE_NUMBER = <YOUR_PHONE_NUMBER_TELETHON>
+- SESSION_STRING = <SESSION_STRING_TELETHON>
+- OPEN_AI = <OPEN_AI_ACCOUNT>
+- MONGO_DB_LOCAL = <MONGO_DB_LOCAL>
+- BOT_NAME = <BOT_NAME>
+- <GROUP_1_CHANNEL_ID> = <GROUP_2_CHANNEL_ID>
+- TELEGRAM_ACCESS_TOKEN = <TELEGRAM_ACCECSS_TOKEN_BOT>
+- TELEGRAM_URL = <TELEGRAM_URL> 
+- <GROUP_1_CHANNEL_ID>_TELEGRAM_INVITE_LINK = 'https://t.me/<GROUP_1_CHANNEL_NAME>'
+- <GROUP_2_CHANNEL_ID>_TELEGRAM_INVITE_LINK = 'https://t.me/<GROUP_2_CHANNEL_NAME>'
+- WAITING_COUNTDOWN = 60 
+- COMPETITION_REMINDER = 2
+- DELAY = 5 
+- INTERVAL = 10 
+- REMINDER_DELAY = 2
+- OPEN_QUEST_TIME = 90
+- OPEN_QUEST_PENALTY = 5
+- BUTTON_QUEST_TIME = 30
+- BUTTON_QUEST_PENALTY = 2
+- RANK_LIST = 3
+- MAX_LINE_LENGTH = 30
+- FIRST_CORRECT_THRESHOLD = 1 
+- COLLABORATION_THRESHOLD = 2
+- IN_TIME_THRESHOLD = 5 # 3
+- SINGLE_CHOICE_THRESHOLD = 2 
+- MULTIPLE_CHOICE_THRESHOLD = 2 
+- OFFENE_FRAGE_THRESHOLD = 2 
+- MAX_LEVEL = 4 
+- LAST_SLOT = -1 
+- MAX_POINTS = 60
+
+
+## Installation 
+
+- Install Rasa: Follow the steps at [Rasa Documentation](https://rasa.com/docs/rasa/2.x/installation/).
+- Install dependent packages using: `pip install -r /Master-Thesis/Implementation/bot/actions/requirements.txt`.
+- Install MongoDB and MongoDBCompass (GUI).
+- Install NGROK from: [NGROK Download](https://ngrok.com/download).
+  
+### MongoDB:
+
+First, populate the database with quiz questions and answers.
+1. Open a terminal.
+2. Navigate to the directory `/Master-Thesis/Files/MongoDB-Dump` in the repository.
+3. Run the command: `mongoimport –db rasa_ben`.
+4. Update the connection string under `/Master-Thesis/Implementation/bot/.env` for the variable `MONGO_DB_LOCAL`.
+
+### NGROK:
+
+For HTTPS connection between Telegram and Rasa, use NGROK.
+1. Open a terminal.
+2. Run: `ngrok http 5005`.
+Under Forwarding, note the URL ending with ngrok-free.app for further steps.
+
+### RASA:
+Next, open two additional terminal windows. Activate the Rasa environment in both terminals from installation. After that, in both terminals, navigate to the directory containing the source code: `/Master-Thesis/Implementation/bot`.
+
+1. If no model exists, run the following command in one terminal: 
+    ```bash
+    rasa train
+    ```
+
+2. Next, insert the NGROK URL into the file `/Master-Thesis/Implementation/bot/credentials.yml` in the format: `"NGROK-URL/webhooks/telegram/webhook"` for the `webhook_url`.
+
+Afterward, execute the following commands:
+
+### Terminal 2:
+
+```bash
+rasa run –connectoraddons.custom_channel.MyIO –debug
+ ```
+### Terminal 3:
+  ```bash
+rasa run actions
+ ```
+
+
+
+
+

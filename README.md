@@ -5,6 +5,7 @@
 - Rasa
 - LLM (OpenAI)
 - MongoDB
+- Telegram
 - Docker
 
 ## Description

@@ -39,7 +39,6 @@ You can play the solo play mode by scanning the following QR code. You will need
 - Bot in Telegram (Botfather)
 
 ## Requirements
-- rasa==3.1
 - telethon==1.28.5
 - pyTelegramBotAPI==4.12.
 - python-telegram-bot==20.3
@@ -52,7 +51,7 @@ You can play the solo play mode by scanning the following QR code. You will need
 - sqlalchemy<2.0
 
 ## Environments 
-Create a .env file with the following variables: 
+Extend the .env file with the following variables: 
 - DB_NAME = <DB_NAME>
 - API_ID = <API_ID_TELETHON>
 - API_HASH = <API_HASH_TELETHON>
@@ -66,26 +65,7 @@ Create a .env file with the following variables:
 - TELEGRAM_URL = <TELEGRAM_URL> 
 - <GROUP_1_CHANNEL_ID>_TELEGRAM_INVITE_LINK = 'https://t.me/<GROUP_1_CHANNEL_NAME>'
 - <GROUP_2_CHANNEL_ID>_TELEGRAM_INVITE_LINK = 'https://t.me/<GROUP_2_CHANNEL_NAME>'
-- WAITING_COUNTDOWN = 60 
-- COMPETITION_REMINDER = 2
-- DELAY = 5 
-- INTERVAL = 10 
-- REMINDER_DELAY = 2
-- OPEN_QUEST_TIME = 90
-- OPEN_QUEST_PENALTY = 5
-- BUTTON_QUEST_TIME = 30
-- BUTTON_QUEST_PENALTY = 2
-- RANK_LIST = 3
-- MAX_LINE_LENGTH = 30
-- FIRST_CORRECT_THRESHOLD = 1 
-- COLLABORATION_THRESHOLD = 2
-- IN_TIME_THRESHOLD = 5 # 3
-- SINGLE_CHOICE_THRESHOLD = 2 
-- MULTIPLE_CHOICE_THRESHOLD = 2 
-- OFFENE_FRAGE_THRESHOLD = 2 
-- MAX_LEVEL = 4 
-- LAST_SLOT = -1 
-- MAX_POINTS = 60
+
 
 
 ## Installation 
@@ -125,7 +105,7 @@ Afterward, execute the following commands:
 ### Terminal 2:
 
 ```bash
-rasa run –connector addons.custom_channel.MyIO –debug
+rasa run --connector addons.custom_channel.MyIO –debug
  ```
 ### Terminal 3:
   ```bash

@@ -1,6 +1,5 @@
 .DS_Store  
 models/ 
-.env 
 *.tar.gz
 *.rasa
 *.pyc
